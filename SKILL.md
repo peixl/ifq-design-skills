@@ -1,11 +1,38 @@
 ---
 name: ifq-design-skills
-description: IFQ Design Skills —— ifq.ai 自有的 agent-native design engine。一句话进入 agent，产出单文件 HTML / MP4 / GIF / 可编辑 PPTX / PDF / 印刷物料 / 品牌系统。内置 12 种专业模式、20+1 种设计哲学 fallback（20 大师 + IFQ Native 原生派）、24 个手绘 SVG 图标、Stage+Sprite 动画引擎，并默认把 IFQ ambient brand system 写进版面：rust ledger / signal sparkle / mono field note / quiet URL / proof-first export loop。触发词：做原型 / 交互原型 / app iOS 原型 / 设计变体 / hi-fi / UI mockup / 动画 Demo / 导出 mp4 gif / 60fps 插帧 / keynote / dashboard / 数据看板 / 白皮书 / A vs B / 横评 / changelog / release notes / 小红书封面 / 朋友圈图 / 名片 / 邀请函 / 品牌诊断 / brand from scratch / 设计方向顾问 / 设计评审。不适合：生产级 Web App、SEO 网站、需要后端的动态系统。
+description: Use this skill when the user asks for a visual design deliverable built from HTML — interactive prototype, slide deck, motion demo, infographic, dashboard, landing, whitepaper, changelog, business card, social cover, or brand system — and wants a single-file HTML plus optional MP4, GIF, editable PPTX, print-ready PDF, or SVG. Also use for design critiques, brand diagnoses, multi-variant exploration, or 3-direction advisory (from 20 master styles plus the IFQ Native recipe). Triggers include prototype, hi-fi mockup, UI mockup, design variants, tweaks, animation demo, mp4/gif export, 60fps, keynote, PPTX, dashboard, whitepaper, A-vs-B, benchmark, changelog, release notes, social cover, business card, invitation, brand from scratch, design critique. Do not use for production web apps, SEO sites, backend-dependent systems, or pure copy edits. Outputs weave the IFQ ambient brand layer (rust ledger, signal spark, mono field note, quiet URL, editorial contrast) into layout rather than stamped logos.
 ---
 
 # IFQ Design Skills
 
 > *"One prompt. One command. A design that ships — and breathes like ifq.ai."*
+
+## Purpose
+
+A design engine for agents. Given a natural-language request, this skill picks one of 12 professional modes, forks a pre-built template, fills it with user context, weaves in the IFQ ambient brand layer, verifies with Playwright, and compiles to HTML / MP4 / GIF / PPTX / PDF / SVG. Agent-agnostic: works inside Claude Code, Codex CLI, OpenClaw, Hermes, Cursor, and any agent that can read files, write files, run shell commands, and optionally browse the web.
+
+## When to use
+
+- User asks for a visual deliverable built from HTML (prototype · slides · motion · infographic · dashboard · landing · whitepaper · changelog · card · social cover · brand system)
+- User wants exports (MP4 / GIF / PPTX / PDF / SVG) from the same source
+- User wants design variants, or 3 differentiated directions before committing
+- User asks for a design critique or brand diagnosis
+- User says "make it look good / not sure what style / recommend a direction" — the Direction Advisor fallback activates
+
+## When not to use
+
+- Production web app, SaaS backend, or SEO-critical marketing site → use a frontend-engineering skill
+- Pure copy / text rewriting with no visual output
+- Simple CSS bug fixes inside an existing large codebase
+- Documents that must round-trip through Word / Google Docs / existing corporate templates
+
+## Quickstart (three moves)
+
+1. **Read** [`references/modes.md`](references/modes.md) and [`assets/templates/INDEX.json`](assets/templates/INDEX.json) to pick the matching mode and template.
+2. **Fork** that template into the working file, inline [`assets/ifq-brand/ifq-tokens.css`](assets/ifq-brand/ifq-tokens.css), weave in at least three ambient marks (see [`references/ifq-brand-spec.md`](references/ifq-brand-spec.md)).
+3. **Verify** with [`scripts/verify.py`](scripts/verify.py); export via [`scripts/`](scripts/); run `npm run smoke` for a skill-level health check.
+
+Agent-specific tool mappings (Claude Code · Codex CLI · OpenClaw · Hermes · Cursor) live in [`references/agent-compatibility.md`](references/agent-compatibility.md). Do not hard-code a specific agent's tool names inside this skill's workflow.
 
 ## ⚡ 最短执行协议（Fast Path · 先读这一段）
 
@@ -21,7 +48,7 @@ description: IFQ Design Skills —— ifq.ai 自有的 agent-native design engin
 - **Style Recipes**：风格组织方式用“风格配方 / scene template / protocol”，不要再靠“DNA 神话”表达方法论。
 - **Verification**：Playwright 截图验证（`scripts/verify.py`）；App 原型必须 ≥ 1 个可点击交互；动画检查 60fps + BGM fade + 文件体积；Deck 导出 PDF 页数 = HTML slides。
 - **Dependencies**：Node ≥18.17 + `playwright / pdf-lib / pptxgenjs / sharp`；Python ≥3.9 + `playwright`；System `ffmpeg` + `npx playwright install chromium`。详见 `package.json` / `requirements.txt` / `references/smoke-test.md`。
-- **Agent-agnostic 术语**：本 skill 默认用「读取文件 / 写入文件 / 网络搜索 / 创建任务」这类中性词；各 agent 按自身工具映射（Claude Code 的 `Read/Write/WebSearch`、Cursor 的 `@file`、OpenClaw 的 `feishu/browser`、ifq CLI 的 `ifq design` 等）。
+- **Agent-agnostic 术语**：本 skill 统一用中性动词（`读取文件 / 写入文件 / 运行命令 / 网络搜索 / 截图验证`）。各 agent 的实际工具映射（Claude Code · Codex · OpenClaw · Hermes · Cursor · ifq CLI）见 [`references/agent-compatibility.md`](references/agent-compatibility.md)。
 - **Routing**：`模式触发` → 设计方向顾问 Fallback → Junior Designer 主干。模式触发时先 `读取模板`（`assets/templates/INDEX.json` → 对应 html），再 fork-and-fill，**禁止从白纸开始**。
 - **Smoke test**：跑 `npm run smoke` 一分钟验证 skill 完整性（模板索引、identity toolkit、图标 sprite、references 路由、脚本语法）。
 
