@@ -21,7 +21,10 @@ Hermes documents `~/.agents/skills/` as the cross-tool shared external directory
 
 ```bash
 mkdir -p ~/.agents/skills
-git clone git@github.com:peixl/ifq-design-skills.git ~/.agents/skills/ifq-design-skills
+git clone https://github.com/peixl/ifq-design-skills ~/.agents/skills/ifq-design-skills
+
+# or the skills CLI shorthand (symlinks into every agent automatically)
+npx skills add peixl/ifq-design-skills -g -y
 ```
 
 Each agent's section below shows how to register that shared path or install an independent copy.
@@ -235,7 +238,9 @@ export CODEX_SKILLS_PATH="$HOME/.codex/skills"
 Cursor does not load skills automatically but honors `@file` pins in chat.
 
 ```bash
-git clone git@github.com:peixl/ifq-design-skills.git
+git clone https://github.com/peixl/ifq-design-skills
+# or use the shared path
+npx skills add peixl/ifq-design-skills -g -y
 ```
 
 In Cursor chat, pin the skill at the start of the conversation:

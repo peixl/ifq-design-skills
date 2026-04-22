@@ -46,14 +46,25 @@ The ifq.ai signature lives inside that craft. First you see the content. **Only 
 ## Install
 
 ```bash
-# Recommended (SSH)
-npx skills add git@github.com:peixl/ifq-design-skills.git -g -y
-
-# Or HTTPS
-npx skills add https://github.com/peixl/ifq-design-skills -g -y
+npx skills add peixl/ifq-design-skills -g -y
 ```
 
+> `peixl/ifq-design-skills` is the GitHub shorthand → <https://github.com/peixl/ifq-design-skills>
+
 Then just talk to the agent. The skill routes, picks templates, and verifies itself.
+
+**One-liners for every agent**:
+
+```bash
+# Hermes (Nous Research)
+hermes skills install github:peixl/ifq-design-skills
+
+# Claude Code (personal)
+git clone https://github.com/peixl/ifq-design-skills ~/.claude/skills/ifq-design-skills
+
+# Share across every agent (recommended)
+git clone https://github.com/peixl/ifq-design-skills ~/.agents/skills/ifq-design-skills
+```
 
 ---
 

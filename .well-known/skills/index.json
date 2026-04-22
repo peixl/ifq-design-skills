@@ -17,10 +17,11 @@
       },
       "entrypoint": "SKILL.md",
       "install": {
+        "skills-cli": "npx skills add peixl/ifq-design-skills -g -y",
         "hermes": "hermes skills install github:peixl/ifq-design-skills",
         "openclaw": "openclaw skills install ifq-design-skills",
-        "claude-code": "git clone git@github.com:peixl/ifq-design-skills.git ~/.claude/skills/ifq-design-skills",
-        "generic": "git clone git@github.com:peixl/ifq-design-skills.git ~/.agents/skills/ifq-design-skills"
+        "claude-code": "git clone https://github.com/peixl/ifq-design-skills ~/.claude/skills/ifq-design-skills",
+        "generic": "git clone https://github.com/peixl/ifq-design-skills ~/.agents/skills/ifq-design-skills"
       },
       "standards": {
         "agentskills": "v1",
