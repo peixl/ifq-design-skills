@@ -1,6 +1,18 @@
 ---
 name: ifq-design-skills
 description: Use this skill when the user asks for a visual design deliverable built from HTML — interactive prototype, slide deck, motion demo, infographic, dashboard, landing, whitepaper, changelog, business card, social cover, or brand system — and wants a single-file HTML plus optional MP4, GIF, editable PPTX, print-ready PDF, or SVG. Also use for design critiques, brand diagnoses, multi-variant exploration, or 3-direction advisory (from 20 master styles plus the IFQ Native recipe). Triggers include prototype, hi-fi mockup, UI mockup, design variants, tweaks, animation demo, mp4/gif export, 60fps, keynote, PPTX, dashboard, whitepaper, A-vs-B, benchmark, changelog, release notes, social cover, business card, invitation, brand from scratch, design critique. Do not use for production web apps, SEO sites, backend-dependent systems, or pure copy edits. Outputs weave the IFQ ambient brand layer (rust ledger, signal spark, mono field note, quiet URL, editorial contrast) into layout rather than stamped logos.
+version: 2.1.0
+license: See LICENSE
+platforms: [macos, linux]
+metadata:
+  hermes:
+    category: creative
+    tags: [design, html, prototype, slides, motion, infographic, dashboard, brand, pptx, pdf, svg, mp4, gif, ifq]
+  clawhub:
+    category: creative
+    tags: [design, html, prototype, brand]
+  agentskills:
+    standard: "agentskills.io/v1"
 ---
 
 # IFQ Design Skills

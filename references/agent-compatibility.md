@@ -1,39 +1,46 @@
 # Agent Compatibility Matrix
 
-> How to mount and run `ifq-design-skills` across the major agent runtimes. The skill itself uses neutral verbs (`read file`, `write file`, `run command`, `web search`, `take screenshot`). This file maps those verbs to each runtime's actual tool surface.
+> How to mount and run `ifq-design-skills` across every major agent runtime. The skill follows the **agentskills.io open standard** (Anthropic Agent Skills compatible) and adds Hermes and ClawHub metadata blocks without breaking any runtime.
 
-## Universal prerequisites (all runtimes)
+The skill itself uses neutral verbs (`read file`, `write file`, `run command`, `web search`, `take screenshot`). This file maps those verbs to each runtime's actual tool surface and documents install paths, slash commands, and discovery endpoints.
+
+## Universal prerequisites
 
 ```
-Node ≥ 18.17          # for scripts/*.mjs, npm run smoke, pptx/pdf export
-Python ≥ 3.9          # for scripts/verify.py (Playwright)
-ffmpeg                # for scripts/render-video.js, scripts/add-music.sh
-npx playwright install chromium
+Node ≥ 18.17                    # scripts/*.mjs, smoke, pptx/pdf export
+Python ≥ 3.9                    # scripts/verify.py (Playwright)
+ffmpeg                          # scripts/render-video.js, scripts/add-music.sh
+npx playwright install chromium # verification
 ```
 
-Optional: `sharp`, `pptxgenjs`, `pdf-lib` are pulled from `package.json`.
+Optional: `sharp`, `pptxgenjs`, `pdf-lib` come from `package.json`.
+
+## Recommended install path — shared across every agent
+
+Hermes documents `~/.agents/skills/` as the cross-tool shared external directory. Install there once and every agent below can point at the same copy.
+
+```bash
+mkdir -p ~/.agents/skills
+git clone git@github.com:peixl/ifq-design-skills.git ~/.agents/skills/ifq-design-skills
+```
+
+Each agent's section below shows how to register that shared path or install an independent copy.
 
 ---
 
 ## 1 · Claude Code (Anthropic)
 
-**Install** — as a personal skill (visible only to you):
+Claude Code honors the Anthropic Agent Skills spec natively. Mount at either path:
 
 ```bash
-mkdir -p ~/.claude/skills
-git clone git@github.com:peixl/ifq-design-skills.git ~/.claude/skills/ifq-design-skills
+# Personal (visible only to you)
+ln -s ~/.agents/skills/ifq-design-skills ~/.claude/skills/ifq-design-skills
+
+# Project-scoped (checked into the repo)
+ln -s ~/.agents/skills/ifq-design-skills .claude/skills/ifq-design-skills
 ```
 
-Or project-scoped (visible to the repo team):
-
-```bash
-mkdir -p .claude/skills
-git clone git@github.com:peixl/ifq-design-skills.git .claude/skills/ifq-design-skills
-```
-
-**Discovery** is automatic. Claude Code scans `~/.claude/skills/` and `.claude/skills/` at start, loads this skill's frontmatter (`name`, `description`) into the system prompt, and reads `SKILL.md` only when the description matches the user request.
-
-**Tool surface used by this skill**:
+**Discovery** is automatic. Claude Code scans `~/.claude/skills/` and `.claude/skills/`, loads the frontmatter (`name`, `description`) into the system prompt, and reads `SKILL.md` only when the description matches the user request.
 
 | Neutral verb | Claude Code tool |
 |---|---|
@@ -41,62 +48,99 @@ git clone git@github.com:peixl/ifq-design-skills.git .claude/skills/ifq-design-s
 | write file | `Write`, `Edit` |
 | run command | `Bash` |
 | web search | `WebSearch`, `WebFetch` |
-| screenshot / verify | `Bash` → `python scripts/verify.py` |
+| verify / screenshot | `Bash` → `python scripts/verify.py` |
 
 No config changes required.
 
 ---
 
-## 2 · Codex CLI (OpenAI)
+## 2 · Hermes (Nous Research)
 
-Codex CLI does not have a native "skill" concept, but it honors a workspace-level `AGENTS.md` plus any markdown the user points it at.
+Hermes is the most feature-rich runtime. It understands the extended frontmatter (`platforms`, `metadata.hermes`, `fallback_for_toolsets`, `required_environment_variables`, `config`) and ships a fully integrated skills hub.
 
-**Install** — clone the repo, then tell Codex to treat it as a skill bundle:
+### Install — three equivalent routes
 
 ```bash
-git clone git@github.com:peixl/ifq-design-skills.git ~/.codex/skills/ifq-design-skills
+# Route A — direct GitHub install via the Hermes skills hub
+hermes skills install github:peixl/ifq-design-skills
+
+# Route B — via ClawHub marketplace
+hermes skills install clawhub:peixl/ifq-design-skills
+
+# Route C — point Hermes at the shared external dir
+# edit ~/.hermes/config.yaml:
+#   skills:
+#     external_dirs:
+#       - ~/.agents/skills
 ```
 
-Add to your project or global `AGENTS.md`:
+### Slash commands (CLI and every messaging surface)
 
-```markdown
-## Skills
-
-When the user asks for a visual design deliverable (prototype, deck, motion,
-infographic, dashboard, whitepaper, changelog, card, social cover, or brand
-system) or wants exports (mp4/gif/pptx/pdf/svg), first read
-`~/.codex/skills/ifq-design-skills/SKILL.md` and follow its routing.
+```
+/ifq-design-skills make a 12-slide editorial keynote about AI agents
+/ifq-design-skills design a dashboard for the quarterly launch review
+/ifq-design-skills critique this landing page and propose 3 directions
+/ifq-design-skills                                    # loads the skill, asks what you need
 ```
 
-**Tool surface**:
+### Progressive disclosure (native)
 
-| Neutral verb | Codex CLI tool |
+Hermes loads this skill in three levels, matching the agentskills.io standard:
+
+- **Level 0** — `skills_list()` returns `{name, description, category}` (~3 k tokens total)
+- **Level 1** — `skill_view("ifq-design-skills")` returns the full `SKILL.md`
+- **Level 2** — `skill_view("ifq-design-skills", "references/modes.md")` pulls one reference on demand
+
+### Tool mapping
+
+| Neutral verb | Hermes tool |
 |---|---|
-| read file | `apply_patch` read / `shell` → `cat` |
-| write file | `apply_patch` |
-| run command | `shell` |
-| web search | not native — fall back to user-provided URLs |
-| screenshot / verify | `shell` → `python scripts/verify.py` |
+| read file | `file.read`, `skill_view` |
+| write file | `file.write` |
+| run command | `terminal.run`, `execute_code` |
+| web search | `web.search`, `web.fetch` (or `duckduckgo_search` fallback) |
+| verify / screenshot | `terminal.run` → `python scripts/verify.py` |
 
-Codex works best when the `CODEX_SKILLS_PATH` env var is set so the agent can `cat` the skill root quickly:
+### Conditional activation
+
+This skill does not declare `fallback_for_toolsets` because design output is its primary job, not a fallback. If `ffmpeg` or `chromium` is missing, motion export and verification are auto-skipped and the skill falls back to HTML-only output.
+
+### Agent-managed patches
+
+When the Hermes agent discovers a non-trivial workflow while using this skill, it can patch the skill via the `skill_manage` tool:
+
+```
+skill_manage action=patch name=ifq-design-skills \
+  old_string="..." new_string="..."
+```
+
+Prefer `patch` over `edit` for small fixes — it is more token-efficient.
+
+### Reset after manual edits
+
+If you hand-edit the installed copy and later want to restore the pristine version:
 
 ```bash
-export CODEX_SKILLS_PATH="$HOME/.codex/skills"
+hermes skills reset ifq-design-skills --restore
 ```
 
 ---
 
-## 3 · OpenClaw
+## 3 · OpenClaw + ClawHub
 
-OpenClaw has a first-class plugin system. Skills are mounted via `openclaw.json` plugin entries.
+OpenClaw has a first-class plugin system; [ClawHub](https://clawhub.ai) is its marketplace. Hermes also integrates ClawHub as a source.
 
-**Install**:
+### Install
 
 ```bash
-git clone git@github.com:peixl/ifq-design-skills.git ~/.openclaw/skills/ifq-design-skills
+# Route A — via ClawHub
+openclaw skills install ifq-design-skills
+
+# Route B — symlink the shared dir
+ln -s ~/.agents/skills/ifq-design-skills ~/.openclaw/skills/ifq-design-skills
 ```
 
-**Config** — add to `~/.openclaw/openclaw.json`:
+### Config — `~/.openclaw/openclaw.json`
 
 ```json
 {
@@ -115,9 +159,7 @@ git clone git@github.com:peixl/ifq-design-skills.git ~/.openclaw/skills/ifq-desi
       }
     }
   },
-  "gateway": {
-    "mode": "local"
-  }
+  "gateway": { "mode": "local" }
 }
 ```
 
@@ -129,7 +171,7 @@ openclaw gateway restart
 openclaw gateway status   # expect: ok, mode=local
 ```
 
-**Tool surface**:
+### Tool mapping
 
 | Neutral verb | OpenClaw tool |
 |---|---|
@@ -137,53 +179,66 @@ openclaw gateway status   # expect: ok, mode=local
 | write file | `filesystem/write` |
 | run command | `shell/exec` |
 | web search | `browser/search`, `browser/fetch` |
-| screenshot / verify | `shell/exec` → `scripts/verify.py` |
+| verify / screenshot | `shell/exec` → `scripts/verify.py` |
 
-Known issues:
+### Known issues and fixes
 
-- `gateway status` reports `missing gateway.mode` → set `gateway.mode: local` and restart.
-- `unavailable` for a tool → add its plugin id to `plugins.allow` and set `entries.<id>.enabled: true`.
+- `gateway status` reports `missing gateway.mode` → set `gateway.mode: "local"` and restart.
+- A tool returns `unavailable` → add its plugin id to `plugins.allow` and set `entries.<id>.enabled: true`.
+
+### Publishing to ClawHub
+
+```bash
+hermes skills publish ~/.agents/skills/ifq-design-skills --to clawhub
+# or use the ClawHub web publisher at https://clawhub.ai/publish/skill
+```
 
 ---
 
-## 4 · Hermes
+## 4 · Codex CLI (OpenAI)
 
-Hermes treats skills as pluggable "capability packs". Install by placing the skill under the Hermes skills directory and registering it.
-
-**Install**:
+Codex has no native skill concept but honors `AGENTS.md` plus any markdown the user points it at.
 
 ```bash
-git clone git@github.com:peixl/ifq-design-skills.git ~/.hermes/skills/ifq-design-skills
-hermes skill register ifq-design-skills --path ~/.hermes/skills/ifq-design-skills
+ln -s ~/.agents/skills/ifq-design-skills ~/.codex/skills/ifq-design-skills
 ```
 
-**Config** — Hermes reads `SKILL.md` frontmatter directly. No extra JSON needed.
+Add to your project or global `AGENTS.md`:
 
-**Tool surface**:
+```markdown
+## Skills
 
-| Neutral verb | Hermes tool |
+When the user asks for a visual design deliverable (prototype, deck, motion,
+infographic, dashboard, whitepaper, changelog, card, social cover, or brand
+system) or wants exports (mp4/gif/pptx/pdf/svg), read
+`~/.codex/skills/ifq-design-skills/SKILL.md` first and follow its routing.
+```
+
+| Neutral verb | Codex CLI tool |
 |---|---|
-| read file | `file.read` |
-| write file | `file.write` |
-| run command | `terminal.run` |
-| web search | `web.search`, `web.fetch` |
-| screenshot / verify | `terminal.run` → `python scripts/verify.py` |
+| read file | `apply_patch` read / `shell` → `cat` |
+| write file | `apply_patch` |
+| run command | `shell` |
+| web search | not native — user supplies URLs |
+| verify / screenshot | `shell` → `python scripts/verify.py` |
 
-If Hermes runs in a sandbox without `ffmpeg` or `chromium`, motion exports and verification are disabled automatically — the skill falls back to HTML-only output.
+Optional env hint so Codex finds the skill quickly:
+
+```bash
+export CODEX_SKILLS_PATH="$HOME/.codex/skills"
+```
 
 ---
 
 ## 5 · Cursor
 
-Cursor does not load skills automatically, but it honors `@file` references inside chat.
-
-**Install**:
+Cursor does not load skills automatically but honors `@file` pins in chat.
 
 ```bash
 git clone git@github.com:peixl/ifq-design-skills.git
 ```
 
-**Usage** — in Cursor chat, pin the skill:
+In Cursor chat, pin the skill at the start of the conversation:
 
 ```
 @ifq-design-skills/SKILL.md
@@ -191,41 +246,76 @@ git clone git@github.com:peixl/ifq-design-skills.git
 I need a 12-slide editorial keynote for tomorrow's AI agents talk.
 ```
 
-Cursor's composer will read `SKILL.md`, then any `references/*.md` or `scripts/*` it finds linked.
-
-**Tool surface**:
-
 | Neutral verb | Cursor tool |
 |---|---|
 | read file | `@file` pins, `Read` |
 | write file | composer `Apply`, `Edit` |
 | run command | integrated terminal |
-| web search | not native — paste URL or use Composer "web" |
+| web search | paste URL or Composer "web" |
 
 ---
 
-## 6 · Generic fallback (any agent with filesystem + shell)
+## 6 · Generic fallback — any agent with filesystem + shell
 
-For any agent that can read/write files and run shell commands, this minimum works:
+Minimum steps for any runtime with file read/write and shell:
 
-1. Clone the repo anywhere on disk.
+1. Clone the repo (or symlink `~/.agents/skills/ifq-design-skills`).
 2. Point the agent at `SKILL.md` as its entry doc.
 3. Ensure the agent can run `node`, `python3`, and `ffmpeg` in the cloned directory.
 4. `npm install && npx playwright install chromium`.
 5. Run `npm run smoke` — a passing smoke means the skill is wired correctly.
 
-This covers: Continue, Aider, GitHub Copilot Chat with file pin, Sweep, and any MCP-capable client.
+Covers Continue, Aider, GitHub Copilot Chat with `@workspace`, Sweep, and any MCP-capable client.
 
 ---
 
-## Smoke test (same everywhere)
+## 7 · Web discovery via `/.well-known/skills/`
+
+For any Hermes instance (or compatible client) to discover this skill from its homepage, publish a static manifest at:
+
+```
+https://<your-domain>/.well-known/skills/index.json
+https://<your-domain>/.well-known/skills/ifq-design-skills
+```
+
+See [`../.well-known/skills/index.json`](../.well-known/skills/index.json) in this repo for the reference manifest. Agents install with:
+
+```bash
+hermes skills install well-known:https://<your-domain>/.well-known/skills/ifq-design-skills
+```
+
+---
+
+## Frontmatter extension reference
+
+This skill's frontmatter is strictly additive: runtimes that do not understand an extra key ignore it.
+
+| Key | Required by | Status |
+|---|---|---|
+| `name` | Anthropic, Hermes, ClawHub, agentskills.io | **required** |
+| `description` | same (≤ 1024 chars, third-person, what + when) | **required** |
+| `version` | Hermes, ClawHub | recommended |
+| `license` | ClawHub publish | recommended |
+| `platforms: [macos, linux, windows]` | Hermes | recommended |
+| `metadata.hermes.category` | Hermes | recommended |
+| `metadata.hermes.tags` | Hermes | recommended |
+| `metadata.clawhub.*` | ClawHub | recommended |
+| `metadata.agentskills.standard` | agentskills.io | informational |
+| `required_environment_variables` | Hermes (secrets) | only if a script needs an API key |
+| `fallback_for_toolsets`, `requires_toolsets` | Hermes | optional |
+
+This skill declares none of the secret/fallback fields because it runs on local files and does not require API keys.
+
+---
+
+## Smoke test — same everywhere
 
 ```bash
 cd <skill-root>
 npm run smoke
 ```
 
-Expected output:
+Expected:
 
 ```
 IFQ Design Skills · smoke test
@@ -237,7 +327,7 @@ IFQ Design Skills · smoke test
 ✓ smoke test passed
 ```
 
-If any step fails, see [`references/smoke-test.md`](smoke-test.md) for remediation.
+See [`smoke-test.md`](smoke-test.md) for remediation.
 
 ---
 
@@ -251,5 +341,6 @@ Inside `SKILL.md` and every `references/*.md`, always use neutral verbs:
 - ❌ `use Read to open the template` (Claude-specific)
 - ❌ `use apply_patch to edit` (Codex-specific)
 - ❌ `use browser/fetch` (OpenClaw-specific)
+- ❌ `call skill_view` (Hermes-specific)
 
-Keeping verbs neutral is how one skill runs in every agent without forks.
+Neutral verbs are how one skill runs unmodified in every agent that implements the agentskills.io standard.

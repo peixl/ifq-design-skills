@@ -1,0 +1,31 @@
+{
+  "version": "1.0",
+  "skills": [
+    {
+      "name": "ifq-design-skills",
+      "version": "2.1.0",
+      "description": "Agent-native design engine. Single prompt → shippable HTML / MP4 / GIF / PPTX / PDF / SVG with the IFQ ambient brand layer. 12 professional modes, 20 master style advisors plus the IFQ Native recipe, Playwright verification, multi-agent (Claude Code / Hermes / OpenClaw / Codex / Cursor) compatible.",
+      "category": "creative",
+      "tags": ["design", "html", "prototype", "slides", "motion", "infographic", "dashboard", "brand", "pptx", "pdf", "svg", "mp4", "gif", "ifq"],
+      "platforms": ["macos", "linux"],
+      "license": "See LICENSE",
+      "author": "ifq.ai",
+      "source": {
+        "type": "github",
+        "repo": "peixl/ifq-design-skills",
+        "branch": "main"
+      },
+      "entrypoint": "SKILL.md",
+      "install": {
+        "hermes": "hermes skills install github:peixl/ifq-design-skills",
+        "openclaw": "openclaw skills install ifq-design-skills",
+        "claude-code": "git clone git@github.com:peixl/ifq-design-skills.git ~/.claude/skills/ifq-design-skills",
+        "generic": "git clone git@github.com:peixl/ifq-design-skills.git ~/.agents/skills/ifq-design-skills"
+      },
+      "standards": {
+        "agentskills": "v1",
+        "anthropic-agent-skills": "compatible"
+      }
+    }
+  ]
+}
