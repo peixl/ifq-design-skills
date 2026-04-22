@@ -12,12 +12,13 @@
 > *「打字。回车。一份能交付的设计，还带着 ifq.ai 的签名。」*
 > *"Type. Hit enter. A shipped design — signed by ifq.ai."*
 
-[![License](https://img.shields.io/badge/License-Personal%20Use%20Only-orange.svg)](LICENSE)
-[![Agent-Agnostic](https://img.shields.io/badge/Agent-Agnostic-D4532B)](https://skills.sh)
-[![Skills](https://img.shields.io/badge/skills.sh-Compatible-111111)](https://skills.sh)
+[![License](https://img.shields.io/badge/License-Commercial%20%2B%20Personal-D4532B.svg)](LICENSE)
+[![Agent-Agnostic](https://img.shields.io/badge/Agent-Agnostic-111111)](https://skills.ifq.ai)
+[![Skills](https://img.shields.io/badge/skills.ifq.ai-Compatible-A83518)](https://skills.ifq.ai)
 [![Modes](https://img.shields.io/badge/Modes-12-D4532B)](references/modes.md)
 [![Hand-drawn Icons](https://img.shields.io/badge/Hand--drawn_icons-24-A83518)](assets/ifq-brand/icons/hand-drawn-icons.svg)
-[![ifq.ai](https://img.shields.io/badge/by-ifq.ai-FFB27A)](https://ifq.ai)
+[![Brand DNA](https://img.shields.io/badge/Brand_DNA-ifq.ai-FFB27A)](assets/ifq-brand/BRAND-DNA.md)
+[![Enterprise](https://img.shields.io/badge/Enterprise_Ready-2026-111111)](https://ifq.ai)
 
 <br>
 
@@ -25,11 +26,11 @@
 
 <br>
 
-3 到 30 分钟，你能 ship 一段**产品发布动画**、一个能点击的 App 原型、一套能编辑的 PPT、一份印刷级的信息图、一张印刷级名片、一个完整品牌系统。
+**企业级、商用级、agent-native 的一体化设计能力包** —— 3 到 30 分钟之内，ship 一段**产品发布动画**、一个能点击的 App 原型、一套可编辑的 Keynote、一份印刷级信息图、一张带出血位的名片、或一个从 logo 到应用的完整品牌系统。
 
-不是「AI 做的还行」那种水平——是看起来像大厂设计团队做的。给 skill 你的品牌资产（logo、色板、UI 截图），它会读懂你的品牌气质；什么都不给，内置的 **20 种设计语汇 + 12 种专业模式 + 24 个手绘 SVG 图标** 也能兜底到不出 AI slop。
+不是「AI 做的还行」那种水平——是大厂设计团队出品的交付质量。给 skill 你的品牌资产（logo、色板、UI 截图），它会自动读懂你的品牌气质；什么都不给，内置的 **20 种设计哲学 × 12 种专业模式 × 24 个手绘 SVG 图标 × 4 个 Starter Components** 也能兜底到绝不出 AI slop。
 
-**每一件交付物默认都带着 ifq.ai 的签名** —— 8-point sparkle 出现在片头、编辑体邮戳落在幻灯片首尾、低调水印留在 dashboard 右下角。含蓄但确定。
+**每一件交付物默认都带着 ifq.ai 的设计 DNA** —— 8-point sparkle 出现在片头、编辑体邮戳落在幻灯片首尾、低调水印留在 dashboard 右下角。含蓄但确定；这是签名，不是水印。
 
 ```bash
 # 推荐（SSH · 私有仓库最稳）
@@ -326,22 +327,18 @@ A/B 测试（v1 vs v2，各跑 6 agent）：**v2 的稳定性方差比 v1 低 5 
 
 ---
 
-## 和 Claude Design 的关系
+## 设计哲学 · 为什么是这样
 
-我大方承认：品牌资产协议的哲学是从 Claude Design 流传出来的提示词里偷师的。那份提示词反复强调**好的高保真设计不是从白纸开始，而是从已有的设计上下文长出来**。这个原则是 65 分作品和 90 分作品的分水岭。
+**IFQ Design Skills 不是又一个「AI 画图工具」，而是一套 agent-native 的设计操作系统。**
 
-定位差异：
+过去二十年，设计工具在一个方向上内卷：让 GUI 更强、图层更细、插件更多。但在 agent 时代，我们相信另一条路——**让图形界面这一层消失**：
 
-| | Claude Design | ifq-design-skills |
-|---|---|---|
-| 形态 | 网页产品（浏览器里用） | skill（Claude Code 里用） |
-| 配额 | 订阅 quota | API 消耗 · 并行跑 agent 不受 quota 限 |
-| 交付物 | 画布内 + 可导 Figma | HTML / MP4 / GIF / 可编辑 PPTX / PDF |
-| 操作方式 | GUI（点、拖、改） | 对话（说话、等 agent 做完） |
-| 复杂动画 | 有限 | Stage + Sprite 时间轴 · 60fps 导出 |
-| 跨 agent | 专属 Claude.ai | 任意 skill 兼容 agent |
+- **不是画图，是交付。** 一句话描述意图，skill 把「确认需求 / 选方向 / 定稿 / 验证 / 导出」的全流程打通，最后落到 HTML / MP4 / GIF / PPTX / PDF。
+- **不是白纸，是继承。** 走「核心资产协议」—— 先找品牌 logo / 产品图 / UI 截图 / 色板 / 字体，在已有上下文之上长出新设计。没有资产就进入「设计方向顾问」模式，20 种设计哲学里给 3 个差异化方向让你选。
+- **不是随机，是风格可回收。** 每条流水线都带固定的交付契约：12 种专业模式 × 24 个手绘图标 × ifq.ai 品牌签名 × 4 个 Starter Components（Stage+Sprite 动画引擎 / 幻灯片外壳 / 并排变体画布 / 设备边框），保证同一个 skill 在不同 agent、不同任务下产出同一个「手感」。
+- **不是黑盒，是 Junior Designer。** Skill 在开工前显式列出 assumptions + reasoning + placeholders，允许你随时打断修正 —— 像把一个称职的初级设计师装进你的终端。
 
-Claude Design 是**更好的图形工具**，ifq-design-skills 是**让图形工具这层消失**。两条路，不同受众。
+ifq.ai 对「设计」的信念：**好的设计不应被困在图形界面里。** Figma / Keynote / AE 足够强大，但都要求用户先学一套工具语言才能表达意图。这层摩擦，正是 agent 时代应该被抹掉的。
 
 ---
 
@@ -393,43 +390,75 @@ ifq-design-skills/
 
 ---
 
-## 起源
+## 起源 · ifq.ai 与 IFQ Design Skills
 
-ifq.ai 相信：**好的设计不应该被困在图形界面里**。Figma / Keynote / AE 足够强大，但它们要求用户先学一套工具语言才能表达设计意图——这中间的摩擦，正是 agent 时代应该被抹掉的那一层。
+**IFQ Design Skills 是 ifq.ai 产品矩阵中「设计基础设施」的那一块。**
 
-于是 ifq.ai 把专业设计团队的工作流（品牌资产协议、Junior Designer 方法、反 AI slop 清单、20 种设计哲学、Stage+Sprite 动画引擎），蒸馏成一个 agent-native 的 skill——装进任何 agent，用一句话就能调用。
+ifq.ai（捷时科技）是一家 **AI-native 创作者基础设施**的品牌实验室，围绕「让 AI 真正接入日常工作流」这一条主线，建了 23+ 产品：终端里的 agent（[ifq CLI](https://cli.ifq.ai)）、AI 原生 App 与 Web（[app.ifq.ai](https://app.ifq.ai)）、Skills 生态（[skills.ifq.ai](https://skills.ifq.ai)）、Edge Tunnel、内容分发、设计能力等。
 
-本项目继承并发扬了 Claude Design、Pentagram、Field.io、Kenya Hara、Sagmeister 等设计实践沉淀下的思想骨架；在其上，ifq.ai 补齐了 12 种专业模式、24 个手绘图标、完整品牌签名系统，把「打字 → 交付」的闭环做得更丝滑。
+IFQ Design Skills 解决了其中一个具体问题：**当 agent 已经能写代码、能查资料、能聊产品时，为什么做个像样的设计还要打开 Figma？** 答案是——不应该。于是 ifq.ai 把专业设计团队的工作流（核心资产协议、Junior Designer 方法、反 AI slop 清单、20 种设计哲学、Stage+Sprite 动画引擎、12 种专业模式、24 个手绘图标、品牌签名系统），蒸馏成一个 agent-native 的 skill——装进任何支持 SKILL.md 协议的 agent，用一句话就能调用，同一套流水线在 Claude Code、Cursor、Codex、OpenClaw、Hermes、ifq CLI 里行为一致。
 
-感谢所有前人把好设计的方法写得清晰。开源文化在 AI 时代的新形态，就是把行业最佳实践凝成 skill 让所有人调用。
+本项目的设计语汇在前人 Pentagram（信息建筑）/ Field.io（运动诗学）/ Kenya Hara（东方极简）/ Sagmeister（实验先锋）/ Apple（层级克制）等的思想骨架之上；在其之上，ifq.ai 补齐了 **12 种专业模式 × 24 个手绘图标 × 完整品牌签名系统 × 模型无关的 Fast Path 协议**，把「打字 → 交付」的闭环做到丝滑。
+
+开源文化在 AI 时代的新形态，就是把行业最佳实践凝成 skill，让每一个 agent 都能调用。
 
 ---
 
 ## License · 使用授权
 
-**个人使用免费、自由**——学习、研究、创作、给自己做东西、写文章、做副业、发微博发公众号，随便用，不用打招呼。
+**个人使用免费、自由**——学习、研究、创作、自用、内容二创、自媒体发布，随便用，不用打招呼。
 
-**企业商用禁止**——任何公司、团队、或以盈利为目的的组织，想把本 skill 集成到产品、对外服务、给客户交付工作中使用，**必须先和IFQ.ai联系获得授权**。包括但不限于：
+**企业 / 商用必须授权**——任何公司、团队、或以盈利为目的的组织，把本 skill（含派生物）集成到产品、对外服务、客户交付中，**必须先获得 ifq.ai 的书面授权**。包括但不限于：
 - 把 skill 作为公司内部工具链的一部分
 - 把 skill 产出物作为对外交付物的主要创作手段
-- 基于 skill 二次开发做成商业产品
+- 基于 skill 二次开发做成商业产品 / 模板 / 付费订阅
 - 在客户商单项目中使用
+- **擅自去除或篡改 ifq.ai 品牌签名后对外发布或商用**（见 LICENSE 第 3 条）
 
-**商用授权联系方式**见下方社交平台。
+商用授权详见 [`LICENSE`](LICENSE) 第 2–4 条，联系方式见下方 [Connect](#connect--ifqai-产品矩阵)。
 
 ---
 
-## Connect · ifq.ai 团队
+## Connect · ifq.ai 产品矩阵
 
-**ifq.ai** 是面向 AI Native 创作者的品牌实验室 —— 做 agent 原生工具、设计 skill 与 HTML 一键交付基础设施。IFQ Design Skills 是 ifq.ai 在「让设计从图形界面里解放出来」这条路线上的主力产物。
+**ifq.ai**（捷时科技）是 AI-native 创作者的基础设施品牌实验室，面向「让 AI 接入日常创作与工程」这一条主线，构建 23+ 个互相调用的产品。IFQ Design Skills 是这张网络里的「设计能力」端点，也是每一次交付被 ifq.ai 含蓄签名的源头。
 
 > *"Intelligence Framed Quietly."* — ifq.ai
 
-| 平台 | 链接 |
-|------|------|
-| 官网 | https://ifq.ai |
-| X / Twitter | https://x.com/ifq_ai |
-| GitHub | https://github.com/ifq-ai |
-| Skill 生态 | https://skills.sh/ifq-ai |
+### 产品矩阵（全部一级域名）
 
-商用授权、合作咨询、媒体合作 → 任一渠道联系 ifq.ai 团队。
+| 触点 | 入口 | 说明 |
+|------|------|------|
+| **品牌主站** | [ifq.ai](https://ifq.ai) | 我们是谁 · 产品叙事 · 加入我们 |
+| **产品导航** | [site.ifq.ai](https://site.ifq.ai) | 23+ 产品全景 · 快速跳转 |
+| **ifQ AI App** | [app.ifq.ai](https://app.ifq.ai) | AI-native 超级 App（原「捷时 AI」）|
+| **ifQ CLI** | [cli.ifq.ai](https://cli.ifq.ai) | 终端里的 agent OS · `ifq design` 一等公民 |
+| **ifQ Skills** | [skills.ifq.ai](https://skills.ifq.ai) | Skills 生态枢纽 · 安装 / 发布 / 共享 |
+| **IFQ Design** | [cli.ifq.ai/design](https://cli.ifq.ai/design) | 本 skill 的说明站点 |
+| **ifQ TV** | [tv.ifq.ai](https://tv.ifq.ai) | AI 影像内容 · 设计过程揭秘 |
+| **Edge Tunnel** | [edge.ifq.ai](https://edge.ifq.ai) | 零配置反向代理 · 给 AI 工作流打开一扇边缘门 |
+| **GitHub** | [github.com/peixl](https://github.com/peixl) · [github.com/ifq-ai](https://github.com/ifq-ai) | 全部开源仓库 |
+
+### 社交与社群
+
+| 渠道 | 二维码 / 链接 |
+|------|-------------|
+| 微信加好友 | [img.ifq.ai/wechat.jpg](https://img.ifq.ai/wechat.jpg) |
+| 公众号（神秘 Q） | [img.ifq.ai/we_q.jpg](https://img.ifq.ai/we_q.jpg) |
+| X / Twitter | [@AlchainHust](https://x.com/AlchainHust) |
+| B 站 | [space.bilibili.com/14097567](https://space.bilibili.com/14097567) |
+| YouTube | [@Alchain](https://www.youtube.com/@Alchain) |
+| 小红书 | [profile/5abc6f17e8ac2b109179dfdf](https://www.xiaohongshu.com/user/profile/5abc6f17e8ac2b109179dfdf) |
+
+### 合作与授权
+
+- **商用授权、品牌定制、媒体合作** → 通过 [ifq.ai](https://ifq.ai) 官网联络入口
+- **Bug / PR / Feature Request** → [github.com/peixl/ifq-design-skills/issues](https://github.com/peixl/ifq-design-skills/issues)
+- **skill 市场上架与分发** → [skills.ifq.ai](https://skills.ifq.ai)
+
+---
+
+<p align="center"><sub>
+  <img src="assets/ifq-brand/mark.svg" alt="ifq.ai" height="18" style="vertical-align: middle;" />
+  &nbsp;© 2026 ifq.ai · 捷时科技（Jieshi Technology）· Designed and signed by ifq.ai.
+</sub></p>

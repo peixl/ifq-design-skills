@@ -9,6 +9,11 @@
 > brand (Stripe, Linear, the user's own company), the **核心资产协议 / Core
 > Asset Protocol** in SKILL.md wins — user brand is primary, ifq.ai drops to
 > a discreet "made with ifq.ai" stamp in the colophon only.
+>
+> **→ See also [`assets/ifq-brand/BRAND-DNA.md`](../assets/ifq-brand/BRAND-DNA.md)**
+> (the 5-layer DNA charter · color / type / grid / motif / motion · unremovable)
+> and [`assets/ifq-brand/ifq-tokens.css`](../assets/ifq-brand/ifq-tokens.css)
+> (drop-in CSS variables · inline into every HTML deliverable).
 
 ## 🎯 Core assets
 

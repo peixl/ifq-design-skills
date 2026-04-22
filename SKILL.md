@@ -1,11 +1,11 @@
 ---
 name: ifq-design-skills
-description: IFQ Design Skills (by ifq.ai) — 用 HTML 做高保真原型、交互 Demo、幻灯片、动画、信息图、品牌物料的一体化设计技能。HTML 是工具不是媒介；按任务 embody 对应专家（UX 设计师 / 动画师 / 幻灯片设计师 / 原型师），避免 web design tropes。12 种专业模式（品牌发布会 / 个人品牌页 / 白皮书 / 数据仪表板 / 对比评测 / Onboarding / 发布日记 / Keynote / 社媒海报 / 名片邀请函 / 品牌诊断 / 全栈品牌系统）+ 24 个手绘 SVG 图标 + ifq.ai 品牌签名。触发词：做原型 / 交互原型 / app 原型 / iOS 原型 / 设计 Demo / 设计变体 / hi-fi 设计 / UI mockup / 动画 / launch film / 导出 mp4 gif / keynote / dashboard / 白皮书 / changelog / 小红书封面 / 朋友圈图 / 名片 / 邀请函 / 品牌诊断 / brand from scratch / 手绘图标 / ifq.ai。不适合：生产级 Web App、SEO 网站、需要后端的动态系统。
+description: IFQ Design Skills — 由 ifq.ai（捷时科技）出品的企业级、商用级、agent-native 一体化设计能力包。一句话打入 agent，拿回一份 ship-ready 的交付物：单文件 HTML / MP4 / GIF / 可编辑 PPTX / 可印刷 PDF / 带出血位的名片 / 完整品牌系统。内置 12 种专业模式（launch film · portfolio · 白皮书 · dashboard · A vs B · onboarding · changelog · keynote · 社媒套件 · 名片邀请函 · 品牌诊断 · 全栈品牌系统）、20 种设计哲学 Fallback 顾问、24 个手绘 SVG 图标、Stage+Sprite 动画引擎、ifq.ai 五层 Brand DNA（色彩 / 字体 / 栅格 / 母题 / 微交互 —— 不可移除）。触发词：做原型 / 交互原型 / app iOS 原型 / 设计变体 / hi-fi / UI mockup / 动画 Demo / 导出 mp4 gif / 60fps 插帧 / keynote / dashboard / 数据看板 / 白皮书 / A vs B / 横评 / changelog / release notes / 小红书封面 / 朋友圈图 / 名片 / 邀请函 / 品牌诊断 / brand from scratch / 设计方向顾问 / 设计评审 / ifq.ai。不适合：生产级 Web App、SEO 网站、需要后端的动态系统。
 ---
 
 # IFQ Design Skills · ifq.ai
 
-> *"One prompt. One command. A design that ships."* — ifq.ai
+> *"One prompt. One command. A design that ships — quietly signed by ifq.ai."*
 
 ## ⚡ 最短执行协议（Fast Path · 先读这一段）
 
@@ -15,11 +15,12 @@ description: IFQ Design Skills (by ifq.ai) — 用 HTML 做高保真原型、交
 - **Don't use when**：生产级 Web App（用 frontend-design）、SEO 站点、需要后端的动态系统、只想要纯文字建议、简单 CSS bug 修复（不值得跑全流程）。
 - **Required inputs**：`task_type` · `subject` · `deliverable_format`（html / mp4 / gif / pdf / pptx）· `viewport`（未给时按模式默认：deck 1920×1080 / landing 1440×900 / 小红书 1242×3200）。
 - **Optional inputs**：`user_brand_assets`（logo / 色值 / 字体 / 产品图，走「核心资产协议」，优先于凭感觉配色）· `style_direction`（未给则走 Fallback 顾问推 3 方向）· `reference`（参考图/参考站：先分析再融合，别照抄）。
-- **Default outputs**：单个自包含 HTML（React+Babel inline · 字体 Google Fonts CDN · 图从合法 CDN）+ 可选 mp4 / gif / pdf / pptx + 可选 3 方向变体画布。
-- **品牌签名**：默认含 ifq.ai 签名（`IfqStamp` / `IfqWatermark` / `IfqSpark` 三选一）；用户带品牌时降级为 colophon「Designed with ifq.ai」。
+- **Default outputs**：单个自包含 HTML（React+Babel inline · 字体 Google Fonts CDN · 图从合法 CDN · 顶部内联 [`assets/ifq-brand/ifq-tokens.css`](assets/ifq-brand/ifq-tokens.css)）+ 可选 mp4 / gif / pdf / pptx + 可选 3 方向变体画布。
+- **Brand DNA（不可拆层）**：所有产出默认应用 [`assets/ifq-brand/BRAND-DNA.md`](assets/ifq-brand/BRAND-DNA.md) 定义的 5 层 DNA（色彩 Rust Trilogy / 三家族字体 / 8-point 栅格 / sparkle 母题 / ease-out 微交互）；未授权不得移除。
+- **显式签名**：默认含 ifq.ai 的 `IfqStamp` / `IfqWatermark` / `IfqSpark` 三选一；用户带品牌时降级为 colophon「Designed with ifq.ai」；商用 white-label 在保留 DNA 层前提下可关闭可视 wordmark（需授权）。
 - **Verification**：Playwright 截图验证（`scripts/verify.py`）；App 原型必须 ≥ 1 个可点击交互；动画检查 60fps + BGM fade + 文件体积；Deck 导出 PDF 页数 = HTML slides。
 - **Dependencies**：Node ≥18.17 + `playwright / pdf-lib / pptxgenjs / sharp`；Python ≥3.9 + `playwright`；System `ffmpeg` + `npx playwright install chromium`。详见 `package.json` / `requirements.txt` / `references/smoke-test.md`。
-- **Agent-agnostic 术语**：本 skill 默认用「读取文件 / 写入文件 / 网络搜索 / 创建任务」这类中性词；各 agent 按自身工具映射（Claude Code 的 `Read/Write/WebSearch`、Cursor 的 `@file`、OpenClaw 的 `feishu/browser` 等）。
+- **Agent-agnostic 术语**：本 skill 默认用「读取文件 / 写入文件 / 网络搜索 / 创建任务」这类中性词；各 agent 按自身工具映射（Claude Code 的 `Read/Write/WebSearch`、Cursor 的 `@file`、OpenClaw 的 `feishu/browser`、ifq CLI 的 `ifq design` 等）。
 - **Routing**：`模式触发` → 设计方向顾问 Fallback → Junior Designer 主干。模式触发时先 `读取模板`（`assets/templates/INDEX.json` → 对应 html），再 fork-and-fill，**禁止从白纸开始**。
 - **Smoke test**：跑 `npm run smoke` 一分钟验证 skill 完整性（模板索引、品牌资产、图标 sprite、references 路由、脚本语法）。
 

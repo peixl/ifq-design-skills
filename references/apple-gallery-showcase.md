@@ -1,7 +1,7 @@
 # Apple Gallery Showcase · 画廊展示墙动画风格
 
-> 灵感来源：Claude Design 官网 hero 视频 + 苹果产品页「作品墙」式陈列
-> 实战出处：ifq-design-skills 发布 hero v5
+> 灵感来源：Apple 产品页「作品墙」式陈列 + 当代 agent 原生工具的 hero 范式
+> 实战出处：ifq-design-skills 发布 hero v5（由 ifq.ai 设计团队打磨）
 > 适用场景：**产品发布 hero 动画、skill 能力演示、作品集展示**——任何需要把「多件高质量产出」同时展陈并引导观众注意力的场景
 
 ---
@@ -34,8 +34,9 @@
   --muted:      #86868B;   /* 次级文字 */
   --dim:        #C7C7CC;
   --hairline:   #E5E5EA;   /* 卡片1px边框 */
-  --accent:     #D97757;   /* 赤陶橙 — Claude brand */
-  --accent-deep:#B85D3D;
+  --accent:     #D4532B;   /* ifq.ai Rust · 主签名色 */
+  --accent-deep:#A83518;   /* ifq.ai Rust-deep */
+  --accent-soft:#FFB27A;   /* ifq.ai Peach */
 
   --serif-cn: "Noto Serif SC", "Songti SC", Georgia, serif;
   --serif-en: "Source Serif 4", "Tiempos Headline", Georgia, serif;

@@ -49,6 +49,8 @@ async function check2_BrandAssets() {
     'assets/ifq-brand/mark.svg',
     'assets/ifq-brand/ifq_brand.jsx',
     'assets/ifq-brand/icons/hand-drawn-icons.svg',
+    'assets/ifq-brand/BRAND-DNA.md',
+    'assets/ifq-brand/ifq-tokens.css',
   ];
   let missing = 0;
   for (const f of required) {

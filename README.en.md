@@ -1,4 +1,4 @@
-<sub><b>🌐 English</b> · <a href="README.md">中文</a></sub>
+<sub>🌐 <b>English</b> · <a href="README.md">中文</a></sub>
 
 <div align="center">
 
@@ -10,314 +10,181 @@
 # IFQ Design Skills
 
 > *"Type. Hit enter. A shipped design — signed by ifq.ai."*
-> *「打字。回车。一份能交付的设计，还带着 ifq.ai 的签名。」*
 
-[![License](https://img.shields.io/badge/License-Personal%20Use%20Only-orange.svg)](LICENSE)
-[![Agent-Agnostic](https://img.shields.io/badge/Agent-Agnostic-D4532B)](https://skills.sh)
-[![Skills](https://img.shields.io/badge/skills.sh-Compatible-111111)](https://skills.sh)
+[![License](https://img.shields.io/badge/License-Commercial%20%2B%20Personal-D4532B.svg)](LICENSE)
+[![Agent-Agnostic](https://img.shields.io/badge/Agent-Agnostic-111111)](https://skills.ifq.ai)
+[![Skills](https://img.shields.io/badge/skills.ifq.ai-Compatible-A83518)](https://skills.ifq.ai)
 [![Modes](https://img.shields.io/badge/Modes-12-D4532B)](references/modes.md)
 [![Hand-drawn Icons](https://img.shields.io/badge/Hand--drawn_icons-24-A83518)](assets/ifq-brand/icons/hand-drawn-icons.svg)
-[![ifq.ai](https://img.shields.io/badge/by-ifq.ai-FFB27A)](https://ifq.ai)
+[![Brand DNA](https://img.shields.io/badge/Brand_DNA-ifq.ai-FFB27A)](assets/ifq-brand/BRAND-DNA.md)
+[![Enterprise](https://img.shields.io/badge/Enterprise_Ready-2026-111111)](https://ifq.ai)
 
 <br>
 
-**Say one sentence to your agent — Claude Code, Cursor, Codex, OpenClaw, Hermes all work.**
+**Type one sentence in your agent, get back a ship-ready design.**
 
 <br>
 
-3 to 30 minutes — you ship a **product launch animation**, a clickable App prototype, an editable PPT deck, a print-grade infographic, a business card, or an entire brand system.
+**Enterprise-grade, commercial-ready, agent-native design infrastructure** — in 3 to 30 minutes, ship a **product launch film**, a clickable App prototype, an editable Keynote deck, a print-grade infographic, a business card with bleed, or a full brand system from logo to applications.
 
-Not "decent for AI" quality — it looks like a real design team made it. Give the skill your brand assets (logo, colors, UI screenshots) and it reads your brand's voice; give it nothing and the built-in **20 design vocabularies + 12 pro modes + 24 hand-drawn SVG icons** still keep you out of AI slop territory.
+Not "decent for AI" quality — the kind of output that looks like it came from a top-tier in-house design team. Feed the skill your brand assets (logo, palette, UI screenshots) and it absorbs your visual voice; feed it nothing, and the built-in **20 design philosophies × 12 professional modes × 24 hand-drawn SVG icons × 4 Starter Components** still floor-sets the quality far above AI slop.
 
-**Every deliverable ships with a quiet ifq.ai signature** — 8-point sparkle in the intro, editorial stamp on slide bookends, subtle watermark on dashboards. Present but never loud.
+**Every deliverable quietly carries ifq.ai's design DNA** — an 8-point sparkle in the intro, an editorial stamp on deck title / end pages, a low-opacity watermark in the dashboard corner. Tasteful but unmistakable. It's a signature, not a watermark.
 
 ```bash
-npx skills add https://github.com/peixl/ifq-design-skills
+# Recommended (SSH · private-repo-friendly)
+npx skills add git@github.com:peixl/ifq-design-skills.git -g -y
+
+# Or HTTPS
+npx skills add https://github.com/peixl/ifq-design-skills -g -y
+
+# Or as a first-party command inside ifq CLI
+ifq design init
 ```
 
-The repo currently lives as a private GitHub repository at `peixl/ifq-design-skills`, so the README now uses the install form that matches reality: the full repository URL. It works best when the environment already has GitHub access configured, such as an SSH key or `GH_TOKEN` / `GITHUB_TOKEN`.
-
-[See it work](#demo-gallery) · [Install](#install) · [12 Modes](references/modes.md) · [How it works](#core-mechanics)
+Works across agents — Claude Code, Cursor, Codex, OpenClaw, Hermes, ifq CLI — same skill, same behavior.
 
 </div>
-
----
-
-<p align="center">
-  <video src="https://github.com/ifq-ai/ifq-design-skills/releases/download/v2.0/hero-animation-v10-en.mp4" autoplay muted loop playsinline width="100%">
-    Your browser doesn't support inline video. <a href="https://github.com/ifq-ai/ifq-design-skills/releases/download/v2.0/hero-animation-v10-en.mp4">Download MP4</a>.
-  </video>
-</p>
-
-<p align="center"><sub>▲ 10-second hero animation showing what ifq-design-skills does (<a href="https://github.com/ifq-ai/ifq-design-skills/releases/download/v2.0/hero-animation-v10-en.mp4">download MP4</a> if autoplay doesn't work)</sub></p>
 
 ---
 
 ## Install
 
 ```bash
-npx skills add https://github.com/peixl/ifq-design-skills
+# Recommended (SSH · most stable)
+npx skills add git@github.com:peixl/ifq-design-skills.git -g -y
+
+# Or HTTPS (needs gh login or GH_TOKEN / GITHUB_TOKEN)
+npx skills add https://github.com/peixl/ifq-design-skills -g -y
 ```
 
-If your agent environment can already access that private repo, this is a more accurate install command than `ifq-ai/ifq-design-skills`.
+Or as a first-party command inside [ifq CLI](https://cli.ifq.ai):
 
-In Hermes, install the skill with that command, then just start talking:
-
+```bash
+npm install -g @peixl/ifq
+ifq design init
+ifq design modes
+ifq design "make a launch keynote"
 ```
-"Make a keynote for AI psychology. Give me 3 style directions to pick from."
-"Build an iOS prototype for a Pomodoro app — 4 screens, actually clickable."
-"Turn this logic into a 60-second animation. Export MP4 and GIF."
-"Run a 5-dimension expert review on this design."
-```
-
-Claude Code, Cursor, Codex, OpenClaw, and other markdown-skill-capable agents use the same install command too.
-
-No buttons, no panels, no Figma plugin.
 
 ---
 
-## Star History
-
-<p align="center">
-  <a href="https://star-history.com/#ifq-ai/ifq-design-skills&Date">
-    <img src="https://api.star-history.com/svg?repos=ifq-ai/ifq-design-skills&type=Date" alt="ifq-design-skills Star History" width="80%">
-  </a>
-</p>
-
----
-
-## What it does
+## What It Does
 
 | Capability | Deliverable | Typical time |
-|---|---|---|
-| Interactive prototype (App / Web) | Single-file HTML · real iPhone bezel · clickable · Playwright-verified | 10–15 min |
-| Slide decks | HTML deck (browser presentation) + editable PPTX (text frames preserved) | 15–25 min |
-| Motion design | MP4 (25fps / 60fps interpolation) + GIF (palette-optimized) + BGM | 8–12 min |
-| Design variations | 3+ side-by-side · Tweaks live params · cross-dimension exploration | 10 min |
-| Infographic / data viz | Print-quality typography · exports to PDF/PNG/SVG | 10 min |
-| Design direction advisor | 5 schools × 20 philosophies · 3 directions recommended · Demos generated in parallel | 5 min |
-| 5-dimension expert critique | Radar chart + Keep/Fix/Quick Wins · actionable punch list | 3 min |
+|------|--------|----------|
+| Interactive prototype | Single-file HTML · real iPhone bezel · clickable · Playwright-verified | 10–15 min |
+| Presentation deck | HTML deck + editable PPTX (text boxes preserved) | 15–25 min |
+| Timeline animation | MP4 (25fps / 60fps) + GIF + BGM | 8–12 min |
+| Design variations | 3+ side-by-side · live Tweaks · cross-dimensional | 10 min |
+| Infographic / dataviz | Print-grade typography · export PDF/PNG/SVG | 10 min |
+| Direction advisor | 5 schools × 20 philosophies · 3 directions · parallel demos | 5 min |
+| 5-dimension critique | Radar chart + Keep/Fix/Quick Wins · actionable list | 3 min |
 
 ---
 
-## Demo Gallery
+## 12 Professional Modes
 
-> English parallel versions of the demos. Chinese versions live at the default filenames (see the Chinese README).
+| Mode | Triggers | Deliverable |
+|------|-------|-------|
+| **M-01 Launch Film** | launch · hype film | 25–40s animation + poster + social cards |
+| **M-02 Personal Brand** | portfolio · about me | Single-page site + 5 variants |
+| **M-03 White Paper** | PDF report · annual report | Printable HTML → PDF + TOC |
+| **M-04 Dashboard** | command center · KPI panel | High-density real-data-driven dashboard |
+| **M-05 Compare / Review** | A vs B · benchmark | Matrix + radar + social cards |
+| **M-06 Onboarding** | first-run flow | 3–5 screens + tracking notes |
+| **M-07 Changelog** | release notes | Timeline infographic + social variant |
+| **M-08 Keynote** | conference deck | HTML deck + PPTX + PDF |
+| **M-09 Social Kit** | card · story | 3–6 pieces · multiple aspect ratios |
+| **M-10 Business Card** | invite · VIP pass | Print SVG + PDF (3mm bleed) |
+| **M-11 Brand Audit** | health check · upgrade | 6-dim radar + 3 directions |
+| **M-12 Full Brand System** | brand from scratch | logo + palette + type + 6 applications |
 
-### Design Direction Advisor
-
-The fallback for vague briefs: pick 3 differentiated directions from 5 schools × 20 philosophies, generate all 3 demos in parallel, let the user choose.
-
-<p align="center"><img src="https://github.com/ifq-ai/ifq-design-skills/releases/download/v2.0/w3-fallback-advisor-en.gif" width="100%"></p>
-
-### iOS App Prototype
-
-Pixel-accurate iPhone 15 Pro body (Dynamic Island / status bar / Home Indicator) · state-driven multi-screen navigation · real images pulled from Wikimedia/Met/Unsplash · Playwright click tests before delivery.
-
-<p align="center"><img src="https://github.com/ifq-ai/ifq-design-skills/releases/download/v2.0/c1-ios-prototype-en.gif" width="100%"></p>
-
-### Motion Design Engine
-
-Stage + Sprite time-slice model · `useTime` / `useSprite` / `interpolate` / `Easing` — four APIs cover every animation need · one command exports MP4 / GIF / 60fps-interpolated / BGM-scored finals.
-
-<p align="center"><img src="https://github.com/ifq-ai/ifq-design-skills/releases/download/v2.0/c3-motion-design-en.gif" width="100%"></p>
-
-### HTML Slides → Editable PPTX
-
-HTML decks for browser presentation · `html2pptx.js` reads DOM computed styles and translates each element into real PowerPoint objects · exports are **actual text frames**, not image-bed fakes.
-
-<p align="center"><img src="https://github.com/ifq-ai/ifq-design-skills/releases/download/v2.0/c2-slides-pptx-en.gif" width="100%"></p>
-
-### Tweaks · Live Variation Switching
-
-Colors / typography / information density parameterized · side panel toggle · pure-frontend + `localStorage` persistence · survives reload.
-
-<p align="center"><img src="https://github.com/ifq-ai/ifq-design-skills/releases/download/v2.0/c4-tweaks-en.gif" width="100%"></p>
-
-### Infographic / Data Viz
-
-Magazine-grade typography · precise CSS Grid columns · `text-wrap: pretty` typographic details · driven by real data · exports to vector PDF / 300dpi PNG / SVG.
-
-<p align="center"><img src="https://github.com/ifq-ai/ifq-design-skills/releases/download/v2.0/c5-infographic-en.gif" width="100%"></p>
-
-### 5-Dimension Expert Critique
-
-Philosophical coherence · visual hierarchy · execution craft · functionality · innovation — each scored 0–10 · radar-chart visualization · outputs Keep / Fix / Quick Wins punch list.
-
-<p align="center"><img src="https://github.com/ifq-ai/ifq-design-skills/releases/download/v2.0/c6-expert-review-en.gif" width="100%"></p>
-
-### Junior Designer Workflow
-
-No heroic one-shot attempts: start with assumptions + placeholders + reasoning, show it to the user early, then iterate. Fixing a misunderstanding early is 100× cheaper than fixing it late.
-
-<p align="center"><img src="https://github.com/ifq-ai/ifq-design-skills/releases/download/v2.0/w2-junior-designer-en.gif" width="100%"></p>
-
-### Core Asset Protocol · 5-step hard process
-
-Mandatory whenever the task involves a specific brand: ask → search → download (three fallback paths) → verify + extract → write `brand-spec.md` covering **logo, product shots, UI screenshots, colors, fonts** — all required assets, not just colors.
-
-<p align="center"><img src="https://github.com/ifq-ai/ifq-design-skills/releases/download/v2.0/w1-brand-protocol-en.gif" width="100%"></p>
+Full handbook → [`references/modes.md`](references/modes.md)
 
 ---
 
-## Core Mechanics
+## Runtime Dependencies
 
-### Core Asset Protocol
+The skill itself has zero runtime deps if you only use `SKILL.md` as agent context. To run export scripts:
 
-The hardest rule in the skill. When the task touches a specific brand (Stripe, Linear, Anthropic, DJI, your own company, etc.), five steps are enforced:
+| Layer | Package / Tool | Install |
+|------|---------|------|
+| Node (required) | `playwright`, `pdf-lib`, `pptxgenjs`, `sharp` | `cd <skill-root> && npm install` |
+| Browser | chromium | `npx playwright install chromium` |
+| Python (only `verify.py`) | `playwright` | `pip install -r requirements.txt` |
+| System | `ffmpeg` ≥ 4.4 | `brew install ffmpeg` / `apt install ffmpeg` |
 
-| Step | Action | Purpose |
-|---|---|---|
-| 1 · Ask | Checklist of 6 asset types: logo / product shots / UI screenshots / color palette / fonts / brand guidelines | Respect existing resources |
-| 2 · Search official channels | `<brand>.com/brand` · `<brand>.com/press` · `brand.<brand>.com` · product pages · launch films | Find authoritative assets |
-| 3 · Download by asset type | Logo (SVG → inline-SVG in HTML → social avatar) · Product shots (hero → press kit → launch video frames → AI-generated from reference) · UI (App Store screenshots → official video frames) | Three fallback paths per asset type |
-| 4 · Verify + extract | Check logo fidelity · product image resolution · UI freshness · grep color hex from real assets | **Never guess from memory** |
-| 5 · Freeze to spec | Write `brand-spec.md` with logo paths, product image paths, UI screenshot paths, CSS variables for colors/fonts | Un-frozen knowledge evaporates |
+One-line smoke test:
 
-**Ranking of asset importance** (from the skill's internal rubric):
-
-1. Logo — mandatory for any brand
-2. Product renders — mandatory for physical products
-3. UI screenshots — mandatory for digital products
-4. Color values — auxiliary
-5. Fonts — auxiliary
-
-A/B-tested (v1 vs v2, 6 agents each): **v2 reduced stability variance by 5×**. Stability of stability — that's the real moat.
-
-### Design Direction Advisor (Fallback)
-
-Triggered when the brief is too vague to execute:
-
-- Don't run on generic intuition — enter Fallback mode
-- Recommend 3 differentiated directions from 5 schools × 20 philosophies, each **from a different school**
-- Each comes with flagship works, gestalt keywords, representative designer
-- Generate 3 visual demos in parallel, let the user choose
-- Once chosen, continue into the Junior Designer main flow
-
-### Junior Designer Workflow
-
-The default working mode across every task:
-
-- Send the full question set in one batch, wait for all answers before moving
-- Write assumptions + placeholders + reasoning comments directly into the HTML
-- Show it to the user early (even if just gray blocks)
-- Fill in real content → variations → Tweaks — show at each of these three steps
-- Manually eyeball the browser with Playwright before delivery
-
-### Fact Verification First (Principle #0)
-
-The highest-priority rule, added after a real failure mode: when the task mentions a specific product / technology / event (e.g., "DJI Pocket 4", "Nano Banana Pro", "Gemini 3 Pro"), the first action **must** be a `WebSearch` to confirm existence, release status, current version, and specs. No claims from training-corpus memory. Cost of a search: ~10 seconds. Cost of a wrong assumption: 1–2 hours of rework.
-
-### Anti AI-slop Rules
-
-Avoid the visual common denominator of AI output (purple gradients / emoji icons / rounded-corner + left border accent / SVG humans / Inter-as-display / **CSS silhouettes standing in for real product shots**). Use `text-wrap: pretty` + CSS Grid + carefully chosen serif display faces + oklch colors.
-
----
-
-## vs. Claude Design
-
-I'll be upfront: the Core Asset Protocol's philosophy was lifted from system prompts Anthropic wrote for Claude Design. That prompt hammers home a single idea — **great hi-fi design doesn't start from a blank page, it grows from existing design context**. That one principle is the difference between a 65-point design and a 90-point design.
-
-Positioning differences:
-
-| | Claude Design | ifq-design-skills |
-|---|---|---|
-| Form | Web product (used in browser) | Skill (used in Claude Code) |
-| Quota | Subscription quota | API usage · parallel agents unblocked |
-| Output | Canvas + Figma export | HTML / MP4 / GIF / editable PPTX / PDF |
-| Interaction | GUI (click, drag, edit) | Conversation (tell agent, wait) |
-| Complex animation | Limited | Stage + Sprite timeline · 60fps export |
-| Agent compatibility | Claude.ai only | Claude Code / Cursor / Trae / Hermes / OpenClaw |
-
-Claude Design is a **better graphics tool**. IFQ-design makes **the graphics-tool layer disappear**. Two paths, different audiences.
-
----
-
-## Limitations
-
-- **No layer-editable PPTX-to-Figma round-trip.** The output is HTML — screenshottable, recordable, image-exportable, but not draggable into Keynote for text-position tweaks.
-- **Framer-Motion-tier complex animations are out of scope.** 3D, physics simulation, particle systems exceed the skill's boundaries.
-- **Brand-from-zero design quality drops to 60–65 points.** Drawing hi-fi from nothing was always a last resort.
-
-This is an 80-point skill, not a 100-point product. For people unwilling to open a graphical UI, an 80-point skill beats a 100-point product.
-
----
-
-## Repository Structure
-
-```
-ifq-design-skills/
-├── SKILL.md                 # Main doc (read by agent, Chinese)
-├── README.md                # Chinese README (default)
-├── README.en.md             # English README (this file)
-├── assets/                  # Starter Components
-│   ├── animations.jsx       # Stage + Sprite + Easing + interpolate
-│   ├── ios_frame.jsx        # iPhone 15 Pro bezel
-│   ├── android_frame.jsx
-│   ├── macos_window.jsx
-│   ├── browser_window.jsx
-│   ├── deck_stage.js        # HTML deck engine
-│   ├── deck_index.html      # Multi-file deck assembler
-│   ├── design_canvas.jsx    # Side-by-side variation display
-│   ├── showcases/           # 24 prebuilt samples (8 scenes × 3 styles)
-│   └── bgm-*.mp3            # 6 scene-specific background tracks
-├── references/              # Drill-down docs by task (Chinese)
-│   ├── animation-pitfalls.md
-│   ├── design-styles.md     # 20 design philosophies in detail
-│   ├── slide-decks.md
-│   ├── editable-pptx.md
-│   ├── critique-guide.md
-│   ├── video-export.md
-│   └── ...
-├── scripts/                 # Export toolchain
-│   ├── render-video.js      # HTML → MP4
-│   ├── convert-formats.sh   # MP4 → 60fps + GIF
-│   ├── add-music.sh         # MP4 + BGM
-│   ├── export_deck_pdf.mjs
-│   ├── export_deck_pptx.mjs
-│   ├── html2pptx.js
-│   └── verify.py
-└── demos/                   # Capability demos referenced by this README
+```bash
+cd <skill-root>
+npm run smoke
 ```
 
 ---
 
-## Origin Story
+## Design Philosophy
 
-The day Anthropic launched Claude Design I played with it until 4 a.m. A few days later I realized I hadn't opened it once since — not because it's bad (it's the most polished product in the category) but because I'd rather have an agent work in my terminal than open any graphical UI.
+**IFQ Design Skills is not another "AI image generator". It's an agent-native design operating system.**
 
-So I had an agent deconstruct Claude Design itself (including the system prompts circulating in the community, the brand asset protocol, the component mechanics), distill it into a structured spec, then write it as a skill installed in my own Claude Code.
+- **Not drawing, shipping.** One sentence of intent → full pipeline → HTML / MP4 / GIF / PPTX / PDF.
+- **Not a blank page, an inheritance.** Core Asset Protocol first looks for logo / product imagery / UI screenshots / palettes / fonts.
+- **Not random, style-recyclable.** 12 modes × 24 hand-drawn icons × ifq.ai brand signature × 4 Starter Components guarantee the same touch across agents and tasks.
+- **Not a black box, a Junior Designer.** Assumptions + reasoning + placeholders surface up-front, so you can interrupt and correct.
 
-Thanks to Anthropic for writing the Claude Design prompts so clearly. This kind of derivative work inspired by other products is the new form of open-source culture in the AI era.
-
----
-
-## License · Usage Rights
-
-**Personal use is free and unrestricted** — studying, research, creating things for yourself, writing articles, side projects, personal social media. Use it freely, no need to ask.
-
-**Enterprise / commercial use is restricted** — any company, team, or for-profit organization integrating this skill into a product, external service, or client deliverable **must obtain authorization from Huasheng first**. Including but not limited to:
-- Using the skill as part of internal company tooling
-- Using skill outputs as the primary creative method for external deliverables
-- Building a commercial product on top of the skill
-- Using it in paid client projects
-
-**Commercial licensing contact**: any of the social platforms below.
+ifq.ai's belief: **good design should not be trapped inside a GUI.**
 
 ---
 
-## Connect · Huasheng (IFQ)
+## License
 
-Huasheng is an AI-native coder, independent developer, and AI content creator. Notable work: Cat Fill Light (App Store Top 1 in Paid category), *A Book on DeepSeek*, Nüwa.skill (GitHub 12k+ stars). Combined 300k+ followers across platforms.
+**Personal use** is free and unrestricted — study, research, create, self-promote, indie side projects.
 
-| Platform | Handle | Link |
-|---|---|---|
-| X / Twitter | @ifq_ai | https://x.com/ifq_ai |
-| WeChat Official Account | IFQ | Search "IFQ" in WeChat |
-| Bilibili | IFQ | https://space.bilibili.com/14097567 |
-| YouTube | IFQ | https://www.youtube.com/@Alchain |
-| Xiaohongshu | IFQ | https://www.xiaohongshu.com/user/profile/5abc6f17e8ac2b109179dfdf |
-| Official Site | ifq.ai | https://www.ifq.ai/ |
-| Developer Hub | ifq.ai | https://ifq.ai |
+**Enterprise / commercial use** requires written authorization from ifq.ai — internal toolchains, client deliverables, paid templates/subscriptions, or removing brand signatures before shipping. See [`LICENSE`](LICENSE) §2–4.
 
-For commercial licensing, collaborations, or sponsored content, DM on any of the above.
+---
+
+## Connect · The ifq.ai Product Matrix
+
+**ifq.ai** (Jieshi Technology) is a brand lab building **AI-native creator infrastructure**. IFQ Design Skills is the design-capability endpoint in a network of 23+ interconnected products; it's also the reason every delivery carries a quiet ifq.ai signature.
+
+> *"Intelligence Framed Quietly."* — ifq.ai
+
+### Product Matrix
+
+| Surface | Entry | What |
+|------|------|------|
+| **Brand site** | [ifq.ai](https://ifq.ai) | Who we are · product narrative |
+| **Product hub** | [site.ifq.ai](https://site.ifq.ai) | 23+ products in one place |
+| **ifQ AI App** | [app.ifq.ai](https://app.ifq.ai) | AI-native super app |
+| **ifQ CLI** | [cli.ifq.ai](https://cli.ifq.ai) | Terminal-native agent OS · `ifq design` first-class |
+| **ifQ Skills** | [skills.ifq.ai](https://skills.ifq.ai) | Skills ecosystem hub |
+| **IFQ Design** | [cli.ifq.ai/design](https://cli.ifq.ai/design) | Marketing site for this skill |
+| **ifQ TV** | [tv.ifq.ai](https://tv.ifq.ai) | AI video content · process behind the scenes |
+| **Edge Tunnel** | [edge.ifq.ai](https://edge.ifq.ai) | Zero-config reverse tunnel for AI workflows |
+| **GitHub** | [github.com/peixl](https://github.com/peixl) · [github.com/ifq-ai](https://github.com/ifq-ai) | All open-source repos |
+
+### Social
+
+| Channel | Link |
+|------|-------------|
+| WeChat | [img.ifq.ai/wechat.jpg](https://img.ifq.ai/wechat.jpg) |
+| Official Account | [img.ifq.ai/we_q.jpg](https://img.ifq.ai/we_q.jpg) |
+| X / Twitter | [@AlchainHust](https://x.com/AlchainHust) |
+| Bilibili | [space.bilibili.com/14097567](https://space.bilibili.com/14097567) |
+| YouTube | [@Alchain](https://www.youtube.com/@Alchain) |
+| Xiaohongshu | [profile/5abc6f17...](https://www.xiaohongshu.com/user/profile/5abc6f17e8ac2b109179dfdf) |
+
+### Partnership & Licensing
+
+- **Commercial license, brand customization, press** → reach out via [ifq.ai](https://ifq.ai)
+- **Bug / PR / feature request** → [issues](https://github.com/peixl/ifq-design-skills/issues)
+- **Skill marketplace & distribution** → [skills.ifq.ai](https://skills.ifq.ai)
+
+---
+
+<p align="center"><sub>
+  <img src="assets/ifq-brand/mark.svg" alt="ifq.ai" height="18" style="vertical-align: middle;" />
+  &nbsp;© 2026 ifq.ai · Jieshi Technology · Designed and signed by ifq.ai.
+</sub></p>
