@@ -65,7 +65,7 @@ npx skills add https://github.com/peixl/ifq-design-skills
 
 如果你的 agent 环境已经能访问这个私有仓库，这个写法比 `ifq-ai/ifq-design-skills` 更符合当前现实。
 
-然后在 Claude Code 里直接说话：
+以 Hermes 为例，添加完 skill 之后就可以直接说话：
 
 ```
 「做一份 AI 心理学的演讲 PPT，推荐 3 个风格方向让我选」
@@ -73,6 +73,8 @@ npx skills add https://github.com/peixl/ifq-design-skills
 「把这段逻辑做成 60 秒动画，导出 MP4 和 GIF」
 「帮我对这个设计做一个 5 维度评审」
 ```
+
+Claude Code、Cursor、Codex、OpenClaw、Hermes 这类支持 skills 的 agent 也都是同一条命令。
 
 没有按钮、没有面板、没有 Figma 插件。
 

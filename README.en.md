@@ -61,7 +61,7 @@ npx skills add https://github.com/peixl/ifq-design-skills
 
 If your agent environment can already access that private repo, this is a more accurate install command than `ifq-ai/ifq-design-skills`.
 
-Then just talk to Claude Code:
+In Hermes, install the skill with that command, then just start talking:
 
 ```
 "Make a keynote for AI psychology. Give me 3 style directions to pick from."
@@ -70,7 +70,9 @@ Then just talk to Claude Code:
 "Run a 5-dimension expert review on this design."
 ```
 
-No buttons, no panels, no Figma plugin. Agent-agnostic — drops into Claude Code, Cursor, Trae, Hermes, OpenClaw, or any markdown-skill-capable agent.
+Claude Code, Cursor, Codex, OpenClaw, and other markdown-skill-capable agents use the same install command too.
+
+No buttons, no panels, no Figma plugin.
 
 ---
 
