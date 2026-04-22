@@ -1,6 +1,6 @@
 {
   "name": "ifq-design-skills",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
   "description": "IFQ Design Skills — skill package for AI coding agents (Anthropic/OpenAI SKILL.md format). This package.json declares the runtime dependencies needed by the skill's scripts (render-video / export-pptx / export-pdf / verify). Installing the skill DOES NOT install these automatically — run `npm install` in this directory (or install peers globally) before running scripts.",
   "author": "ifq.ai",
@@ -17,6 +17,7 @@
   "scripts": {
     "smoke": "node scripts/smoke-test.mjs",
     "verify": "python3 scripts/verify.py",
+    "verify:publish": "node scripts/validate_publish.cjs",
     "render:video": "node scripts/render-video.js",
     "export:pdf": "node scripts/export_deck_pdf.mjs",
     "export:pptx": "node scripts/export_deck_pptx.mjs",
