@@ -1,7 +1,7 @@
 <!doctype html>
 <!--
   IFQ Design Skills · Template T-hero-landing
-  Editorial hero landing with ifq.ai brand signature baked in.
+  IFQ-native editorial hero landing.
   Fork-and-fill: replace { HEADLINE / EYEBROW / CTA / BODY } placeholders.
 -->
 <html lang="zh-CN">
@@ -29,6 +29,7 @@
   /* Header band */
   .nav { display: flex; justify-content: space-between; align-items: center; padding-bottom: 40px; border-bottom: 1px solid rgba(17,17,17,0.12); }
   .nav__brand { display: flex; align-items: center; gap: 10px; font-family: var(--ifq-display); font-weight: 900; font-size: 22px; letter-spacing: -0.5px; }
+  .nav__meta { font-family: var(--ifq-mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ifq-ink-soft); margin-left: 16px; opacity: .72; }
   .nav__brand svg.spark { width: 18px; height: 18px; color: var(--ifq-accent); }
   .nav__brand b { color: var(--ifq-accent); }
   .nav__links { display: flex; gap: 32px; font-family: var(--ifq-mono); font-size: 12px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--ifq-ink-soft); }
@@ -45,6 +46,7 @@
   /* Hero visual slot */
   .hero__visual { position: relative; aspect-ratio: 4/5; background: var(--ifq-cream); border: 1px solid rgba(17,17,17,0.1); display: flex; align-items: center; justify-content: center; overflow: hidden; }
   .hero__visual::before { content: "{ HERO IMAGE · replace with real asset }"; font-family: var(--ifq-mono); font-size: 11px; color: var(--ifq-ink-soft); opacity: .45; letter-spacing: 1px; }
+  .hero__visual::after { content: "ifq.ai / signal frame"; position: absolute; left: 20px; bottom: 18px; font-family: var(--ifq-mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--ifq-ink-soft); opacity: .46; }
   .hero__spark { position: absolute; top: 32px; right: 32px; width: 64px; height: 64px; }
 
   /* Stats strip */
@@ -74,13 +76,14 @@
     <div class="nav__brand">
       <svg class="spark" viewBox="-12 -12 24 24"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="currentColor"/></svg>
       <span>ifq<b>.ai</b></span>
+      <span class="nav__meta">Intelligence Framed Quietly</span>
     </div>
-    <div class="nav__links"><span>Work</span><span>Skills</span><span>Journal</span><span>Contact</span></div>
+    <div class="nav__links"><span>Products</span><span>Signals</span><span>Journal</span><span>Index</span></div>
   </nav>
 
   <section class="hero">
     <div>
-      <div class="hero__eyebrow">{ EYEBROW · 2 WORDS }</div>
+      <div class="hero__eyebrow">{ SIGNAL · 2026 }</div>
       <h1 class="hero__title">{ HEADLINE.<br/> <em>Make it pretty.</em> }</h1>
       <p class="hero__sub">{ SUPPORTING SENTENCE — 20–30 words that situate the product and its audience. Keep it one paragraph. }</p>
       <a class="hero__cta" href="#">{ CTA TEXT }
@@ -109,7 +112,7 @@
 
   <div class="colophon">
     <svg viewBox="-12 -12 24 24"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="#D4532B"/></svg>
-    designed with <b>ifq.ai</b>
+    ifq.ai / field signal / { ISSUE }
   </div>
 </div>
 </body>

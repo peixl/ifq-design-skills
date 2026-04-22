@@ -1,7 +1,7 @@
 # 场景模板库：按输出类型组织
 
-> 与 design-styles.md 的「提示词DNA」组合使用。
-> 公式：`[风格提示词DNA] + [场景模板] + [具体内容描述]`
+> 与 design-styles.md 的「风格配方」组合使用。
+> 公式：`[风格配方] + [场景模板] + [具体内容描述]`
 
 ---
 
@@ -21,7 +21,7 @@
 
 **场景提示词模板**：
 ```
-[风格DNA插入此处]
+[风格配方插入此处]
 - Article cover image for WeChat subscription
 - Landscape format, 2.35:1 aspect ratio
 - Bold visual impact, minimal or no text
@@ -49,7 +49,7 @@
 
 **场景提示词模板**：
 ```
-[风格DNA插入此处]
+[风格配方插入此处]
 - Article illustration, concept visualization
 - [16:9 / 1:1 / 4:3] aspect ratio
 - Single clear concept: [描述核心概念]
@@ -76,7 +76,7 @@
 
 **场景提示词模板**：
 ```
-[风格DNA插入此处]
+[风格配方插入此处]
 - Infographic / data visualization
 - [Vertical 1080x1920 / Horizontal 1920x1080 / Square 1080x1080]
 - Clear information hierarchy: title → key data → details
@@ -104,7 +104,7 @@
 
 **场景提示词模板**：
 ```
-[风格DNA插入此处]
+[风格配方插入此处]
 - Presentation slide design, 16:9
 - One core message per slide
 - Clear type hierarchy (title 40pt+, body 24pt+)
@@ -133,7 +133,7 @@
 
 **场景提示词模板**：
 ```
-[风格DNA插入此处]
+[风格配方插入此处]
 - PDF document / white paper design
 - A4 portrait format (210×297mm)
 - Long-form reading optimized (66 char line width, 1.5 line height)
@@ -162,7 +162,7 @@
 
 **场景提示词模板**：
 ```
-[风格DNA插入此处]
+[风格配方插入此处]
 - Landing page / product website
 - Desktop 1440px width, responsive
 - Hero section 100vh, core value in 5 seconds
@@ -190,7 +190,7 @@
 
 **场景提示词模板**：
 ```
-[风格DNA插入此处]
+[风格配方插入此处]
 - Mobile app UI design
 - iOS [390×844pt] / Android [360×800dp]
 - Touch-friendly (44pt minimum tap targets)
@@ -218,7 +218,7 @@
 
 **场景提示词模板**：
 ```
-[风格DNA插入此处]
+[风格配方插入此处]
 - Social media image for Xiaohongshu (RED)
 - Vertical 3:4 (1080×1440px)
 - Eye-catching in waterfall feed
@@ -234,7 +234,7 @@
 **场景**：公众号封面，介绍一款AI编程工具，想要专业但有温度
 
 **Step 1**：选风格 → 17 Takram（专业+温度）
-**Step 2**：取Takram提示词DNA + 公众号封面模板
+**Step 2**：取Takram风格配方 + 公众号封面模板
 
 ```
 Takram Japanese speculative design:

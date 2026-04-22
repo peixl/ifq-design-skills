@@ -1,190 +1,371 @@
-<sub>🌐 <b>English</b> · <a href="README.md">中文</a></sub>
+<sub>🌐 <a href="README.md">中文</a> · <b>English</b> · <code>ifq.ai / field note / 2026</code></sub>
 
 <div align="center">
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/ifq-brand/logo-white.svg">
-  <img src="assets/ifq-brand/logo.svg" alt="ifq.ai" height="72">
+  <img src="assets/ifq-brand/logo.svg" alt="ifq.ai" height="64">
 </picture>
 
 # IFQ Design Skills
 
-> *"Type. Hit enter. A shipped design — signed by ifq.ai."*
-
-[![License](https://img.shields.io/badge/License-Commercial%20%2B%20Personal-D4532B.svg)](LICENSE)
-[![Agent-Agnostic](https://img.shields.io/badge/Agent-Agnostic-111111)](https://skills.ifq.ai)
-[![Skills](https://img.shields.io/badge/skills.ifq.ai-Compatible-A83518)](https://skills.ifq.ai)
-[![Modes](https://img.shields.io/badge/Modes-12-D4532B)](references/modes.md)
-[![Hand-drawn Icons](https://img.shields.io/badge/Hand--drawn_icons-24-A83518)](assets/ifq-brand/icons/hand-drawn-icons.svg)
-[![Brand DNA](https://img.shields.io/badge/Brand_DNA-ifq.ai-FFB27A)](assets/ifq-brand/BRAND-DNA.md)
-[![Enterprise](https://img.shields.io/badge/Enterprise_Ready-2026-111111)](https://ifq.ai)
+<sub><i>Intelligence, framed quietly.</i></sub>
 
 <br>
 
-**Type one sentence in your agent, get back a ship-ready design.**
+<code>&nbsp;One prompt in.&nbsp;&nbsp;One shippable page out.&nbsp;&nbsp;Handcraft that reads as ifq.ai.&nbsp;</code>
+
+<br><br>
+
+[![License](https://img.shields.io/badge/license-commercial%20%2B%20personal-D4532B?style=flat-square&labelColor=111111)](LICENSE)
+[![ifq.ai native](https://img.shields.io/badge/ifq.ai-native-111111?style=flat-square)](assets/ifq-brand/BRAND-DNA.md)
+[![ambient brand](https://img.shields.io/badge/ambient_brand-embedded-A83518?style=flat-square&labelColor=111111)](references/ifq-brand-spec.md)
+[![proof first](https://img.shields.io/badge/proof--first-on-111111?style=flat-square)](references/verification.md)
+[![modes](https://img.shields.io/badge/modes-12-D4532B?style=flat-square&labelColor=111111)](references/modes.md)
 
 <br>
 
-**Enterprise-grade, commercial-ready, agent-native design infrastructure** — in 3 to 30 minutes, ship a **product launch film**, a clickable App prototype, an editable Keynote deck, a print-grade infographic, a business card with bleed, or a full brand system from logo to applications.
-
-Not "decent for AI" quality — the kind of output that looks like it came from a top-tier in-house design team. Feed the skill your brand assets (logo, palette, UI screenshots) and it absorbs your visual voice; feed it nothing, and the built-in **20 design philosophies × 12 professional modes × 24 hand-drawn SVG icons × 4 Starter Components** still floor-sets the quality far above AI slop.
-
-**Every deliverable quietly carries ifq.ai's design DNA** — an 8-point sparkle in the intro, an editorial stamp on deck title / end pages, a low-opacity watermark in the dashboard corner. Tasteful but unmistakable. It's a signature, not a watermark.
-
-```bash
-# Recommended (SSH · private-repo-friendly)
-npx skills add git@github.com:peixl/ifq-design-skills.git -g -y
-
-# Or HTTPS
-npx skills add https://github.com/peixl/ifq-design-skills -g -y
-
-# Or as a first-party command inside ifq CLI
-ifq design init
-```
-
-Works across agents — Claude Code, Cursor, Codex, OpenClaw, Hermes, ifq CLI — same skill, same behavior.
+<sub>01 · The thesis &nbsp;·&nbsp; 02 · Install &nbsp;·&nbsp; 03 · What you say, what it hears &nbsp;·&nbsp; 04 · Anatomy of one page &nbsp;·&nbsp; 05 · Co-brand rule &nbsp;·&nbsp; 06 · 12 modes &nbsp;·&nbsp; 07 · The six layers &nbsp;·&nbsp; 08 · Verification &nbsp;·&nbsp; 09 · Roadmap</sub>
 
 </div>
 
 ---
 
-## Install
+## 01 · The thesis
+
+Most agents, asked to design something, will hand you one of two things: a **Figma Community template that tries too hard**, or a **Notion page that an AI reformatted**. Neither ships.
+
+This skill is what gets in the way of that.  
+It is not a palette file. It is not a logo sticker.  
+It is **a way of making things**: treat a web page like an editorial spread, an animation like a teaser cut, a slide deck like a launch-night master, a business card like a print job with real bleed.
+
+The ifq.ai signature lives inside that craft. So the first thing the viewer sees is the content, and **only on the second look do they realize: this is ifq.ai’s hand**.
+
+We call that second look the **Ambient Brand**. It is made of five environmental markers — not ornaments, but layout grammar:
+
+<table>
+<tr>
+<td width="22%" align="center"><code><b>Signal Spark</b></code><br><sub>8-point spark</sub></td>
+<td>the moment intelligence lights up. The small point top-right of a hero, a single-frame cue in a motion piece, the center of a stamp. Never decorative sparkles.</td>
+</tr>
+<tr>
+<td align="center"><code><b>Rust Ledger</b></code><br><sub>terracotta ruling</sub></td>
+<td>verticals, dividers, numbering, axes. IFQ is less a brand block and more a carefully set publication — this rule is the spine of the publication.</td>
+</tr>
+<tr>
+<td align="center"><code><b>Mono Field Note</b></code><br><sub>authored byline</sub></td>
+<td><code>ifq.ai / field note / 2026</code>, <code>ifq.ai / release ledger</code>, <code>ifq.ai / live system</code> — a JetBrains Mono microline in place of a rude watermark.</td>
+</tr>
+<tr>
+<td align="center"><code><b>Quiet URL</b></code><br><sub>a domain that doesn’t shout</sub></td>
+<td>the URL behaves like someone who knows who they are. Small, precise, once.</td>
+</tr>
+<tr>
+<td align="center"><code><b>Editorial Contrast</b></code><br><sub>desk-grade typography</sub></td>
+<td>Newsreader italic + JetBrains Mono + warm paper. Serif breathes, mono provides evidence.</td>
+</tr>
+</table>
+
+Every deliverable weaves in at least three. The viewer never names which three. They only say: “this one looks different from the AI stuff.”
+
+---
+
+## 02 · Install
 
 ```bash
-# Recommended (SSH · most stable)
+# Recommended (SSH)
 npx skills add git@github.com:peixl/ifq-design-skills.git -g -y
 
-# Or HTTPS (needs gh login or GH_TOKEN / GITHUB_TOKEN)
+# Or HTTPS
 npx skills add https://github.com/peixl/ifq-design-skills -g -y
 ```
 
-Or as a first-party command inside [ifq CLI](https://cli.ifq.ai):
+Then just talk to your agent. The skill routes the task, picks the template, and runs verification on its own.
 
-```bash
-npm install -g @peixl/ifq
-ifq design init
-ifq design modes
-ifq design "make a launch keynote"
+---
+
+## 03 · What you say, what it hears
+
+Real conversations. Left: the sentence you actually type. Right: what the skill hears and goes to build.
+
+<table>
+<thead>
+<tr><th width="50%">You say</th><th>It hears</th></tr>
+</thead>
+<tbody>
+
+<tr>
+<td>
+
+> “I’m giving a 20-min talk on AI agents tomorrow. Can you make me a deck that doesn’t look like a SaaS keynote? A bit bookish, not too Silicon Valley.”
+
+</td>
+<td>
+
+<sub>M-08 Keynote · editorial dark · Newsreader display · section dividers as rust ledger verticals · mono page number <code>01 / 20</code> · colophon stamp on the closer · HTML + PPTX + PDF all emitted</sub>
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+> “We shipped 4 things this week. Make a vertical changelog page that feels like flipping open a field notebook, not a bulletin board.”
+
+</td>
+<td>
+
+<sub>M-07 Changelog Timeline · warm paper · single rust ledger as the left axis · each entry gets a mono timestamp and a category stamp · header <code>release ledger / vol.12</code> · no emoji, hand-drawn icons only</sub>
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+> “Make a business card for a friend’s indie coffee shop. Black and white, both sides. Not fancy, but it should look handmade.”
+
+</td>
+<td>
+
+<sub>M-10 Card · 85×55mm with 3mm bleed · front: one business line + a small spark dot · back: mono info strip · non-IFQ work, wordmark removed · IFQ survives only as rhythm and bleed alignment · print-ready PDF with crop marks</sub>
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+> “Do a 24-second launch teaser for a piece of hardware. Cold, a bit like Teenage Engineering — not a hype reel.”
+
+</td>
+<td>
+
+<sub>M-01 Launch Film · three directions first (matter-of-fact / editorial / kinetic-type) · then Stage+Sprite timeline at 60fps · product key shot + mono spec overlay + a 2-second quiet URL closer · mp4 + gif + first-frame keyposter</sub>
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+> “I want a personal site. One page is enough, but I don’t want it to look like I’m job-hunting.”
+
+</td>
+<td>
+
+<sub>M-02 Portfolio · five directions up front (archive / studio / essay / atlas / ledger) · user picks one, two are saved as variant canvases · hero is not a headshot but a three-column <i>currently / writing about / building</i> · mono colophon at the foot</sub>
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+> “We need a command-center dashboard for an internal AI. Bloomberg-terminal density. No BI chrome.”
+
+</td>
+<td>
+
+<sub>M-04 Dashboard · dark graphite · 12-col ledger grid · metrics in mono with a hairline rust underline for trend direction · top strip with authored <i>session / latency / build</i> fields · no gradient buttons, no cartoon pies</sub>
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+> “Pitching next week. I need one A-vs-B chart: us vs three competitors. It has to be obvious why us — but no bragging.”
+
+</td>
+<td>
+
+<sub>M-05 Compare · matrix over radar · four equal columns · each capability ✓ / ● / — with a small source citation · bottom: <code>compiled from public docs · ifq.ai</code> · facts WebSearched before any pixel moves</sub>
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+> “Make me a 2026 AI-agent whitepaper. Under 50 pages. Has to be printable.”
+
+</td>
+<td>
+
+<sub>M-03 Whitepaper · A4 print-ready HTML · cover / abstract / TOC / chapters / references / colophon · each chapter opens with a mono section number and half a page of air · footer <code>ifq.ai / field note / 2026</code> · print-ready PDF with page numbers and chapter bookmarks</sub>
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+> “Our visuals feel messy. Don’t fix it yet — just tell me what’s wrong.”
+
+</td>
+<td>
+
+<sub>M-11 Brand Diagnosis · hands off. Produces a one-page report: color temperature / type hierarchy / rhythm / motif / finish, each scored 1–5, each with a before / suggested-after thumbnail · ends with three upgrade directions, no single verdict</sub>
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+> “A set of 6 Xiaohongshu / social covers for a new column called ‘one image a week.’ Restrained, but instantly recognizable in-feed.”
+
+</td>
+<td>
+
+<sub>M-09 Social Kit · 1242×1660 · unified top-left column stamp <code>weekly / 01</code> → <code>06</code> · editorial-typography hero, no giant emoji · quiet URL bottom-right · 6 covers + 1 OG landscape, same scene system</sub>
+
+</td>
+</tr>
+
+</tbody>
+</table>
+
+> You don’t have to remember mode numbers. Plain language is enough. The skill routes.
+
+---
+
+## 04 · Anatomy of one page
+
+Take a single hero landing. It looks calm. It is doing seven things at once:
+
+```text
+ ┌────────────────────────────────────────────────────────────────────┐
+ │  ◇ ifq.ai / live system                            [01 / 12]       │ ← mono field note + column index
+ │                                                                    │
+ │                                                                    │
+ │     Intelligence, framed                                           │ ← Newsreader display
+ │     quietly.                                                       │   italic pivot word
+ │                                                                    │
+ │     A design engine that understands the difference                │ ← body serif
+ │     between a slide deck and a launch film.                        │
+ │                                                                    │
+ │   ┃  ·  ledger                                                     │ ← rust ledger vertical
+ │   ┃                                                                │   carries the layout
+ │   ┃   01    mode-aware pipeline                                    │ ← mono numbered rows
+ │   ┃   02    ambient brand, not loud branding                       │
+ │   ┃   03    proof-first export loop                                │
+ │                                                                    │
+ │                                                                    │
+ │                                      ✦                             │ ← signal spark
+ │                                                                    │   a single lit point
+ │                                                                    │
+ │  compiled by ifq.ai              ·           ifq.ai / 2026         │ ← quiet URL + colophon
+ └────────────────────────────────────────────────────────────────────┘
+```
+
+Seven things, none of them ornament:
+
+1. **Editorial contrast** — Newsreader serif paired with JetBrains Mono. Not a random font stack.
+2. **Rust ledger** — the vertical on the left is the spine. More IFQ than a logo would be.
+3. **Mono field note** — `ifq.ai / live system` at the top, `ifq.ai / 2026` at the foot.
+4. **Quiet URL** — no CTA yelling. The URL appears once, bottom-right.
+5. **Signal spark** — one small lit point. The only graphical beat on the page.
+6. **Warm paper** — background is `#FAF7F2`, not `#FFFFFF`. Cold white drains the temperature.
+7. **Ledger rhythm** — all spacing lives on `4 · 8 · 12 · 16 · 24 · 32 · 48 · 64`. Not vibes.
+
+**The viewer will not count any of this.** The viewer will just say “that page looks well made.”  
+Well made = same hand = ifq.ai’s ambient brand system.
+
+---
+
+## 05 · Co-brand rule
+
+| Scenario | Where IFQ lives |
+|----------|-----------------|
+| **IFQ-owned work** (ifq.ai and its products) | Everyone on stage: wordmark + spark + field note + quiet URL. |
+| **Friend / client / third-party work** | Subject brand leads. IFQ retreats to an authored layer: rhythm, color temperature, colophon, hand-drawn icons, export finish. |
+| **Client asks for white-label** | Remove explicit wordmark and field note. Keep editorial contrast, ledger rhythm, proof-first craft. |
+
+So: **IFQ can disappear; it can’t be absent**. The craft is the signature.
+
+---
+
+## 06 · 12 modes
+
+| # | Mode | Typical trigger | Output |
+|---|------|-----------------|--------|
+| M-01 | Launch Film | launch animation / product teaser | 25–40s motion + keyposter + social set |
+| M-02 | Personal Brand | portfolio / personal site / about me | single page + 5 direction variants |
+| M-03 | Whitepaper / Report | whitepaper / annual / research PDF | printable HTML → PDF |
+| M-04 | Dashboard | KPI board / monitoring console | dense dashboard |
+| M-05 | Comparison | A vs B / benchmark | matrix + radar + sources |
+| M-06 | Onboarding | product onboarding / flow demo | 3–5 screen flow |
+| M-07 | Changelog | release notes / weekly log | vertical timeline infographic |
+| M-08 | Keynote | deck / stage master | HTML deck + PPTX + PDF |
+| M-09 | Social Kit | Xiaohongshu / OG cards / story set | multi-size static assets |
+| M-10 | Card / Invite | business card / VIP / invitation | SVG + print-bleed PDF |
+| M-11 | Brand Diagnosis | brand audit / upgrade guidance | diagnostic report + 3 directions |
+| M-12 | Full Brand | brand from scratch | logo + palette + type + 6 applications |
+
+Full protocol: [references/modes.md](references/modes.md).  
+Routing order: **mode trigger → fallback direction advisor → junior-designer trunk**.
+
+---
+
+## 07 · The six layers
+
+IFQ Design Skills reads as IFQ not because of a color or a logo, but because these six layers run together:
+
+| Layer | What it does | Key files |
+|-------|--------------|-----------|
+| **01 · Context Engine** | grow the design from existing context, not from a blank page | [references/design-context.md](references/design-context.md) |
+| **02 · Asset Protocol** | fetch facts / logos / renders / UI screenshots before anything visual | [SKILL.md](SKILL.md) · [references/workflow.md](references/workflow.md) |
+| **03 · House Marks** | weave the five ambient markers into the composition | [references/ifq-brand-spec.md](references/ifq-brand-spec.md) · [assets/ifq-brand/](assets/ifq-brand/) |
+| **04 · Style Recipes** | organize taste through reusable recipes + scene templates | [references/design-styles.md](references/design-styles.md) · [references/scene-templates.md](references/scene-templates.md) |
+| **05 · Output Compiler** | HTML → MP4 / GIF / PPTX / PDF as one pipeline | [scripts/](scripts/) |
+| **06 · Proof Loop** | screenshot + click + smoke + export audits | [references/verification.md](references/verification.md) · [scripts/smoke-test.mjs](scripts/smoke-test.mjs) |
+
+Repository layout:
+
+```text
+ifq-design-skills/
+├── SKILL.md                  # main protocol: fast path, role, rules
+├── assets/
+│   ├── ifq-brand/            # logo / sparkle / tokens / BRAND-DNA
+│   └── templates/            # fork-ready templates with ambient marks baked in
+├── references/               # methods, modes, verification, recipes, charter
+├── scripts/                  # export / verify / smoke / pdf / pptx
+└── demos/                    # demo outputs
 ```
 
 ---
 
-## What It Does
-
-| Capability | Deliverable | Typical time |
-|------|--------|----------|
-| Interactive prototype | Single-file HTML · real iPhone bezel · clickable · Playwright-verified | 10–15 min |
-| Presentation deck | HTML deck + editable PPTX (text boxes preserved) | 15–25 min |
-| Timeline animation | MP4 (25fps / 60fps) + GIF + BGM | 8–12 min |
-| Design variations | 3+ side-by-side · live Tweaks · cross-dimensional | 10 min |
-| Infographic / dataviz | Print-grade typography · export PDF/PNG/SVG | 10 min |
-| Direction advisor | 5 schools × 20 philosophies · 3 directions · parallel demos | 5 min |
-| 5-dimension critique | Radar chart + Keep/Fix/Quick Wins · actionable list | 3 min |
-
----
-
-## 12 Professional Modes
-
-| Mode | Triggers | Deliverable |
-|------|-------|-------|
-| **M-01 Launch Film** | launch · hype film | 25–40s animation + poster + social cards |
-| **M-02 Personal Brand** | portfolio · about me | Single-page site + 5 variants |
-| **M-03 White Paper** | PDF report · annual report | Printable HTML → PDF + TOC |
-| **M-04 Dashboard** | command center · KPI panel | High-density real-data-driven dashboard |
-| **M-05 Compare / Review** | A vs B · benchmark | Matrix + radar + social cards |
-| **M-06 Onboarding** | first-run flow | 3–5 screens + tracking notes |
-| **M-07 Changelog** | release notes | Timeline infographic + social variant |
-| **M-08 Keynote** | conference deck | HTML deck + PPTX + PDF |
-| **M-09 Social Kit** | card · story | 3–6 pieces · multiple aspect ratios |
-| **M-10 Business Card** | invite · VIP pass | Print SVG + PDF (3mm bleed) |
-| **M-11 Brand Audit** | health check · upgrade | 6-dim radar + 3 directions |
-| **M-12 Full Brand System** | brand from scratch | logo + palette + type + 6 applications |
-
-Full handbook → [`references/modes.md`](references/modes.md)
-
----
-
-## Runtime Dependencies
-
-The skill itself has zero runtime deps if you only use `SKILL.md` as agent context. To run export scripts:
-
-| Layer | Package / Tool | Install |
-|------|---------|------|
-| Node (required) | `playwright`, `pdf-lib`, `pptxgenjs`, `sharp` | `cd <skill-root> && npm install` |
-| Browser | chromium | `npx playwright install chromium` |
-| Python (only `verify.py`) | `playwright` | `pip install -r requirements.txt` |
-| System | `ffmpeg` ≥ 4.4 | `brew install ffmpeg` / `apt install ffmpeg` |
-
-One-line smoke test:
+## 08 · Verification
 
 ```bash
 cd <skill-root>
 npm run smoke
 ```
 
----
+Checks: template index integrity · IFQ brand toolkit · icon sprite · reference-router targets · `scripts/` syntax. Returns a one-minute health report.
 
-## Design Philosophy
-
-**IFQ Design Skills is not another "AI image generator". It's an agent-native design operating system.**
-
-- **Not drawing, shipping.** One sentence of intent → full pipeline → HTML / MP4 / GIF / PPTX / PDF.
-- **Not a blank page, an inheritance.** Core Asset Protocol first looks for logo / product imagery / UI screenshots / palettes / fonts.
-- **Not random, style-recyclable.** 12 modes × 24 hand-drawn icons × ifq.ai brand signature × 4 Starter Components guarantee the same touch across agents and tasks.
-- **Not a black box, a Junior Designer.** Assumptions + reasoning + placeholders surface up-front, so you can interrupt and correct.
-
-ifq.ai's belief: **good design should not be trapped inside a GUI.**
+Per-deliverable verification uses Playwright screenshots + click checks + export-format audits. See [references/verification.md](references/verification.md).
 
 ---
 
-## License
+## 09 · Roadmap
 
-**Personal use** is free and unrestricted — study, research, create, self-promote, indie side projects.
+This version is not about “de-branding” IFQ. It is about **making IFQ more advanced**:
 
-**Enterprise / commercial use** requires written authorization from ifq.ai — internal toolchains, client deliverables, paid templates/subscriptions, or removing brand signatures before shipping. See [`LICENSE`](LICENSE) §2–4.
+- no loud watermark
+- no crude logo slapping
+- no single slogan pounded into every corner
 
----
+Instead: **layout order, micro-markers, motion grammar, colophons, color temperature, export finish** — stacked into one authored layer, until ifq.ai becomes the page’s own scent.
 
-## Connect · The ifq.ai Product Matrix
-
-**ifq.ai** (Jieshi Technology) is a brand lab building **AI-native creator infrastructure**. IFQ Design Skills is the design-capability endpoint in a network of 23+ interconnected products; it's also the reason every delivery carries a quiet ifq.ai signature.
-
-> *"Intelligence Framed Quietly."* — ifq.ai
-
-### Product Matrix
-
-| Surface | Entry | What |
-|------|------|------|
-| **Brand site** | [ifq.ai](https://ifq.ai) | Who we are · product narrative |
-| **Product hub** | [site.ifq.ai](https://site.ifq.ai) | 23+ products in one place |
-| **ifQ AI App** | [app.ifq.ai](https://app.ifq.ai) | AI-native super app |
-| **ifQ CLI** | [cli.ifq.ai](https://cli.ifq.ai) | Terminal-native agent OS · `ifq design` first-class |
-| **ifQ Skills** | [skills.ifq.ai](https://skills.ifq.ai) | Skills ecosystem hub |
-| **IFQ Design** | [cli.ifq.ai/design](https://cli.ifq.ai/design) | Marketing site for this skill |
-| **ifQ TV** | [tv.ifq.ai](https://tv.ifq.ai) | AI video content · process behind the scenes |
-| **Edge Tunnel** | [edge.ifq.ai](https://edge.ifq.ai) | Zero-config reverse tunnel for AI workflows |
-| **GitHub** | [github.com/peixl](https://github.com/peixl) · [github.com/ifq-ai](https://github.com/ifq-ai) | All open-source repos |
-
-### Social
-
-| Channel | Link |
-|------|-------------|
-| WeChat | [img.ifq.ai/wechat.jpg](https://img.ifq.ai/wechat.jpg) |
-| Official Account | [img.ifq.ai/we_q.jpg](https://img.ifq.ai/we_q.jpg) |
-| X / Twitter | [@AlchainHust](https://x.com/AlchainHust) |
-| Bilibili | [space.bilibili.com/14097567](https://space.bilibili.com/14097567) |
-| YouTube | [@Alchain](https://www.youtube.com/@Alchain) |
-| Xiaohongshu | [profile/5abc6f17...](https://www.xiaohongshu.com/user/profile/5abc6f17e8ac2b109179dfdf) |
-
-### Partnership & Licensing
-
-- **Commercial license, brand customization, press** → reach out via [ifq.ai](https://ifq.ai)
-- **Bug / PR / feature request** → [issues](https://github.com/peixl/ifq-design-skills/issues)
-- **Skill marketplace & distribution** → [skills.ifq.ai](https://skills.ifq.ai)
+Next: [references/revolution-gap.md](references/revolution-gap.md)
 
 ---
 
-<p align="center"><sub>
-  <img src="assets/ifq-brand/mark.svg" alt="ifq.ai" height="18" style="vertical-align: middle;" />
-  &nbsp;© 2026 ifq.ai · Jieshi Technology · Designed and signed by ifq.ai.
-</sub></p>
+<div align="center">
+
+<sub><code>compiled by ifq.ai&nbsp;&nbsp;·&nbsp;&nbsp;field note&nbsp;&nbsp;·&nbsp;&nbsp;2026</code></sub>
+
+</div>

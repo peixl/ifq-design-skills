@@ -1,8 +1,16 @@
-# Design Context：从已有上下文出发
+# Design Context：先找系统，再做造型
 
-**这是这个skill最重要的one thing。**
+**这是 IFQ 的第一原则。**
 
-好的hi-fi设计一定是从已有design context长出来的。**凭空做hi-fi是last resort，一定会产出generic的作品**。所以每次设计任务开始，先问：有没有可以参考的东西？
+好的 hi-fi 设计一定是从已有 context 长出来的。**凭空做 hi-fi 是 last resort**。所以任务开始时，不先想“我要用什么风格”，先想“我能继承什么系统”。
+
+在 IFQ 里，context 不只是视觉参考，更是：
+
+- 已有品牌资产
+- 已有代码与 token
+- 已有产品截图
+- 已有信息结构
+- 已有行为边界
 
 ## 什么是Design Context
 

@@ -1,10 +1,19 @@
-# Verification：输出验证流程
+# Verification：证据优先的输出验证流程
 
-一些 design-agent 原生环境（如 Claude.ai Artifacts）有内置的 `fork_verifier_agent` 起 subagent 用 iframe 截图检查。大部分 agent 环境（Claude Code / Codex / Cursor / Trae / 等）里没有这个内置能力——用 Playwright 手动做就能覆盖相同的验证场景。
+IFQ 的验证不是“随手看一眼没问题就算完”，而是**先定义什么算完成，再收集对应证据**。
+
+一些 design-agent 原生环境（如 Claude.ai Artifacts）有内置验证器。大部分 agent 环境没有，所以这里默认用 Playwright 和脚本化检查补齐。
+
+核心原则：
+
+- 没有截图，不算看过
+- 没有交互验证，不算可点
+- 没有导出核对，不算可交付
+- 没有控制台检查，不算能运行
 
 ## 验证清单
 
-每次产出HTML后，按这个清单做一遍：
+每次产出 HTML 后，至少走一遍这套 evidence contract：
 
 ### 1. 浏览器渲染检查（必做）
 

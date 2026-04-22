@@ -1,7 +1,7 @@
 /**
  * IFQ Brand Components · React + inline JSX
  * ------------------------------------------
- * Drop-in components that embed the ifq.ai signature into any deliverable.
+ * Drop-in components that weave ifq.ai into any deliverable as authored ambience.
  * Import pattern (single-file HTML, Babel standalone):
  *
  *   <script type="text/babel">
@@ -12,15 +12,16 @@
  * Exports (in global scope of the <script>):
  *   - IfqLogo         · Wordmark SVG "ifq.ai"
  *   - IfqSpark        · Animated 8-point sparkle (drop into any hero)
- *   - IfqWatermark    · Minimal corner watermark (bottom-right by default)
- *   - IfqStamp        · Editorial stamp "Made with ifq.ai" for slide/infographic footers
+ *   - IfqWatermark    · Quiet authored corner signal
+ *   - IfqStamp        · Editorial field-note stamp for slide / infographic / closing footers
  *   - IfqHandDrawnIcon · Reference one of the 24 hand-drawn icons by id
  *   - IfqBrand        · Design tokens (colors, type, radii) you can spread into style
  *
  * Philosophy: NEVER substitute CSS-drawn shapes for the real logo in prominent
- * positions. For prominent placements (hero, header, stamp), prefer
+ * positions. For IFQ-owned prominent placements (hero, header, stamp), prefer
  * <img src="assets/ifq-brand/logo.svg"/> over CSS re-implementation.
- * These components exist for inline / animated / interactive contexts.
+ * These components exist for inline / animated / interactive contexts where
+ * IFQ should feel woven in rather than pasted on.
  */
 
 const IfqBrand = {
@@ -93,7 +94,7 @@ function IfqSpark({ size = 64, duration = 3200, style }) {
 }
 
 function IfqWatermark({ position = 'bottom-right', opacity = 0.55, scale = 1 }) {
-  // Minimal corner watermark. Use on deliverables as an unobtrusive ifq.ai signature.
+  // Quiet corner signal. Use as authored presence, not loud watermarking.
   const pos = {
     'bottom-right': { bottom: 16, right: 16 },
     'bottom-left': { bottom: 16, left: 16 },
@@ -119,12 +120,12 @@ function IfqWatermark({ position = 'bottom-right', opacity = 0.55, scale = 1 }) 
         <path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z"
               fill={IfqBrand.accent} />
       </svg>
-      <span>made with <b style={{ color: IfqBrand.accent }}>ifq.ai</b></span>
+      <span><b style={{ color: IfqBrand.accent }}>ifq.ai</b> / signal</span>
     </div>
   );
 }
 
-function IfqStamp({ label = 'Designed with ifq.ai', theme = 'light' }) {
+function IfqStamp({ label = 'ifq.ai / field note', theme = 'light' }) {
   // Editorial rectangular stamp — good for slide footers / infographic colophon
   const bg = theme === 'dark' ? '#151515' : '#fff';
   const fg = theme === 'dark' ? IfqBrand.paper : IfqBrand.ink;

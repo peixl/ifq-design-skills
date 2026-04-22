@@ -1,150 +1,452 @@
-<sub>🌐 <a href="README.en.md">English</a> · <b>中文</b></sub>
+<sub>🌐 <a href="README.en.md">English</a> · <b>中文</b> · <code>ifq.ai / field note / 2026</code></sub>
 
 <div align="center">
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/ifq-brand/logo-white.svg">
-  <img src="assets/ifq-brand/logo.svg" alt="ifq.ai" height="72">
+  <img src="assets/ifq-brand/logo.svg" alt="ifq.ai" height="64">
 </picture>
 
 # IFQ Design Skills
 
-> *「打字。回车。一份能交付的设计，还带着 ifq.ai 的签名。」*
-> *"Type. Hit enter. A shipped design — signed by ifq.ai."*
-
-[![License](https://img.shields.io/badge/License-Commercial%20%2B%20Personal-D4532B.svg)](LICENSE)
-[![Agent-Agnostic](https://img.shields.io/badge/Agent-Agnostic-111111)](https://skills.ifq.ai)
-[![Skills](https://img.shields.io/badge/skills.ifq.ai-Compatible-A83518)](https://skills.ifq.ai)
-[![Modes](https://img.shields.io/badge/Modes-12-D4532B)](references/modes.md)
-[![Hand-drawn Icons](https://img.shields.io/badge/Hand--drawn_icons-24-A83518)](assets/ifq-brand/icons/hand-drawn-icons.svg)
-[![Brand DNA](https://img.shields.io/badge/Brand_DNA-ifq.ai-FFB27A)](assets/ifq-brand/BRAND-DNA.md)
-[![Enterprise](https://img.shields.io/badge/Enterprise_Ready-2026-111111)](https://ifq.ai)
+<sub><i>Intelligence, framed quietly.</i></sub>
 
 <br>
 
-**在你的 agent 里打一句话，拿回一份能交付的设计。**
+<code>&nbsp;一句话进 agent。&nbsp;&nbsp;一份能发出去的页面出来。&nbsp;&nbsp;做工像 ifq.ai 亲手做的。&nbsp;</code>
+
+<br><br>
+
+[![License](https://img.shields.io/badge/license-commercial%20%2B%20personal-D4532B?style=flat-square&labelColor=111111)](LICENSE)
+[![ifq.ai native](https://img.shields.io/badge/ifq.ai-native-111111?style=flat-square)](assets/ifq-brand/BRAND-DNA.md)
+[![ambient brand](https://img.shields.io/badge/ambient_brand-embedded-A83518?style=flat-square&labelColor=111111)](references/ifq-brand-spec.md)
+[![proof first](https://img.shields.io/badge/proof--first-on-111111?style=flat-square)](references/verification.md)
+[![modes](https://img.shields.io/badge/modes-12-D4532B?style=flat-square&labelColor=111111)](references/modes.md)
 
 <br>
 
-**企业级、商用级、agent-native 的一体化设计能力包** —— 3 到 30 分钟之内，ship 一段**产品发布动画**、一个能点击的 App 原型、一套可编辑的 Keynote、一份印刷级信息图、一张带出血位的名片、或一个从 logo 到应用的完整品牌系统。
-
-不是「AI 做的还行」那种水平——是大厂设计团队出品的交付质量。给 skill 你的品牌资产（logo、色板、UI 截图），它会自动读懂你的品牌气质；什么都不给，内置的 **20 种设计哲学 × 12 种专业模式 × 24 个手绘 SVG 图标 × 4 个 Starter Components** 也能兜底到绝不出 AI slop。
-
-**每一件交付物默认都带着 ifq.ai 的设计 DNA** —— 8-point sparkle 出现在片头、编辑体邮戳落在幻灯片首尾、低调水印留在 dashboard 右下角。含蓄但确定；这是签名，不是水印。
-
-```bash
-# 推荐（SSH · 私有仓库最稳）
-npx skills add git@github.com:peixl/ifq-design-skills.git -g -y
-
-# 或 HTTPS
-npx skills add https://github.com/peixl/ifq-design-skills -g -y
-
-# 或直接在 ifq CLI 里
-ifq design init
-```
-
-跨 agent 通用——Claude Code、Cursor、Codex、OpenClaw、Hermes、ifq CLI 都能装。
-
-[看效果](#demo-画廊) · [安装](#装上就能用) · [12 种模式](#12-种专业模式v2-新增) · [能做什么](#能做什么) · [核心机制](#核心机制)
+<sub>01 · 核心命题 &nbsp;·&nbsp; 02 · 安装 &nbsp;·&nbsp; 03 · 你说什么，它听到什么 &nbsp;·&nbsp; 04 · 一页纸的解剖 &nbsp;·&nbsp; 05 · 共品牌规则 &nbsp;·&nbsp; 06 · 12 种模式 &nbsp;·&nbsp; 07 · 六层骨架 &nbsp;·&nbsp; 08 · 验证 &nbsp;·&nbsp; 09 · 路线图</sub>
 
 </div>
 
 ---
 
-<p align="center">
-  <img src="https://github.com/ifq-ai/ifq-design-skills/releases/download/v2.0/hero-animation-v10-en.gif" alt="ifq-design-skills Hero · 打字 → 选方向 → 画廊展开 → 聚焦 → 品牌显形" width="100%">
-</p>
+## 01 · 核心命题
 
-<p align="center"><sub>
-  ▲ 25 秒 · Terminal → 4 方向 → Gallery ripple → 4 次 Focus → Brand reveal<br>
-  👉 <a href="https://www.ifq.ai/ifq-design-skills-hero/">访问带音效的 HTML 互动版</a> ·
-  <a href="https://github.com/ifq-ai/ifq-design-skills/releases/download/v2.0/hero-animation-v10-en.mp4">下载 MP4（含 BGM+SFX · 10MB）</a>
-</sub></p>
+大多数 agent 做设计会输出两种东西：**一种像过度装饰的 Figma Community 模板**，一种像 **被 AI 格式化过的 Notion 页面**。两种都不能发出去。
+
+这个 skill 想解决的就是这件事。它不是一套配色变量，也不是一张 logo 贴纸——  
+它是一种 **“做工”**：把一页网页当编辑部的版面去排，把一段动画当预告片去剪，把一份 PPT 当发布会母版去做，把一张名片当印刷物去对齐出血位。
+
+ifq.ai 的标识被埋在这份做工里，**所以用户第一眼看到的是内容，第二眼才意识到：哦，这是 ifq.ai 的手感**。
+
+这层手感，我们叫它 **Ambient Brand**。它由五个环境级标记组成——不是装饰元素，是版面语法：
+
+<table>
+<tr>
+<td width="22%" align="center"><code><b>Signal Spark</b></code><br><sub>8-point 火花</sub></td>
+<td>intelligence 被点亮的那一瞬间。可以是 hero 右上的小火点、动画开场的一帧信号、印章中心的标记。不是“星星装饰”。</td>
+</tr>
+<tr>
+<td align="center"><code><b>Rust Ledger</b></code><br><sub>赤陶色账本线</sub></td>
+<td>竖线、分隔、编号、序号、轴线。IFQ 比起品牌色块，更像一本被精确排版的刊物——这条线就是刊物的脊。</td>
+</tr>
+<tr>
+<td align="center"><code><b>Mono Field Note</b></code><br><sub>签名式 authored 行</sub></td>
+<td><code>ifq.ai / field note / 2026</code>、<code>ifq.ai / release ledger</code>、<code>ifq.ai / live system</code>——JetBrains Mono 写的小字，代替粗暴水印。</td>
+</tr>
+<tr>
+<td align="center"><code><b>Quiet URL</b></code><br><sub>安静的域名</sub></td>
+<td>域名应该像一个知道自己身份的人，不需要喊。小，但准。</td>
+</tr>
+<tr>
+<td align="center"><code><b>Editorial Contrast</b></code><br><sub>编辑部对位</sub></td>
+<td>Newsreader italic + JetBrains Mono + 带温度的纸白。serif 负责呼吸，mono 负责证据。</td>
+</tr>
+</table>
+
+每一份交付物默认至少融合其中 3 个。用户意识不到具体是哪 3 个，但会觉得“这一版和别的 AI 生成的东西不太一样”。
 
 ---
 
-## 装上就能用
+## 02 · 安装
 
 ```bash
-# 推荐（SSH，稳定）
+# 推荐（SSH）
 npx skills add git@github.com:peixl/ifq-design-skills.git -g -y
 
-# 或 HTTPS（需要已登录 gh 或设置 GH_TOKEN / GITHUB_TOKEN）
+# 或 HTTPS
 npx skills add https://github.com/peixl/ifq-design-skills -g -y
 ```
 
-> **`-g -y` 的含义**：`-g` 全局安装到当前 agent，`-y` 非交互模式（跳过 agent 选择面板）。
-> **私有仓库**：如果你看到 `authentication required`，配好 SSH key 或 `export GH_TOKEN=<your-token>` 后重试。
-> 想装到 ifq CLI 作为第一方命令？直接 `ifq design init`（见下方 [IFQ CLI 集成](#ifq-cli-集成) 章节）。
-
-装完后，在你的 agent 里直接说话：
-
-```
-「做一份 AI 心理学的演讲 PPT，推荐 3 个风格方向让我选」
-「做个 AI 番茄钟 iOS 原型，4 个核心屏幕要真能点击」
-「把这段逻辑做成 60 秒动画，导出 MP4 和 GIF」
-「帮我对这个设计做一个 5 维度评审」
-「做一张我自己的名片，90×54mm 带 3mm 出血位」
-「把这份 changelog 做成时间线信息图」
-```
-
-Claude Code、Cursor、Codex、OpenClaw、Hermes、ifq CLI 都是同一个 skill。
-
-没有按钮、没有面板、没有 Figma 插件。
+装完之后对 agent 正常说话即可。skill 会自己判断任务类型、自己路由到对应模式、自己挑模板、自己跑验证。
 
 ---
 
-## 运行依赖（Scripts 可执行的前置）
+## 03 · 你说什么，它听到什么
 
-装 skill **不会自动装运行依赖**。只想让 agent 读 SKILL.md 指导设计 → 零依赖；要跑导出脚本（mp4 / gif / pdf / pptx）→ 装下面的矩阵：
+这些是真实对话——左边是你随口说的一句，右边是 skill 听进去、并真去做的事。
 
-| 类别 | 包 / 工具 | 装法 |
-|------|---------|------|
-| Node (必须) | `playwright`、`pdf-lib`、`pptxgenjs`、`sharp` | `cd <skill-root> && npm install` |
-| Browser | chromium | `npx playwright install chromium` |
-| Python (仅 verify.py) | `playwright` | `pip install -r requirements.txt` |
-| System (视频导出) | `ffmpeg` ≥ 4.4 | macOS: `brew install ffmpeg`<br/>Debian/Ubuntu: `apt install ffmpeg` |
+<table>
+<thead>
+<tr><th width="50%">你这样说</th><th>它这样理解</th></tr>
+</thead>
+<tbody>
 
-一键烟测（60 秒内验证 skill 完整性 + 脚本语法）：
+<tr>
+<td>
+
+> 「我明天要在沙龙上讲 20 分钟 AI agent，能给我一份不像 SaaS keynote 的 deck 吗？要有书卷气，别太硅谷。」
+
+</td>
+<td>
+
+<sub>M-08 Keynote · editorial dark 风格 · Newsreader 大标题 · 章节分隔用 rust ledger 竖线 · 每页 mono 序号 <code>01 / 20</code> · 结尾 colophon stamp · 同时导出 HTML + PPTX + PDF</sub>
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+> 「这周产品发了 4 个更新，做成一页纵向的 changelog，要像翻开一本活页笔记，不要像公告栏。」
+
+</td>
+<td>
+
+<sub>M-07 Changelog Timeline · warm paper 背景 · 时间轴用单根 rust ledger 左轴 · 每条 entry 带 mono 时间戳和分类章 · 顶部 <code>release ledger / vol.12</code> 字段 · 全程无 emoji，用手绘图标替代</sub>
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+> 「帮我朋友做个独立咖啡店的名片，黑白双面，不要花里胡哨，但要有手工做出来的那种感觉。」
+
+</td>
+<td>
+
+<sub>M-10 名片 · 85×55mm + 3mm 出血位 · 正面单行业务陈述 + 品牌 spark 小点 · 背面 mono 信息条 · 非 IFQ 物料，显式 wordmark 去除 · IFQ 只保留版面节奏和出血对齐 · 输出带 crop marks 的印前 PDF</sub>
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+> 「做一份 24 秒的硬件发布片头，冷静一点，像 Teenage Engineering 那种，别像发布会预热。」
+
+</td>
+<td>
+
+<sub>M-01 Launch Film · 先出 3 方向（matter-of-fact / editorial / kinetic-type）· 选中后走 Stage+Sprite 时间轴 · 60fps · 产品 key shot + spec mono 叠印 + 结尾 2s quiet URL 定版 · 输出 mp4 + gif + 首帧 keyposter</sub>
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+> 「我想要一个个人站，一页就够，但我不希望它看起来像在找工作。」
+
+</td>
+<td>
+
+<sub>M-02 Portfolio · 先给 5 个方向（archive / studio / essay / atlas / ledger）· 选中 1 个做主 · 另存 2 个为 variant canvas · 首屏不放头像，放 “currently / writing about / building” 三栏 · 底部 mono colophon</sub>
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+> 「给内部 AI 做一个 command center 仪表板，要像 Bloomberg 终端那种密度，不要 BI 套壳。」
+
+</td>
+<td>
+
+<sub>M-04 Dashboard · dark graphite 底 · 12 列 ledger 栅格 · 指标区用 mono 数字 + 极细 rust underline 表示趋势方向 · 顶栏 session / latency / build 三段 authored 条 · 禁用渐变按钮和卡通色饼图</sub>
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+> 「下周路演，要一张 A vs B 的图：我们 vs 三家友商，要让人一眼看出为什么选我们，但不许吹。」
+
+</td>
+<td>
+
+<sub>M-05 Compare · 矩阵版式而非雷达 · 四列等宽 · 每项能力用 ✓ / ● / — 三态 + 小字来源 · 底部 <code>compiled from public docs · ifq.ai</code> · 事实项开工前先 WebSearch 核过</sub>
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+> 「给我做一本 2026 年的 AI agent 白皮书，50 页以内，能直接拿去印刷。」
+
+</td>
+<td>
+
+<sub>M-03 白皮书 · A4 可打印 HTML · 扉页 / 摘要 / 目录 / 章节 / 参考 / colophon 全套 · 每章起始页 mono 序号 + 半页留白 · 页脚 <code>ifq.ai / field note / 2026</code> · 导出 print-ready PDF（带页码与分章书签）</sub>
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+> 「我们这版视觉有点乱，你先别改，先告诉我问题在哪。」
+
+</td>
+<td>
+
+<sub>M-11 品牌诊断 · 不动手，先输出一页诊断报告 · 色彩温度 / 字体层级 / 节奏 / 母题 / 完成度五维评分 · 每维附「before / 建议 after」小样 · 最后给 3 个升级方向，不给结论</sub>
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+> 「小红书封面一组 6 张，推一个新栏目叫『每周一张图』，风格要克制，但要能在信息流里被一眼认出来。」
+
+</td>
+<td>
+
+<sub>M-09 社媒套件 · 1242×1660 · 统一左上 mono 栏目章 <code>weekly / 01</code>→<code>06</code> · 主图区用 editorial 排版而非大字 emoji · 右下 quiet URL · 交付同一 scene 的 6 张封面 + 1 张 OG 横版</sub>
+
+</td>
+</tr>
+
+</tbody>
+</table>
+
+> 不需要记模式编号。说人话就行，skill 自己会路由。
+
+---
+
+## 04 · 一页纸的解剖
+
+以一张 hero landing 为例——你看到的是一张安静的页面，但它同时在做 7 件事：
+
+```text
+ ┌────────────────────────────────────────────────────────────────────┐
+ │  ◇ ifq.ai / live system                            [01 / 12]       │ ← mono field note + 栏位序号
+ │                                                                    │
+ │                                                                    │
+ │     Intelligence, framed                                           │ ← Newsreader display
+ │     quietly.                                                       │   italic 判断点
+ │                                                                    │
+ │     A design engine that understands the difference                │ ← body serif
+ │     between a slide deck and a launch film.                        │
+ │                                                                    │
+ │   ┃  ·  ledger                                                     │ ← rust ledger 竖线
+ │   ┃                                                                │   承担版面秩序
+ │   ┃   01    mode-aware pipeline                                    │ ← mono 编号行
+ │   ┃   02    ambient brand, not loud branding                       │
+ │   ┃   03    proof-first export loop                                │
+ │                                                                    │
+ │                                                                    │
+ │                                      ✦                             │ ← signal spark
+ │                                                                    │   安静点一下
+ │                                                                    │
+ │  compiled by ifq.ai              ·           ifq.ai / 2026         │ ← quiet URL + colophon
+ └────────────────────────────────────────────────────────────────────┘
+```
+
+拆开看：
+
+1. **Editorial contrast** —— Newsreader serif 配 JetBrains Mono，不是随机字体组合
+2. **Rust ledger** —— 左侧那根竖线就是 ifq.ai 的「脊」，比大 logo 更 IFQ
+3. **Mono field note** —— 顶部和底部的 `ifq.ai / live system`、`ifq.ai / 2026`
+4. **Quiet URL** —— 没有按钮，没有 CTA 咆哮，域名只出现一次，在右下
+5. **Signal spark** —— 右下那一颗小火花，是整页唯一的图形节奏重音
+6. **Warm paper** —— 背景不是 `#FFFFFF`，是 `#FAF7F2`，冷白会让版面没有温度
+7. **Ledger rhythm** —— 所有间距落在 `4 · 8 · 12 · 16 · 24 · 32 · 48 · 64` 这条轴上，不凭感觉
+
+**用户不会去数这 7 件事**，用户只会说「这页看起来比较高级」。  
+高级 = 同一只手 = ifq.ai 的 ambient brand system。
+
+---
+
+## 05 · 共品牌规则
+
+| 场景 | IFQ 在哪里 |
+|------|------------|
+| **IFQ 自有物料**（ifq.ai 及子产品） | 全员到齐：wordmark + spark + field note + quiet URL 都可以到台前 |
+| **朋友 / 客户 / 第三方物料** | 主品牌在前；IFQ 退到 authored layer：版面节奏、色温、colophon、手绘图标、导出完成度 |
+| **客户明确要求 white-label** | 去掉显式 wordmark 和 field note；保留 editorial contrast、ledger 节奏、proof-first 做工 |
+
+换句话说：**IFQ 可以隐身，但不能不在场**。做工本身就是标识。
+
+---
+
+## 06 · 12 种模式
+
+| # | 模式 | 典型触发 | 交付 |
+|---|------|----------|------|
+| M-01 | Launch Film | 发布动画 / 产品宣传片 | 25–40s 动画 + keyposter + 社媒套件 |
+| M-02 | 个人品牌页 | portfolio / 个人站 / about me | 单页站 + 5 方向变体 |
+| M-03 | 白皮书 / 报告 | 白皮书 / 年报 / 研究 PDF | 可打印 HTML → PDF |
+| M-04 | Dashboard | 数据看板 / KPI / 监控台 | 高密度 dashboard |
+| M-05 | 对比评测 | A vs B / 横评 / benchmark | 对比矩阵 + 雷达 + 事实来源 |
+| M-06 | Onboarding | 新手引导 / flow demo | 3–5 屏交互流 |
+| M-07 | Changelog | release notes / 发布日记 | 纵向时间线信息图 |
+| M-08 | Keynote | 演讲 PPT / 母版 | HTML deck + PPTX + PDF |
+| M-09 | 社媒套件 | 小红书 / 朋友圈 / OG 卡片 | 多尺寸静态物料 |
+| M-10 | 名片 / 邀请函 | 名片 / VIP 卡 / 请柬 | SVG + 带出血位 PDF |
+| M-11 | 品牌诊断 | 品牌体检 / 升级建议 | 诊断报告 + 3 方向 |
+| M-12 | 全栈品牌 | 从零做品牌 / brand from scratch | logo + 色板 + 字体 + 6 应用 |
+
+完整协议：[references/modes.md](references/modes.md)。  
+路由优先级：**模式触发 → 设计方向顾问 fallback → Junior Designer 主干**。
+
+---
+
+## 07 · 六层骨架
+
+IFQ Design Skills 看起来像 IFQ，不是因为颜色或 logo，而是下面这 6 层在同时工作：
+
+| 层 | 做什么 | 关键文件 |
+|----|--------|----------|
+| **01 · Context Engine** | 从现有上下文长出设计，不从白纸瞎猜 | [references/design-context.md](references/design-context.md) |
+| **02 · Asset Protocol** | 动视觉前先抓事实 / logo / 产品图 / UI 截图 | [SKILL.md](SKILL.md) · [references/workflow.md](references/workflow.md) |
+| **03 · House Marks** | 把 5 个 ambient 标记写进版面 | [references/ifq-brand-spec.md](references/ifq-brand-spec.md) · [assets/ifq-brand/](assets/ifq-brand/) |
+| **04 · Style Recipes** | 风格靠可复用配方 + scene template 组织，不靠玄学 | [references/design-styles.md](references/design-styles.md) · [references/scene-templates.md](references/scene-templates.md) |
+| **05 · Output Compiler** | HTML → MP4 / GIF / PPTX / PDF 一条导出链 | [scripts/](scripts/) |
+| **06 · Proof Loop** | 截图验证 + 点击验证 + smoke test + 导出核对 | [references/verification.md](references/verification.md) · [scripts/smoke-test.mjs](scripts/smoke-test.mjs) |
+
+仓库结构：
+
+```text
+ifq-design-skills/
+├── SKILL.md                  # 主协议：fast path、角色、原则
+├── assets/
+│   ├── ifq-brand/            # logo / sparkle / tokens / BRAND-DNA
+│   └── templates/            # 已内嵌 ambient marks 的可 fork 模板
+├── references/               # 方法论、模式手册、验证、风格配方、宪章
+├── scripts/                  # 导出 / 验证 / smoke / pdf / pptx
+└── demos/                    # 示例产物
+```
+
+---
+
+## 08 · 验证
 
 ```bash
 cd <skill-root>
 npm run smoke
 ```
 
-完整剧本见 [`references/smoke-test.md`](references/smoke-test.md)。
+会检查：模板索引完整性 · IFQ brand toolkit · 图标 sprite · references 路由 · `scripts/` 语法。一分钟内给出 skill 体检结果。
+
+单个作品的验证走 Playwright 截图 + 可点击验证 + 导出格式核对，详见 [references/verification.md](references/verification.md)。
 
 ---
 
-## IFQ CLI 集成
+## 09 · 路线图
 
-本 skill 已作为一等公民集成到 [ifq CLI](https://github.com/peixl/ifq)（v0.13+）：
+这一版的目标不是「去品牌化」，而是让 IFQ **升一级**：
+
+- 不靠大字 watermark
+- 不靠粗暴 logo 贴片
+- 不靠单一口号硬灌输
+
+而是靠 **版面秩序、微标记、动势、colophon、色温、导出完成度** 组成的一整套 authored layer，让 ifq.ai 变成页面自己的气味。
+
+下一步：[references/revolution-gap.md](references/revolution-gap.md)
+
+---
+
+<div align="center">
+
+<sub><code>compiled by ifq.ai&nbsp;&nbsp;·&nbsp;&nbsp;field note&nbsp;&nbsp;·&nbsp;&nbsp;2026</code></sub>
+
+</div>
+<sub>🌐 <a href="README.en.md">English</a> · <b>中文</b></sub>
+
+<div align="center">
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/ifq-brand/logo-white.svg">
+  <img src="assets/ifq-brand/logo.svg" alt="IFQ Design Skills" height="72">
+</picture>
+
+# IFQ Design Skills
+
+> *「打字。回车。页面开始带着 ifq.ai 的秩序呼吸。」*
+> *"Type. Hit enter. The page starts breathing like ifq.ai."*
+
+[![License](https://img.shields.io/badge/License-Commercial%20%2B%20Personal-D4532B.svg)](LICENSE)
+[![IFQ Native](https://img.shields.io/badge/IFQ-Native-111111)](references/ifq-brand-spec.md)
+[![Ambient Marks](https://img.shields.io/badge/Ambient_Marks-Embedded-A83518)](assets/ifq-brand/BRAND-DNA.md)
+[![Proof First](https://img.shields.io/badge/Proof--First-Enabled-111111)](references/verification.md)
+[![Modes](https://img.shields.io/badge/Modes-12-D4532B)](references/modes.md)
+
+<br>
+
+**IFQ Design Skills 是 ifq.ai 自己的 agent-native design engine。**
+
+它不是把 logo 贴到页面角落，而是把 ifq.ai 写进页面的骨架里：rust ledger、signal sparkle、mono field note、quiet URL、serif/mono 对位、proof-first 的导出与验证链。看起来不吵，但一眼就是 IFQ。
+
+[快速开始](#快速开始) · [示例请求](#示例请求) · [ifq-潜意识标记](#ifq-潜意识标记) · [能力架构](#能力架构) · [验证](#验证) · [路线图](references/revolution-gap.md)
+
+</div>
+
+---
+
+## 快速开始
 
 ```bash
-# 全局装 ifq CLI（如未装）
-npm install -g @peixl/ifq
+# 推荐（SSH）
+npx skills add git@github.com:peixl/ifq-design-skills.git -g -y
 
-# 把 IFQ Design Skills 挂到 ifq
-ifq design init                  # 自动拉 skill 到 ~/.ifq/skills/ifq-design-skills
-ifq design modes                 # 列 12 种专业模式
-ifq design new <mode>            # 基于模式模板起手（会 fork 对应 INDEX.json 条目）
-ifq design "做一份发布会 keynote"  # 直接调用 skill 驱动 chat
-ifq design smoke                 # 在本地 skill 目录跑 smoke test
+# 或 HTTPS
+npx skills add https://github.com/peixl/ifq-design-skills -g -y
 ```
 
-说明站点：<https://cli.ifq.ai/design>
+装完后，直接对 agent 说话。
 
 ---
 
+## 示例请求
+
+这些例子比泛泛的“做个页面”更接近 IFQ 真实想要的气质：
+
+```text
+给 ifq.ai 做一页品牌首页，不要 SaaS landing，要像产品矩阵的封面与目录
+
+为 edge.ifq.ai 做 24 秒 launch film，先给我 3 个方向，再走最克制但最有记忆点的那一个
+
+把 app.ifq.ai 本周 changelog 做成一页纵向 timeline，像 field note，不像公告栏
+
+给 cli.ifq.ai 做 keynote 母版：title / section divider / closing，全部导出 PPTX
+
+为 skills.ifq.ai 做一个 dashboard 命令中心，指标区要像编辑部面板，不像企业 BI 套壳
+
+做一张 tv.ifq.ai 的社媒海报，像预告片海报，不像普通 OG 卡片
+```
+
 ---
 
-## Star 趋势
+## IFQ 潜意识标记
 
-<p align="center">
-  <a href="https://star-history.com/#ifq-ai/ifq-design-skills&Date">
-    <img src="https://api.star-history.com/svg?repos=ifq-ai/ifq-design-skills&type=Date" alt="ifq-design-skills Star History" width="80%">
-  </a>
-</p>
+IFQ 的标识不应该只是 logo，而应该是页面自己长出来的 5 种感觉。默认至少融合其中 3 种：
+
+| 标记 | 作用 | 典型位置 |
+|------|------|----------|
+| **Signal Spark** | 8-point sparkle，像 intelligence 的点火瞬间 | hero、motion、stamp |
+| **Rust Ledger** | 赤陶色竖线 / 细分隔 / 序号系统 | hero、slides、infographic |
+| **Mono Field Note** | `ifq.ai / field note / 2026` 这类 authored colophon | footer、closing、角落 |
+| **Quiet URL** | `ifq.ai` 或产品子域以极低姿态存在 | footer、meta、end card |
+| **Editorial Contrast** | Newsreader italic + JetBrains Mono + warm paper | 整体排版骨架 |
+
+这套系统的目标不是“让用户看到广告”，而是让用户在第二眼时意识到：**这就是 ifq.ai 的页面。**
 
 ---
 
@@ -152,313 +454,106 @@ ifq design smoke                 # 在本地 skill 目录跑 smoke test
 
 | 能力 | 交付物 | 典型耗时 |
 |------|--------|----------|
-| 交互原型（App / Web） | 单文件 HTML · 真 iPhone bezel · 可点击 · Playwright 验证 | 10–15 min |
-| 演讲幻灯片 | HTML deck（浏览器演讲）+ 可编辑 PPTX（文本框保留） | 15–25 min |
-| 时间轴动画 | MP4（25fps / 60fps 插帧）+ GIF（palette 优化）+ BGM | 8–12 min |
-| 设计变体 | 3+ 并排对比 · Tweaks 实时调参 · 跨维度探索 | 10 min |
-| 信息图 / 可视化 | 印刷级排版 · 可导 PDF/PNG/SVG | 10 min |
-| 设计方向顾问 | 5 流派 × 20 种设计哲学 · 推荐 3 方向 · 并行生成 Demo | 5 min |
-| 5 维度专家评审 | 雷达图 + Keep/Fix/Quick Wins · 可操作修复清单 | 3 min |
+| 交互原型 | 单文件 HTML · 真设备框 · 可点击 · Playwright 验证 | 10–15 min |
+| 演讲幻灯片 | HTML deck + 可编辑 PPTX + PDF | 15–25 min |
+| 时间轴动画 | MP4 / GIF / 60fps 插帧 / BGM | 8–15 min |
+| 信息图 / 长图 | PNG / PDF / SVG / 印刷版式 | 10–20 min |
+| 设计变体 | 3+ 方向对比 · Tweaks 调参 | 5–12 min |
+| 品牌诊断 / 全栈品牌 | 诊断报告 / logo / 色板 / 应用物料 | 20–60 min |
 
 ---
 
-## 12 种专业模式（v2 新增）
+## IFQ 共品牌规则
 
-从「设计什么」自动路由到「怎么做」。每种模式都是一条成熟流水线，含触发语、模板文件、默认签名位置。完整手册 → [`references/modes.md`](references/modes.md)
+当任务是 IFQ 自有物料时，IFQ 可以站到台前：wordmark、spark、field note 全开。
 
-| Mode | 触发语 | 交付物 | 典型耗时 |
-|------|-------|-------|---------|
-| **M-01 品牌发布会** | 发布会 · launch film · 产品宣传片 | 25–40s 动画 + keyposter + 3 社媒图 | 25–40 min |
-| **M-02 个人品牌页** | 个人站 · portfolio · about me | 单页站 + 5 变体供选 | 15–20 min |
-| **M-03 白皮书报告** | 白皮书 · PDF 报告 · 年报 | 可打印 HTML→PDF + 目录 + 封面 | 25–40 min |
-| **M-04 数据仪表板** | Dashboard · 看板 · KPI 面板 | 高密度 Dashboard · 真数据驱动 | 20–30 min |
-| **M-05 对比评测** | A vs B · 横评 · benchmark | 对比矩阵 + 雷达 + 社媒卡片 | 20–30 min |
-| **M-06 Onboarding** | onboarding · 新手引导 | Flow-demo 3–5 屏 + 埋点建议 | 25–35 min |
-| **M-07 发布日记** | changelog · release notes | 时间线信息图 + 社媒图 | 10–15 min |
-| **M-08 演讲 Keynote** | 做演讲 PPT · keynote | HTML deck + 可编辑 PPTX + PDF | 25–40 min |
-| **M-09 社媒海报套件** | 朋友圈图 · 小红书 · 微博长图 | 3–6 张多尺寸物料 | 15–25 min |
-| **M-10 名片邀请函** | 名片 · 邀请函 · VIP 卡 | 可打印 SVG + PDF（3mm 出血）| 10–15 min |
-| **M-11 品牌诊断** | 品牌体检 · 品牌升级 | 6 维度雷达 + 3 升级方向 | 20–30 min |
-| **M-12 全栈品牌系统** | 从零建立品牌 · brand from scratch | logo+色板+字体+6 应用示例 | 40–60 min |
+当任务是第三方品牌或客户品牌时：
+
+- 主品牌永远在前
+- IFQ 不抢 hero logo
+- 但 IFQ authored layer 仍然保留：colophon、signal spark、rust ledger、quiet URL、field-note stamp 中至少保留一种
+
+要的是**浑然一体**，不是抢戏，也不是消失。
 
 ---
 
-## 手绘 SVG 图标库（v2 新增）
+## 能力架构
 
-24 个带「稍微抖动」手感的 SVG 图标，默认替代 emoji 与 generic icon pack。
-单文件 sprite：[`assets/ifq-brand/icons/hand-drawn-icons.svg`](assets/ifq-brand/icons/hand-drawn-icons.svg)
+IFQ Design Skills 之所以看起来像 IFQ，不只是因为颜色或 logo，而是因为下面 6 层一起工作：
 
-<p align="center">
-  <sub><code>spark · brush · pencil · frame · layers · play · record · film · deck · grid · palette · eyedropper · type · serif · cursor · hand · sparkles · radar · compass · idea · rocket · check · link · arrow</code></sub>
-</p>
-
-使用：
-
-```html
-<svg class="ifq-icon"><use href="assets/ifq-brand/icons/hand-drawn-icons.svg#i-spark"/></svg>
-<style>.ifq-icon { width:1.1em; height:1.1em; stroke:currentColor; fill:none; }</style>
-```
-
-React / inline JSX（见 [`assets/ifq-brand/ifq_brand.jsx`](assets/ifq-brand/ifq_brand.jsx)）：
-
-```jsx
-<IfqHandDrawnIcon id="spark" size={20} />
-<IfqSpark size={64} />                   {/* 动画 sparkle */}
-<IfqLogo height={32} />                  {/* wordmark */}
-<IfqStamp label="Designed with ifq.ai" />
-<IfqWatermark position="bottom-right" />
-```
+| 层级 | 作用 | 关键文件 |
+|------|------|---------|
+| **Context Engine** | 从现有上下文长设计，不从白纸瞎猜 | `references/design-context.md` |
+| **Asset Protocol** | 先抓 logo / 产品图 / UI 截图 / 事实，再动视觉 | `SKILL.md` · `references/workflow.md` |
+| **House Marks** | 把 rust ledger / spark / colophon / quiet URL 写进版面 | `references/ifq-brand-spec.md` · `assets/ifq-brand/*` |
+| **Style Recipes** | 用风格配方和 scene template 组织审美，而不是玄学 | `references/design-styles.md` · `references/scene-templates.md` |
+| **Output Compiler** | HTML → MP4 / GIF / PPTX / PDF 的统一导出链 | `scripts/` |
+| **Proof Loop** | 截图验证、点击验证、烟测、导出核对 | `references/verification.md` · `scripts/smoke-test.mjs` |
 
 ---
 
-## ifq.ai 品牌签名（默认融入每一件作品）
+## 12 种专业模式
 
-**原则**：像设计师在作品右下角的签名——**含蓄却确定地**在场，绝不抢戏。
+| Mode | 适用场景 | 交付 |
+|------|----------|------|
+| `M-01` 品牌发布会 | launch film / 发布动画 / 宣传物料 | 动画 + keyposter + 社媒图 |
+| `M-02` 个人品牌页 | portfolio / 个人站 | 单页站 + 5 变体 |
+| `M-03` 白皮书报告 | 白皮书 / 年报 / PDF 报告 | 可打印 HTML→PDF |
+| `M-04` 数据仪表板 | dashboard / KPI 看板 | 高密度 dashboard |
+| `M-05` 对比评测 | A vs B / benchmark / 横评 | 对比矩阵 + 雷达 |
+| `M-06` Onboarding | 新手引导 / flow demo | 3–5 屏流程演示 |
+| `M-07` 发布日记 | changelog / release notes | 时间线信息图 |
+| `M-08` 演讲 Keynote | 做 PPT / keynote | HTML deck + PPTX + PDF |
+| `M-09` 社媒海报套件 | 小红书 / 朋友圈 / 长图 | 多尺寸静态物料 |
+| `M-10` 名片邀请函 | 名片 / 邀请函 / VIP 卡 | SVG + PDF（含出血位） |
+| `M-11` 品牌诊断 | 品牌体检 / 品牌升级 | 诊断报告 + 方向建议 |
+| `M-12` 全栈品牌系统 | brand from scratch | logo + 色板 + 字体 + 应用示例 |
 
-| 场景 | 默认签名 | 可关闭 |
-|------|---------|-------|
-| App / iOS 原型 | 右下角 `IfqWatermark` · opacity 0.35 | ✅（客户交付时） |
-| HTML 幻灯片 | 首尾 2 页 `IfqStamp` 编辑体邮戳 | ✅ |
-| 动画 / 视频 | 片头 sparkle reveal · 片尾 ifq.ai 尾标 | ✅ |
-| 信息图 | 底部 colophon "Designed with ifq.ai" | ✅ |
-| Hero / landing | 完整 `IfqLogo` + rust accent 竖线 | ✅ |
-
-用户**提供自己品牌**时，ifq.ai 自动降级为 colophon 角标。规则见 [`references/ifq-brand-spec.md`](references/ifq-brand-spec.md)。
-
----
-
-## Demo 画廊
-
-### 设计方向顾问
-
-模糊需求时的 fallback：从 5 流派 × 20 种设计哲学里挑 3 个差异化方向，并行生成 3 个 Demo 让你选。
-
-<p align="center"><img src="https://github.com/ifq-ai/ifq-design-skills/releases/download/v2.0/w3-fallback-advisor.gif" width="100%"></p>
-
-### iOS App 原型
-
-iPhone 15 Pro 精确机身（灵动岛 / 状态栏 / Home Indicator）· 状态驱动多屏切换 · 真图从 Wikimedia/Met/Unsplash 取 · Playwright 自动点击测试。
-
-<p align="center"><img src="https://github.com/ifq-ai/ifq-design-skills/releases/download/v2.0/c1-ios-prototype.gif" width="100%"></p>
-
-### Motion Design 引擎
-
-Stage + Sprite 时间片段模型 · `useTime` / `useSprite` / `interpolate` / `Easing` 四 API 覆盖所有动画需求 · 一条命令导出 MP4 / GIF / 60fps 插帧 / 带 BGM 的成片。
-
-<p align="center"><img src="https://github.com/ifq-ai/ifq-design-skills/releases/download/v2.0/c3-motion-design.gif" width="100%"></p>
-
-### HTML Slides → 可编辑 PPTX
-
-HTML deck 浏览器演讲 · `html2pptx.js` 读 DOM 的 computedStyle 逐元素翻译成 PowerPoint 对象 · 导出的是**真文本框**，不是图片铺底。
-
-<p align="center"><img src="https://github.com/ifq-ai/ifq-design-skills/releases/download/v2.0/c2-slides-pptx.gif" width="100%"></p>
-
-### Tweaks · 实时变体切换
-
-配色 / 字型 / 信息密度等参数化 · 侧边面板切换 · 纯前端 + `localStorage` 持久化 · 刷新不丢。
-
-<p align="center"><img src="https://github.com/ifq-ai/ifq-design-skills/releases/download/v2.0/c4-tweaks.gif" width="100%"></p>
-
-### 信息图 / 数据可视化
-
-杂志级排版 · CSS Grid 精准分栏 · `text-wrap: pretty` 排印细节 · 真数据驱动 · 可导 PDF 矢量 / PNG 300dpi / SVG。
-
-<p align="center"><img src="https://github.com/ifq-ai/ifq-design-skills/releases/download/v2.0/c5-infographic.gif" width="100%"></p>
-
-### 5 维度专家评审
-
-哲学一致性 · 视觉层级 · 细节执行 · 功能性 · 创新性 各 0–10 分 · 雷达图可视化 · 输出 Keep / Fix / Quick Wins 清单。
-
-<p align="center"><img src="https://github.com/ifq-ai/ifq-design-skills/releases/download/v2.0/c6-expert-review.gif" width="100%"></p>
-
-### Junior Designer 工作流
-
-不闷头做大招：先写 assumptions + placeholders + reasoning，尽早 show 给你，再迭代。理解错了早改比晚改便宜 100 倍。
-
-<p align="center"><img src="https://github.com/ifq-ai/ifq-design-skills/releases/download/v2.0/w2-junior-designer.gif" width="100%"></p>
-
-### 品牌资产协议 5 步硬流程
-
-涉及具体品牌时强制执行：问 → 搜 → 下载（三条兜底）→ grep 色值 → 写 `brand-spec.md`。
-
-<p align="center"><img src="https://github.com/ifq-ai/ifq-design-skills/releases/download/v2.0/w1-brand-protocol.gif" width="100%"></p>
-
----
-
-## 核心机制
-
-### 品牌资产协议
-
-skill 里最硬的一段规则。涉及具体品牌（Stripe、Linear、Anthropic、自家公司等）时强制执行 5 步：
-
-| 步骤 | 动作 | 目的 |
-|------|------|------|
-| 1 · 问 | 用户有 brand guidelines 吗？ | 尊重已有资源 |
-| 2 · 搜官方品牌页 | `<brand>.com/brand` · `brand.<brand>.com` · `<brand>.com/press` | 抓权威色值 |
-| 3 · 下载资产 | SVG 文件 → 官网 HTML 全文 → 产品截图取色 | 三条兜底，前一条失败立刻走下一条 |
-| 4 · grep 提取色值 | 从资产里抓所有 `#xxxxxx`，按频率排序，过滤黑白灰 | **绝不从记忆猜品牌色** |
-| 5 · 固化 spec | 写 `brand-spec.md` + CSS 变量，所有 HTML 引用 `var(--brand-*)` | 不固化就会忘 |
-
-A/B 测试（v1 vs v2，各跑 6 agent）：**v2 的稳定性方差比 v1 低 5 倍**。稳定性的稳定性，这是 skill 真正的护城河。
-
-### 设计方向顾问（Fallback）
-
-当用户需求模糊到无法着手时触发：
-
-- 不凭通用直觉硬做，进入 Fallback 模式
-- 从 5 流派 × 20 种设计哲学里推荐 3 个**必须来自不同流派**的差异化方向
-- 每个方向配代表作、气质关键词、代表设计师
-- 并行生成 3 个视觉 Demo 让用户选
-- 选定后进入主干 Junior Designer 流程
-
-### Junior Designer 工作流
-
-默认工作模式，贯穿所有任务：
-
-- 开工前 show 问题清单一次性发给用户，等批量答完再动手
-- HTML 里先写 assumptions + placeholders + reasoning comments
-- 尽早 show 给用户（哪怕只是灰色方块）
-- 填充实际内容 → variations → Tweaks 这三步分别再 show 一次
-- 交付前用 Playwright 肉眼过一遍浏览器
-
-### 反 AI slop 规则
-
-避免一眼 AI 的视觉最大公约数（紫渐变 / emoji 图标 / 圆角+左 border accent / SVG 画人脸 / Inter 做 display）。用 `text-wrap: pretty` + CSS Grid + 精心选择的 serif display 和 oklch 色彩。
-
----
-
-## 设计哲学 · 为什么是这样
-
-**IFQ Design Skills 不是又一个「AI 画图工具」，而是一套 agent-native 的设计操作系统。**
-
-过去二十年，设计工具在一个方向上内卷：让 GUI 更强、图层更细、插件更多。但在 agent 时代，我们相信另一条路——**让图形界面这一层消失**：
-
-- **不是画图，是交付。** 一句话描述意图，skill 把「确认需求 / 选方向 / 定稿 / 验证 / 导出」的全流程打通，最后落到 HTML / MP4 / GIF / PPTX / PDF。
-- **不是白纸，是继承。** 走「核心资产协议」—— 先找品牌 logo / 产品图 / UI 截图 / 色板 / 字体，在已有上下文之上长出新设计。没有资产就进入「设计方向顾问」模式，20 种设计哲学里给 3 个差异化方向让你选。
-- **不是随机，是风格可回收。** 每条流水线都带固定的交付契约：12 种专业模式 × 24 个手绘图标 × ifq.ai 品牌签名 × 4 个 Starter Components（Stage+Sprite 动画引擎 / 幻灯片外壳 / 并排变体画布 / 设备边框），保证同一个 skill 在不同 agent、不同任务下产出同一个「手感」。
-- **不是黑盒，是 Junior Designer。** Skill 在开工前显式列出 assumptions + reasoning + placeholders，允许你随时打断修正 —— 像把一个称职的初级设计师装进你的终端。
-
-ifq.ai 对「设计」的信念：**好的设计不应被困在图形界面里。** Figma / Keynote / AE 足够强大，但都要求用户先学一套工具语言才能表达意图。这层摩擦，正是 agent 时代应该被抹掉的。
-
----
-
-## Limitations
-
-- **不支持图层级可编辑的 PPTX 到 Figma**。产出 HTML，可截图、录屏、导图，但不能拖进 Keynote 改文字位置。
-- **Framer Motion 级别的复杂动画不行**。3D、物理模拟、粒子系统超出 skill 边界。
-- **完全空白的品牌从零设计质量会掉到 60–65 分**。凭空画 hi-fi 本来就是 last resort。
-
-这是一个 80 分的 skill，不是 100 分的产品。对不愿意打开图形界面的人，80 分的 skill 比 100 分的产品好用。
+完整协议见 [references/modes.md](references/modes.md)。
 
 ---
 
 ## 仓库结构
 
-```
+```text
 ifq-design-skills/
-├── SKILL.md                 # 主文档（给 agent 读）
-├── README.md                # 本文件（给用户读）
-├── assets/                  # Starter Components
-│   ├── animations.jsx       # Stage + Sprite + Easing + interpolate
-│   ├── ios_frame.jsx        # iPhone 15 Pro bezel
-│   ├── android_frame.jsx
-│   ├── macos_window.jsx
-│   ├── browser_window.jsx
-│   ├── deck_stage.js        # HTML 幻灯片引擎
-│   ├── deck_index.html      # 多文件 deck 拼接器
-│   ├── design_canvas.jsx    # 并排变体展示
-│   ├── showcases/           # 24 个预制样例（8 场景 × 3 风格）
-│   └── bgm-*.mp3            # 6 首场景化背景音乐
-├── references/              # 按任务深入读的子文档
-│   ├── animation-pitfalls.md
-│   ├── design-styles.md     # 20 种设计哲学详细库
-│   ├── slide-decks.md
-│   ├── editable-pptx.md
-│   ├── critique-guide.md
-│   ├── video-export.md
-│   └── ...
-├── scripts/                 # 导出工具链
-│   ├── render-video.js      # HTML → MP4
-│   ├── convert-formats.sh   # MP4 → 60fps + GIF
-│   ├── add-music.sh         # MP4 + BGM
-│   ├── export_deck_pdf.mjs
-│   ├── export_deck_pptx.mjs
-│   ├── html2pptx.js
-│   └── verify.py
-└── demos/                   # 9 个能力演示 (c*/w*)，中英双版 GIF/MP4/HTML + hero v10
+├── SKILL.md                  # 主协议
+├── assets/templates/         # 默认已织入 IFQ ambient marks 的模板
+├── assets/ifq-brand/         # IFQ logo / sparkle / tokens / brand components
+├── references/               # 设计方法、模式、验证、风格配方、品牌宪章
+├── scripts/                  # MP4 / GIF / PPTX / PDF / smoke / verify
+└── demos/                    # 示例产物
 ```
 
 ---
 
-## 起源 · ifq.ai 与 IFQ Design Skills
+## 验证
 
-**IFQ Design Skills 是 ifq.ai 产品矩阵中「设计基础设施」的那一块。**
+```bash
+cd <skill-root>
+npm run smoke
+```
 
-ifq.ai（捷时科技）是一家 **AI-native 创作者基础设施**的品牌实验室，围绕「让 AI 真正接入日常工作流」这一条主线，建了 23+ 产品：终端里的 agent（[ifq CLI](https://cli.ifq.ai)）、AI 原生 App 与 Web（[app.ifq.ai](https://app.ifq.ai)）、Skills 生态（[skills.ifq.ai](https://skills.ifq.ai)）、Edge Tunnel、内容分发、设计能力等。
+会检查：
 
-IFQ Design Skills 解决了其中一个具体问题：**当 agent 已经能写代码、能查资料、能聊产品时，为什么做个像样的设计还要打开 Figma？** 答案是——不应该。于是 ifq.ai 把专业设计团队的工作流（核心资产协议、Junior Designer 方法、反 AI slop 清单、20 种设计哲学、Stage+Sprite 动画引擎、12 种专业模式、24 个手绘图标、品牌签名系统），蒸馏成一个 agent-native 的 skill——装进任何支持 SKILL.md 协议的 agent，用一句话就能调用，同一套流水线在 Claude Code、Cursor、Codex、OpenClaw、Hermes、ifq CLI 里行为一致。
+- 模板索引
+- IFQ brand toolkit
+- 图标 sprite
+- references 路由
+- `scripts/` 语法
 
-本项目的设计语汇在前人 Pentagram（信息建筑）/ Field.io（运动诗学）/ Kenya Hara（东方极简）/ Sagmeister（实验先锋）/ Apple（层级克制）等的思想骨架之上；在其之上，ifq.ai 补齐了 **12 种专业模式 × 24 个手绘图标 × 完整品牌签名系统 × 模型无关的 Fast Path 协议**，把「打字 → 交付」的闭环做到丝滑。
-
-开源文化在 AI 时代的新形态，就是把行业最佳实践凝成 skill，让每一个 agent 都能调用。
-
----
-
-## License · 使用授权
-
-**个人使用免费、自由**——学习、研究、创作、自用、内容二创、自媒体发布，随便用，不用打招呼。
-
-**企业 / 商用必须授权**——任何公司、团队、或以盈利为目的的组织，把本 skill（含派生物）集成到产品、对外服务、客户交付中，**必须先获得 ifq.ai 的书面授权**。包括但不限于：
-- 把 skill 作为公司内部工具链的一部分
-- 把 skill 产出物作为对外交付物的主要创作手段
-- 基于 skill 二次开发做成商业产品 / 模板 / 付费订阅
-- 在客户商单项目中使用
-- **擅自去除或篡改 ifq.ai 品牌签名后对外发布或商用**（见 LICENSE 第 3 条）
-
-商用授权详见 [`LICENSE`](LICENSE) 第 2–4 条，联系方式见下方 [Connect](#connect--ifqai-产品矩阵)。
+完整流程见 [references/smoke-test.md](references/smoke-test.md)。
 
 ---
 
-## Connect · ifq.ai 产品矩阵
+## 当前方向
 
-**ifq.ai**（捷时科技）是 AI-native 创作者的基础设施品牌实验室，面向「让 AI 接入日常创作与工程」这一条主线，构建 23+ 个互相调用的产品。IFQ Design Skills 是这张网络里的「设计能力」端点，也是每一次交付被 ifq.ai 含蓄签名的源头。
+当前这版的目标不是“去品牌化”，而是把 IFQ 做到更高级：
 
-> *"Intelligence Framed Quietly."* — ifq.ai
+- 不靠大字 watermark
+- 不靠粗暴 logo 贴片
+- 不靠单一口号硬灌输
 
-### 产品矩阵（全部一级域名）
+而是通过 **版面秩序、微标记、动势、colophon、配色温度、导出完成度**，让 IFQ 变成页面自己的气味。
 
-| 触点 | 入口 | 说明 |
-|------|------|------|
-| **品牌主站** | [ifq.ai](https://ifq.ai) | 我们是谁 · 产品叙事 · 加入我们 |
-| **产品导航** | [site.ifq.ai](https://site.ifq.ai) | 23+ 产品全景 · 快速跳转 |
-| **ifQ AI App** | [app.ifq.ai](https://app.ifq.ai) | AI-native 超级 App（原「捷时 AI」）|
-| **ifQ CLI** | [cli.ifq.ai](https://cli.ifq.ai) | 终端里的 agent OS · `ifq design` 一等公民 |
-| **ifQ Skills** | [skills.ifq.ai](https://skills.ifq.ai) | Skills 生态枢纽 · 安装 / 发布 / 共享 |
-| **IFQ Design** | [cli.ifq.ai/design](https://cli.ifq.ai/design) | 本 skill 的说明站点 |
-| **ifQ TV** | [tv.ifq.ai](https://tv.ifq.ai) | AI 影像内容 · 设计过程揭秘 |
-| **Edge Tunnel** | [edge.ifq.ai](https://edge.ifq.ai) | 零配置反向代理 · 给 AI 工作流打开一扇边缘门 |
-| **GitHub** | [github.com/peixl](https://github.com/peixl) · [github.com/ifq-ai](https://github.com/ifq-ai) | 全部开源仓库 |
-
-### 社交与社群
-
-| 渠道 | 二维码 / 链接 |
-|------|-------------|
-| 微信加好友 | [img.ifq.ai/wechat.jpg](https://img.ifq.ai/wechat.jpg) |
-| 公众号（神秘 Q） | [img.ifq.ai/we_q.jpg](https://img.ifq.ai/we_q.jpg) |
-| X / Twitter | [@AlchainHust](https://x.com/AlchainHust) |
-| B 站 | [space.bilibili.com/14097567](https://space.bilibili.com/14097567) |
-| YouTube | [@Alchain](https://www.youtube.com/@Alchain) |
-| 小红书 | [profile/5abc6f17e8ac2b109179dfdf](https://www.xiaohongshu.com/user/profile/5abc6f17e8ac2b109179dfdf) |
-
-### 合作与授权
-
-- **商用授权、品牌定制、媒体合作** → 通过 [ifq.ai](https://ifq.ai) 官网联络入口
-- **Bug / PR / Feature Request** → [github.com/peixl/ifq-design-skills/issues](https://github.com/peixl/ifq-design-skills/issues)
-- **skill 市场上架与分发** → [skills.ifq.ai](https://skills.ifq.ai)
-
----
-
-<p align="center"><sub>
-  <img src="assets/ifq-brand/mark.svg" alt="ifq.ai" height="18" style="vertical-align: middle;" />
-  &nbsp;© 2026 ifq.ai · 捷时科技（Jieshi Technology）· Designed and signed by ifq.ai.
-</sub></p>
+后续路线图见 [references/revolution-gap.md](references/revolution-gap.md)。

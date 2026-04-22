@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // IFQ Design Skills · smoke-test.mjs
-// 60-second sanity check: template index, brand assets, icon sprite, references, script syntax.
+// 60-second sanity check: template index, identity toolkit, icon sprite, references, script syntax.
 // Usage: npm run smoke   (or: node scripts/smoke-test.mjs)
 
 import { promises as fs } from 'node:fs';
@@ -41,8 +41,8 @@ async function check1_TemplateIndex() {
   if (missing === 0) ok(`all ${index.templates.length} templates present`);
 }
 
-async function check2_BrandAssets() {
-  console.log(`\n${BOLD}[2/5] IFQ brand assets${RESET}`);
+async function check2_IdentityToolkit() {
+  console.log(`\n${BOLD}[2/5] IFQ identity toolkit${RESET}`);
   const required = [
     'assets/ifq-brand/logo.svg',
     'assets/ifq-brand/logo-white.svg',
@@ -51,12 +51,13 @@ async function check2_BrandAssets() {
     'assets/ifq-brand/icons/hand-drawn-icons.svg',
     'assets/ifq-brand/BRAND-DNA.md',
     'assets/ifq-brand/ifq-tokens.css',
+    'references/ifq-brand-spec.md',
   ];
   let missing = 0;
   for (const f of required) {
     if (!existsSync(path.join(ROOT, f))) { fail(`  missing: ${f}`); missing++; }
   }
-  if (missing === 0) ok(`all ${required.length} brand assets present`);
+  if (missing === 0) ok(`all ${required.length} identity toolkit files present`);
 }
 
 async function check3_IconSprite() {
@@ -109,7 +110,7 @@ async function check5_ScriptSyntax() {
 (async () => {
   console.log(`${BOLD}IFQ Design Skills · smoke test${RESET}  ${DIM}(${ROOT})${RESET}`);
   await check1_TemplateIndex();
-  await check2_BrandAssets();
+  await check2_IdentityToolkit();
   await check3_IconSprite();
   await check4_References();
   await check5_ScriptSyntax();

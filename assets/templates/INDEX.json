@@ -1,8 +1,8 @@
 {
   "$schema": "./templates.schema.json",
   "version": "2.0",
-  "author": "ifq.ai",
-  "description": "IFQ Design Skills · built-in HTML templates. Each entry points to a self-contained HTML scaffold with the IFQ brand already wired in. Agents should Read the template before generating, then fork-and-fill (not blank-start).",
+  "author": "ifq-design-skills",
+  "description": "IFQ Design Skills · built-in HTML templates with ambient IFQ cues already woven into layout rhythm, metadata, and colophon logic. Agents should Read the template before generating, then fork-and-fill with subject matter instead of blank-starting.",
   "templates": [
     {
       "id": "T-hero-landing",
@@ -10,7 +10,7 @@
       "name": "Editorial Hero Landing",
       "file": "assets/templates/hero-landing.html",
       "viewport": "1440×900",
-      "notes": "Newsreader display + rust accent + right-side IfqSpark. Best for product launch landing / personal branding."
+      "notes": "IFQ-native hero scaffold with rust ledger, sparkle cue, quiet colophon, and editorial header rhythm."
     },
     {
       "id": "T-slide-title",
@@ -18,7 +18,7 @@
       "name": "Keynote Title Slide",
       "file": "assets/templates/slide-title.html",
       "viewport": "1920×1080",
-      "notes": "Single title slide with IfqStamp + speaker-attribution band. Pair with slide-body + slide-closing."
+      "notes": "IFQ keynote title slide with field-note stamp area, spark cluster, and rust divider."
     },
     {
       "id": "T-dashboard",
@@ -26,7 +26,7 @@
       "name": "Command Center Dashboard",
       "file": "assets/templates/dashboard-command-center.html",
       "viewport": "1440×900",
-      "notes": "Left nav + top KPI strip + 3×3 metric grid + right feed. Uses hand-drawn radar/arrow icons for status."
+      "notes": "Left nav + KPI strip + 3×3 metric grid + quiet IFQ live-system footer. Uses hand-drawn radar/arrow icons."
     },
     {
       "id": "T-infographic-vertical",
@@ -34,7 +34,7 @@
       "name": "Vertical Infographic (小红书长图)",
       "file": "assets/templates/infographic-vertical.html",
       "viewport": "1242×3200",
-      "notes": "Multi-section scroll with timeline + pull-quotes + colophon. IfqStamp at footer."
+      "notes": "Multi-section scroll with timeline, pull-quotes, and IFQ field-note footer treatment."
     },
     {
       "id": "T-social-x",
@@ -42,7 +42,7 @@
       "name": "X/Twitter Share Card",
       "file": "assets/templates/social-x-card.html",
       "viewport": "1200×675",
-      "notes": "OG-ready share card with large headline + rust accent rule."
+      "notes": "IFQ social card with rust ledger, spark cue, and authored bottom line."
     },
     {
       "id": "T-compare-vs",
@@ -50,7 +50,7 @@
       "name": "A vs B Comparison Matrix",
       "file": "assets/templates/compare-vs.html",
       "viewport": "1440×900",
-      "notes": "Two-column matrix with radar chart footer. Ready for benchmark data."
+      "notes": "IFQ comparison sheet with radar footer and field-research metadata."
     },
     {
       "id": "T-changelog",
@@ -58,7 +58,7 @@
       "name": "Changelog Timeline",
       "file": "assets/templates/changelog-timeline.html",
       "viewport": "1200×variable",
-      "notes": "Left-rail dates + right event cards + hand-drawn icons."
+      "notes": "Release ledger with mono dates, rust timeline spine, and IFQ-authored footer."
     },
     {
       "id": "T-business-card",
@@ -66,7 +66,7 @@
       "name": "Business Card (90×54mm + 3mm bleed)",
       "file": "assets/templates/business-card.html",
       "viewport": "96×60mm",
-      "notes": "Print-ready with bleed & safe-zone marks. Front + back."
+      "notes": "IFQ business card scaffold with spark cue, quiet URL, and authored back colophon."
     }
   ]
 }
