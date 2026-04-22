@@ -305,7 +305,7 @@ So: **IFQ can disappear; it can’t be absent**. The craft is the signature.
 | M-12 | Full Brand | brand from scratch | logo + palette + type + 6 applications |
 
 Full protocol: [references/modes.md](references/modes.md).  
-Routing order: **mode trigger → fallback direction advisor → junior-designer trunk**.
+Routing order: **mode trigger → ambient direction scout → IFQ designer trunk**.
 
 ---
 
