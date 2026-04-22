@@ -34,7 +34,7 @@
 录一个 25fps 的 MP4 基础版本。依赖全局 playwright。
 
 ```bash
-NODE_PATH=$(npm root -g) node /path/to/claude-design/scripts/render-video.js <html文件>
+NODE_PATH=$(npm root -g) node /path/to/ifq-design-skills/scripts/render-video.js <html文件>
 ```
 
 可选参数：
@@ -86,7 +86,7 @@ bash add-music.sh product-promo.mp4 --mood=ad --out=promo-final.mp4
 从已有 MP4 生成 60fps 版本和 GIF。
 
 ```bash
-bash /path/to/claude-design/scripts/convert-formats.sh <input.mp4> [gif_width] [--minterpolate]
+bash /path/to/ifq-design-skills/scripts/convert-formats.sh <input.mp4> [gif_width] [--minterpolate]
 ```
 
 输出（与输入同目录）：

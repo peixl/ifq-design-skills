@@ -1,0 +1,6 @@
+# IFQ Design Skills · Python runtime deps
+# Required by scripts/verify.py and any other Python helpers.
+# Install:  pip install -r requirements.txt
+#           python -m playwright install chromium
+
+playwright>=1.47.0

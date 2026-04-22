@@ -1,0 +1,100 @@
+<!doctype html>
+<!--
+  IFQ Design Skills · Template T-changelog
+  Changelog / Release notes timeline. 1200×variable.
+  Fork-and-fill: { VERSION / DATE / SUMMARY / ITEMS } placeholders. Duplicate <.entry> per release.
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=1200"/>
+<title>{ PRODUCT } · Changelog · ifq.ai</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&family=Noto+Serif+SC:wght@700&display=swap" rel="stylesheet"/>
+<style>
+  :root{--accent:#D4532B;--accent-deep:#A83518;--accent-soft:#FFB27A;--ink:#111;--ink-soft:#3A3532;--paper:#FAF7F2;--cream:#F1EBE0;--display:'Newsreader','Noto Serif SC',Georgia,serif;--mono:'JetBrains Mono',ui-monospace,monospace}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--paper);color:var(--ink);font-family:-apple-system,Inter,sans-serif;-webkit-font-smoothing:antialiased}
+  .page{width:1200px;margin:0 auto;padding:80px 72px}
+
+  header{padding-bottom:40px;border-bottom:3px solid var(--ink);margin-bottom:48px}
+  .kicker{font-family:var(--mono);font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent-deep);margin-bottom:12px}
+  h1{font-family:var(--display);font-size:72px;font-weight:700;letter-spacing:-.015em;line-height:1.05;margin-bottom:16px}
+  .lead{font-family:var(--display);font-size:22px;line-height:1.5;color:var(--ink-soft);font-style:italic;max-width:720px}
+
+  .timeline{position:relative;padding-left:200px}
+  .timeline::before{content:"";position:absolute;left:168px;top:0;bottom:0;width:2px;background:var(--accent-soft)}
+
+  .entry{position:relative;margin-bottom:56px;padding-bottom:40px;border-bottom:1px dashed rgba(17,17,17,.12)}
+  .entry:last-child{border-bottom:0}
+  .entry::before{content:"";position:absolute;left:-40px;top:14px;width:16px;height:16px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--paper),0 0 0 5px var(--accent-soft)}
+
+  .entry .date{position:absolute;left:-200px;top:12px;width:140px;text-align:right;font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:var(--ink-soft);text-transform:uppercase;line-height:1.6}
+  .entry .version{font-family:var(--mono);font-size:13px;letter-spacing:.14em;font-weight:600;color:var(--accent-deep)}
+
+  .entry h2{font-family:var(--display);font-size:34px;font-weight:700;letter-spacing:-.01em;line-height:1.15;margin:4px 0 16px}
+  .entry .summary{font-size:17px;line-height:1.65;color:var(--ink-soft);margin-bottom:20px}
+
+  .items{list-style:none;display:flex;flex-direction:column;gap:10px}
+  .items li{display:flex;gap:14px;align-items:flex-start;font-size:15px;line-height:1.55}
+  .items .tag{flex-shrink:0;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:3px 10px;border-radius:2px;line-height:1.4}
+  .tag.add{background:#E8F2E8;color:#2F6B3E}
+  .tag.fix{background:#FFE9D6;color:var(--accent-deep)}
+  .tag.chg{background:#F1EBE0;color:var(--ink-soft)}
+  .tag.brk{background:#F6DADA;color:#8B2020}
+
+  footer{margin-top:72px;padding-top:32px;border-top:2px solid var(--ink);display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+  .sig{display:flex;align-items:center;gap:10px}
+  .sig svg{width:16px;height:16px}
+</style>
+</head>
+<body>
+<main class="page">
+  <header>
+    <div class="kicker">{ PRODUCT · Release Notes }</div>
+    <h1>Changelog</h1>
+    <p class="lead">{ 一句话介绍：What this product does and why these changes matter. }</p>
+  </header>
+
+  <div class="timeline">
+    <article class="entry">
+      <div class="date">2026 · 04 · 22<br/><span class="version">v{ X.Y.Z }</span></div>
+      <h2>{ Release headline }</h2>
+      <p class="summary">{ 2–3 line narrative summary of the release. }</p>
+      <ul class="items">
+        <li><span class="tag add">New</span><span>{ feature one }</span></li>
+        <li><span class="tag add">New</span><span>{ feature two }</span></li>
+        <li><span class="tag fix">Fix</span><span>{ bug fix }</span></li>
+        <li><span class="tag chg">Change</span><span>{ behavior change }</span></li>
+      </ul>
+    </article>
+
+    <article class="entry">
+      <div class="date">2026 · 03 · 28<br/><span class="version">v{ X.Y.Z−1 }</span></div>
+      <h2>{ Prior release headline }</h2>
+      <p class="summary">{ summary. }</p>
+      <ul class="items">
+        <li><span class="tag add">New</span><span>{ ... }</span></li>
+        <li><span class="tag brk">Breaking</span><span>{ breaking change — link to migration guide }</span></li>
+      </ul>
+    </article>
+
+    <article class="entry">
+      <div class="date">2026 · 03 · 02<br/><span class="version">v{ X.Y.Z−2 }</span></div>
+      <h2>{ ... }</h2>
+      <p class="summary">{ ... }</p>
+      <ul class="items">
+        <li><span class="tag fix">Fix</span><span>{ ... }</span></li>
+      </ul>
+    </article>
+  </div>
+
+  <footer>
+    <div>ifq.ai · { PRODUCT } · 2026</div>
+    <div class="sig">
+      <svg viewBox="-16 -16 32 32"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="#D4532B"/></svg>
+      Designed with ifq.ai
+    </div>
+  </footer>
+</main>
+</body>
+</html>

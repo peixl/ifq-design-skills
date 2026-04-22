@@ -1,0 +1,61 @@
+<!doctype html>
+<!--
+  IFQ Design Skills · Template T-social-x
+  X/Twitter share card + OG image. 1200×675, safe for 2:1 crop.
+  Fork-and-fill: { HEADLINE / TAG / URL } placeholders.
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=1200"/>
+<title>{ HEADLINE } · ifq.ai</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,700;1,700&family=JetBrains+Mono:wght@400;600&family=Noto+Serif+SC:wght@700;900&display=swap" rel="stylesheet"/>
+<style>
+  :root{--accent:#D4532B;--accent-deep:#A83518;--ink:#111;--paper:#FAF7F2;--cream:#F1EBE0;--display:'Newsreader','Noto Serif SC',Georgia,serif;--mono:'JetBrains Mono',ui-monospace,monospace}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#1C1A17;color:var(--paper);font-family:-apple-system,Inter,sans-serif}
+  .card{width:1200px;height:675px;margin:0 auto;position:relative;overflow:hidden;background:linear-gradient(135deg,#1C1A17 0%,#2A2623 100%)}
+  .card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 20%,rgba(212,83,43,.22),transparent 55%)}
+  .card .rule{position:absolute;top:56px;bottom:56px;left:72px;width:3px;background:var(--accent)}
+  .inner{position:relative;padding:72px 96px 72px 120px;height:100%;display:flex;flex-direction:column;justify-content:space-between}
+
+  .top{display:flex;justify-content:space-between;align-items:center}
+  .brand{display:flex;align-items:center;gap:12px;font-family:var(--display);font-size:22px;font-weight:700;letter-spacing:-.01em}
+  .brand .dot{color:var(--accent)}
+  .tag{font-family:var(--mono);font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);padding:6px 14px;border:1px solid rgba(212,83,43,.5);border-radius:2px}
+
+  h1{font-family:var(--display);font-size:92px;line-height:1.02;font-weight:700;letter-spacing:-.02em;max-width:920px}
+  h1 em{color:var(--accent);font-style:italic}
+
+  .bottom{display:flex;justify-content:space-between;align-items:flex-end;font-family:var(--mono);font-size:14px;letter-spacing:.14em;text-transform:uppercase;opacity:.72}
+  .sig{display:flex;align-items:center;gap:10px}
+  .sig svg{width:18px;height:18px}
+
+  .spark{position:absolute;top:120px;right:120px;width:80px;height:80px;opacity:.92;animation:pulse 3s ease-in-out infinite}
+  @keyframes pulse{0%,100%{transform:scale(1);opacity:.92}50%{transform:scale(1.08);opacity:1}}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="rule"></div>
+  <svg class="spark" viewBox="-16 -16 32 32"><path d="M0 -12 L2.6 -2.6 L12 0 L2.6 2.6 L0 12 L-2.6 2.6 L-12 0 L-2.6 -2.6 Z" fill="#D4532B"/></svg>
+
+  <div class="inner">
+    <div class="top">
+      <div class="brand">ifq<span class="dot">.ai</span></div>
+      <div class="tag">{ TAG · e.g. LAUNCH · 2026 }</div>
+    </div>
+
+    <h1>{ HEADLINE — punchy, <em>italic</em> for key word. }</h1>
+
+    <div class="bottom">
+      <div>{ URL · ifq.ai }</div>
+      <div class="sig">
+        <svg viewBox="-16 -16 32 32"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="#D4532B"/></svg>
+        Designed with ifq.ai
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

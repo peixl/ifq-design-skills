@@ -1,0 +1,100 @@
+<!doctype html>
+<!--
+  IFQ Design Skills · Template T-infographic-vertical
+  Vertical long-form infographic (小红书/公众号长图 / white paper one-pager).
+  Fork-and-fill: replace { TITLE / KICKER / SECTION_N / QUOTE } placeholders.
+  Viewport: 1242×3200 (hi-dpi, 2x for social).
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=1242"/>
+<title>{ TITLE } · ifq.ai</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,700;1,400&family=Noto+Serif+SC:wght@700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --ifq-accent:#D4532B; --ifq-accent-deep:#A83518; --ifq-accent-soft:#FFB27A;
+    --ifq-ink:#111; --ifq-ink-soft:#3A3532; --ifq-paper:#FAF7F2; --ifq-cream:#F1EBE0;
+    --display:'Newsreader','Noto Serif SC',Georgia,serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--ifq-paper);color:var(--ifq-ink);font-family:-apple-system,BlinkMacSystemFont,Inter,sans-serif;-webkit-font-smoothing:antialiased}
+  .page{width:1242px;margin:0 auto;padding:96px 80px;position:relative}
+  .rule{position:absolute;top:96px;bottom:96px;left:56px;width:3px;background:var(--ifq-accent)}
+  .kicker{font-family:var(--mono);font-size:16px;letter-spacing:.22em;text-transform:uppercase;color:var(--ifq-accent-deep);margin-bottom:32px}
+  h1{font-family:var(--display);font-size:116px;line-height:1.02;font-weight:700;letter-spacing:-.02em;margin-bottom:48px}
+  h1 em{font-style:italic;color:var(--ifq-accent)}
+  .lead{font-family:var(--display);font-size:34px;line-height:1.4;font-weight:400;color:var(--ifq-ink-soft);max-width:960px;margin-bottom:120px}
+
+  .section{padding:72px 0;border-top:1px solid rgba(17,17,17,.12);display:grid;grid-template-columns:120px 1fr;gap:48px;align-items:start}
+  .section .num{font-family:var(--mono);font-size:14px;color:var(--ifq-accent);letter-spacing:.18em}
+  .section h2{font-family:var(--display);font-size:56px;line-height:1.12;font-weight:700;margin-bottom:24px}
+  .section p{font-size:22px;line-height:1.72;color:var(--ifq-ink-soft);margin-bottom:16px}
+
+  .pull{margin:56px 0;padding:40px 48px;background:var(--ifq-cream);border-left:4px solid var(--ifq-accent);font-family:var(--display);font-size:40px;line-height:1.35;font-style:italic;font-weight:400}
+  .pull cite{display:block;margin-top:20px;font-family:var(--mono);font-size:14px;font-style:normal;letter-spacing:.14em;color:var(--ifq-accent-deep);text-transform:uppercase}
+
+  .timeline{margin:48px 0;padding:0;list-style:none;border-left:2px solid var(--ifq-accent-soft);padding-left:32px}
+  .timeline li{padding:16px 0;position:relative}
+  .timeline li::before{content:"";position:absolute;left:-40px;top:24px;width:14px;height:14px;border-radius:50%;background:var(--ifq-accent)}
+  .timeline .t{font-family:var(--mono);font-size:13px;letter-spacing:.14em;color:var(--ifq-accent-deep);text-transform:uppercase}
+  .timeline .e{font-size:22px;line-height:1.5;margin-top:6px}
+
+  .colophon{margin-top:120px;padding-top:48px;border-top:2px solid var(--ifq-ink);display:flex;justify-content:space-between;align-items:flex-end;font-family:var(--mono);font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--ifq-ink-soft)}
+  .colophon .stamp{display:flex;align-items:center;gap:10px}
+  .stamp svg{width:18px;height:18px}
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="rule"></div>
+
+  <div class="kicker">{ KICKER · e.g. IFQ · WHITE PAPER · 2026 } </div>
+  <h1>{ TITLE — pair with <em>italic accent</em> }</h1>
+  <p class="lead">{ LEAD — one-sentence premise, 80–140 chars. }</p>
+
+  <section class="section">
+    <div class="num">01</div>
+    <div>
+      <h2>{ Section 1 headline }</h2>
+      <p>{ body paragraph 1 }</p>
+      <p>{ body paragraph 2 }</p>
+    </div>
+  </section>
+
+  <blockquote class="pull">
+    "{ key quote that anchors the piece. }"
+    <cite>— { source / author }</cite>
+  </blockquote>
+
+  <section class="section">
+    <div class="num">02</div>
+    <div>
+      <h2>{ Section 2 headline }</h2>
+      <ul class="timeline">
+        <li><div class="t">2026 · 04</div><div class="e">{ milestone one }</div></li>
+        <li><div class="t">2026 · 05</div><div class="e">{ milestone two }</div></li>
+        <li><div class="t">2026 · 06</div><div class="e">{ milestone three }</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="num">03</div>
+    <div>
+      <h2>{ Section 3 headline }</h2>
+      <p>{ closing body }</p>
+    </div>
+  </section>
+
+  <div class="colophon">
+    <div>{ PUBLICATION / YEAR · e.g. IFQ · 2026 }</div>
+    <div class="stamp">
+      <svg viewBox="-16 -16 32 32"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="#D4532B"/></svg>
+      Designed with ifq.ai
+    </div>
+  </div>
+</main>
+</body>
+</html>

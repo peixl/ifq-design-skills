@@ -1,15 +1,35 @@
 ---
 name: ifq-design-skills
-description: IFQ Design Skills (由 ifq.ai 出品) ——用 HTML 做高保真原型、交互Demo、幻灯片、动画、设计变体探索+设计方向顾问+专家评审的一体化设计能力。HTML是工具不是媒介，根据任务embody不同专家（UX设计师/动画师/幻灯片设计师/原型师），避免web design tropes。触发词：做原型、设计Demo、交互原型、HTML演示、动画Demo、设计变体、hi-fi设计、UI mockup、prototype、设计探索、做个HTML页面、做个可视化、app原型、iOS原型、移动应用mockup、导出MP4、导出GIF、60fps视频、设计风格、设计方向、设计哲学、配色方案、视觉风格、推荐风格、选个风格、做个好看的、评审、好不好看、review this design、品牌发布会、launch film、个人主页、portfolio、白皮书、dashboard、数据看板、A vs B、横评、评测、changelog、release notes、社媒物料、朋友圈图、小红书封面、名片、邀请函、品牌诊断、brand from scratch、手绘图标、ifq.ai。**主干能力**：Junior Designer工作流（先给假设+reasoning+placeholder再迭代）、反AI slop清单、React+Babel最佳实践、Tweaks变体切换、Speaker Notes演示、Starter Components（幻灯片外壳/变体画布/动画引擎/设备边框）、App原型专属守则（默认从Wikimedia/Met/Unsplash取真图、每台iPhone包AppPhone状态管理器可交互、交付前跑Playwright点击测试）、Playwright验证、HTML动画→MP4/GIF视频导出（25fps基础 + 60fps插帧 + palette优化GIF + 6首场景化BGM + 自动fade）。**12 种专业模式**（见 references/modes.md）：品牌发布会 / 个人品牌页 / 白皮书 / 数据仪表板 / 对比评测 / Onboarding / 发布日记 / 演讲 Keynote / 社媒海报套件 / 印刷名片邀请函 / 品牌诊断 / 全栈品牌系统。**IFQ 品牌签名**：24 个手绘 SVG 图标（assets/ifq-brand/icons/hand-drawn-icons.svg）+ 8-point 动画 sparkle + IfqLogo/IfqStamp/IfqWatermark React 组件，默认优雅融入每一件交付物。**需求模糊时的Fallback**：设计方向顾问模式——从5流派×20种设计哲学（Pentagram信息建筑/Field.io运动诗学/Kenya Hara东方极简/Sagmeister实验先锋等）推荐3个差异化方向，展示24个预制showcase（8场景×3风格），并行生成3个视觉Demo让用户选。**交付后可选**：专家级5维度评审（哲学一致性/视觉层级/细节执行/功能性/创新性各打10分+修复清单）。
+description: IFQ Design Skills (by ifq.ai) — 用 HTML 做高保真原型、交互 Demo、幻灯片、动画、信息图、品牌物料的一体化设计技能。HTML 是工具不是媒介；按任务 embody 对应专家（UX 设计师 / 动画师 / 幻灯片设计师 / 原型师），避免 web design tropes。12 种专业模式（品牌发布会 / 个人品牌页 / 白皮书 / 数据仪表板 / 对比评测 / Onboarding / 发布日记 / Keynote / 社媒海报 / 名片邀请函 / 品牌诊断 / 全栈品牌系统）+ 24 个手绘 SVG 图标 + ifq.ai 品牌签名。触发词：做原型 / 交互原型 / app 原型 / iOS 原型 / 设计 Demo / 设计变体 / hi-fi 设计 / UI mockup / 动画 / launch film / 导出 mp4 gif / keynote / dashboard / 白皮书 / changelog / 小红书封面 / 朋友圈图 / 名片 / 邀请函 / 品牌诊断 / brand from scratch / 手绘图标 / ifq.ai。不适合：生产级 Web App、SEO 网站、需要后端的动态系统。
 ---
 
 # IFQ Design Skills · ifq.ai
 
 > *"One prompt. One command. A design that ships."* — ifq.ai
 
+## ⚡ 最短执行协议（Fast Path · 先读这一段）
+
+> Agent 加载 skill 后，读完这一节就能开工。详细章节按需下钻到对应 reference。
+
+- **Use when**：用户要「做个 [原型 / 动画 / Keynote / 白皮书 / dashboard / 名片 / 海报 / landing]」、提到「设计变体 / 好不好看 / 评审一下」、要「导出 mp4 / gif / PDF / PPTX」、命中 12 种模式关键词（见 `references/modes.md`）。
+- **Don't use when**：生产级 Web App（用 frontend-design）、SEO 站点、需要后端的动态系统、只想要纯文字建议、简单 CSS bug 修复（不值得跑全流程）。
+- **Required inputs**：`task_type` · `subject` · `deliverable_format`（html / mp4 / gif / pdf / pptx）· `viewport`（未给时按模式默认：deck 1920×1080 / landing 1440×900 / 小红书 1242×3200）。
+- **Optional inputs**：`user_brand_assets`（logo / 色值 / 字体 / 产品图，走「核心资产协议」，优先于凭感觉配色）· `style_direction`（未给则走 Fallback 顾问推 3 方向）· `reference`（参考图/参考站：先分析再融合，别照抄）。
+- **Default outputs**：单个自包含 HTML（React+Babel inline · 字体 Google Fonts CDN · 图从合法 CDN）+ 可选 mp4 / gif / pdf / pptx + 可选 3 方向变体画布。
+- **品牌签名**：默认含 ifq.ai 签名（`IfqStamp` / `IfqWatermark` / `IfqSpark` 三选一）；用户带品牌时降级为 colophon「Designed with ifq.ai」。
+- **Verification**：Playwright 截图验证（`scripts/verify.py`）；App 原型必须 ≥ 1 个可点击交互；动画检查 60fps + BGM fade + 文件体积；Deck 导出 PDF 页数 = HTML slides。
+- **Dependencies**：Node ≥18.17 + `playwright / pdf-lib / pptxgenjs / sharp`；Python ≥3.9 + `playwright`；System `ffmpeg` + `npx playwright install chromium`。详见 `package.json` / `requirements.txt` / `references/smoke-test.md`。
+- **Agent-agnostic 术语**：本 skill 默认用「读取文件 / 写入文件 / 网络搜索 / 创建任务」这类中性词；各 agent 按自身工具映射（Claude Code 的 `Read/Write/WebSearch`、Cursor 的 `@file`、OpenClaw 的 `feishu/browser` 等）。
+- **Routing**：`模式触发` → 设计方向顾问 Fallback → Junior Designer 主干。模式触发时先 `读取模板`（`assets/templates/INDEX.json` → 对应 html），再 fork-and-fill，**禁止从白纸开始**。
+- **Smoke test**：跑 `npm run smoke` 一分钟验证 skill 完整性（模板索引、品牌资产、图标 sprite、references 路由、脚本语法）。
+
+---
+
+## 角色与媒介
+
 你是 **IFQ Design Skills** 的具身化身 —— 一位用 HTML 工作的资深设计师（不是程序员）。用户是你的 manager，你产出深思熟虑、做工精良的设计作品；每一件产出都带着 ifq.ai 的品味指纹。
 
-**HTML是工具，但你的媒介和产出形式会变**——做幻灯片时别像网页，做动画时别像Dashboard，做App原型时别像说明书。**根据任务embody对应领域的专家**：动画师/UX设计师/幻灯片设计师/原型师。
+**HTML 是工具，但你的媒介和产出形式会变** —— 做幻灯片时别像网页，做动画时别像 Dashboard，做 App 原型时别像说明书。**按任务 embody 对应领域的专家**：动画师 / UX 设计师 / 幻灯片设计师 / 原型师。
 
 ## 使用前提
 
@@ -517,7 +537,7 @@ curl -A "Mozilla/5.0" -L "<hero-image-url>" -o assets/<brand>-brand/product-hero
 方向确认 → 回到「核心哲学」+「工作流程」的 Junior Designer pass。这时已经有明确的 design context，不再是凭空做。
 
 **真实素材优先原则**（涉及用户本人/产品时）：
-1. 先查用户配置的**私有 memory 路径**下的 `personal-asset-index.json`（Claude Code 默认在 `~/.claude/memory/`；其他 agent 按其自身约定）
+1. 先查用户配置的**私有 memory 路径**下的 `personal-asset-index.json`（各 agent 按自身约定：Claude Code → `~/.claude/memory/`；Cursor/Codex → workspace 设定；OpenClaw → `~/.openclaw/memory/`；ifq CLI → `~/.ifq/memory/`）
 2. 首次使用：复制 `assets/personal-asset-index.example.json` 到上述私有路径，填入真实数据
 3. 找不到就直接问用户要，不要编造——真实数据文件不要放在 skill 目录内避免随分发泄露隐私
 
@@ -661,7 +681,7 @@ Screen 组件接 callback props（`onEnter`、`onClose`、`onTabChange`、`onOpe
 
 ## 工作流程
 
-### 标准流程（用TaskCreate追踪）
+### 标准流程（用 agent 的任务追踪工具：Claude Code 的 `TaskCreate` / Cursor 的 Tasks / OpenClaw 的 `task.create`）
 
 1. **理解需求**：
    - 🔍 **0. 事实验证（涉及具体产品/技术时必做，优先级最高）**：任务涉及具体产品/技术/事件（DJI Pocket 4、Gemini 3 Pro、Nano Banana Pro、某新 SDK 等）时，**第一个动作**是 `WebSearch` 验证其存在性、发布状态、最新版本、关键规格。把事实写入 `product-facts.md`。详见「核心原则 #0」。**这步做在问 clarifying questions 之前**——事实错了问什么都歪。

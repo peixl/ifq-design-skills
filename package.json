@@ -1,0 +1,45 @@
+{
+  "name": "ifq-design-skills",
+  "version": "2.0.0",
+  "private": true,
+  "description": "IFQ Design Skills — skill package for AI coding agents (Anthropic/OpenAI SKILL.md format). This package.json declares the runtime dependencies needed by the skill's scripts (render-video / export-pptx / export-pdf / verify). Installing the skill DOES NOT install these automatically — run `npm install` in this directory (or install peers globally) before running scripts.",
+  "author": "ifq.ai",
+  "license": "SEE LICENSE IN LICENSE",
+  "homepage": "https://github.com/peixl/ifq-design-skills",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/peixl/ifq-design-skills.git"
+  },
+  "engines": {
+    "node": ">=18.17"
+  },
+  "type": "module",
+  "scripts": {
+    "smoke": "node scripts/smoke-test.mjs",
+    "verify": "python3 scripts/verify.py",
+    "render:video": "node scripts/render-video.js",
+    "export:pdf": "node scripts/export_deck_pdf.mjs",
+    "export:pptx": "node scripts/export_deck_pptx.mjs",
+    "export:stage-pdf": "node scripts/export_deck_stage_pdf.mjs",
+    "install:browsers": "npx playwright install chromium"
+  },
+  "dependencies": {
+    "playwright": "^1.47.0",
+    "pdf-lib": "^1.17.1",
+    "pptxgenjs": "^3.12.0",
+    "sharp": "^0.33.4"
+  },
+  "optionalDependencies": {
+    "fluent-ffmpeg": "^2.1.3"
+  },
+  "peerDependenciesMeta": {
+    "ffmpeg-system": {
+      "optional": true
+    }
+  },
+  "systemRequirements": {
+    "ffmpeg": ">=4.4  (required for video/GIF export; install via `brew install ffmpeg` on macOS or `apt install ffmpeg` on Debian/Ubuntu)",
+    "python": ">=3.9  (required for scripts/verify.py)",
+    "chromium": "installed via `npx playwright install chromium` after npm install"
+  }
+}

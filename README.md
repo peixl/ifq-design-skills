@@ -32,12 +32,17 @@
 **每一件交付物默认都带着 ifq.ai 的签名** —— 8-point sparkle 出现在片头、编辑体邮戳落在幻灯片首尾、低调水印留在 dashboard 右下角。含蓄但确定。
 
 ```bash
-npx skills add https://github.com/peixl/ifq-design-skills
+# 推荐（SSH · 私有仓库最稳）
+npx skills add git@github.com:peixl/ifq-design-skills.git -g -y
+
+# 或 HTTPS
+npx skills add https://github.com/peixl/ifq-design-skills -g -y
+
+# 或直接在 ifq CLI 里
+ifq design init
 ```
 
-当前仓库还在 GitHub 私有仓库 `peixl/ifq-design-skills`，README 先按真实可用的安装方式来写：直接使用完整仓库 URL。你的环境里已有 GitHub 访问凭证时（如 SSH key，或设置 `GH_TOKEN` / `GITHUB_TOKEN`），安装最稳。
-
-跨 agent 通用——Claude Code、Cursor、Codex、OpenClaw、Hermes 都能装。
+跨 agent 通用——Claude Code、Cursor、Codex、OpenClaw、Hermes、ifq CLI 都能装。
 
 [看效果](#demo-画廊) · [安装](#装上就能用) · [12 种模式](#12-种专业模式v2-新增) · [能做什么](#能做什么) · [核心机制](#核心机制)
 
@@ -60,23 +65,75 @@ npx skills add https://github.com/peixl/ifq-design-skills
 ## 装上就能用
 
 ```bash
-npx skills add https://github.com/peixl/ifq-design-skills
+# 推荐（SSH，稳定）
+npx skills add git@github.com:peixl/ifq-design-skills.git -g -y
+
+# 或 HTTPS（需要已登录 gh 或设置 GH_TOKEN / GITHUB_TOKEN）
+npx skills add https://github.com/peixl/ifq-design-skills -g -y
 ```
 
-如果你的 agent 环境已经能访问这个私有仓库，这个写法比 `ifq-ai/ifq-design-skills` 更符合当前现实。
+> **`-g -y` 的含义**：`-g` 全局安装到当前 agent，`-y` 非交互模式（跳过 agent 选择面板）。
+> **私有仓库**：如果你看到 `authentication required`，配好 SSH key 或 `export GH_TOKEN=<your-token>` 后重试。
+> 想装到 ifq CLI 作为第一方命令？直接 `ifq design init`（见下方 [IFQ CLI 集成](#ifq-cli-集成) 章节）。
 
-以 Hermes 为例，添加完 skill 之后就可以直接说话：
+装完后，在你的 agent 里直接说话：
 
 ```
 「做一份 AI 心理学的演讲 PPT，推荐 3 个风格方向让我选」
 「做个 AI 番茄钟 iOS 原型，4 个核心屏幕要真能点击」
 「把这段逻辑做成 60 秒动画，导出 MP4 和 GIF」
 「帮我对这个设计做一个 5 维度评审」
+「做一张我自己的名片，90×54mm 带 3mm 出血位」
+「把这份 changelog 做成时间线信息图」
 ```
 
-Claude Code、Cursor、Codex、OpenClaw、Hermes 这类支持 skills 的 agent 也都是同一条命令。
+Claude Code、Cursor、Codex、OpenClaw、Hermes、ifq CLI 都是同一个 skill。
 
 没有按钮、没有面板、没有 Figma 插件。
+
+---
+
+## 运行依赖（Scripts 可执行的前置）
+
+装 skill **不会自动装运行依赖**。只想让 agent 读 SKILL.md 指导设计 → 零依赖；要跑导出脚本（mp4 / gif / pdf / pptx）→ 装下面的矩阵：
+
+| 类别 | 包 / 工具 | 装法 |
+|------|---------|------|
+| Node (必须) | `playwright`、`pdf-lib`、`pptxgenjs`、`sharp` | `cd <skill-root> && npm install` |
+| Browser | chromium | `npx playwright install chromium` |
+| Python (仅 verify.py) | `playwright` | `pip install -r requirements.txt` |
+| System (视频导出) | `ffmpeg` ≥ 4.4 | macOS: `brew install ffmpeg`<br/>Debian/Ubuntu: `apt install ffmpeg` |
+
+一键烟测（60 秒内验证 skill 完整性 + 脚本语法）：
+
+```bash
+cd <skill-root>
+npm run smoke
+```
+
+完整剧本见 [`references/smoke-test.md`](references/smoke-test.md)。
+
+---
+
+## IFQ CLI 集成
+
+本 skill 已作为一等公民集成到 [ifq CLI](https://github.com/peixl/ifq)（v0.13+）：
+
+```bash
+# 全局装 ifq CLI（如未装）
+npm install -g @peixl/ifq
+
+# 把 IFQ Design Skills 挂到 ifq
+ifq design init                  # 自动拉 skill 到 ~/.ifq/skills/ifq-design-skills
+ifq design modes                 # 列 12 种专业模式
+ifq design new <mode>            # 基于模式模板起手（会 fork 对应 INDEX.json 条目）
+ifq design "做一份发布会 keynote"  # 直接调用 skill 驱动 chat
+ifq design smoke                 # 在本地 skill 目录跑 smoke test
+```
+
+说明站点：<https://cli.ifq.ai/design>
+
+---
 
 ---
 

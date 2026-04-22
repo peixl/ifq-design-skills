@@ -1,0 +1,120 @@
+<!doctype html>
+<!--
+  IFQ Design Skills · Template T-compare-vs
+  A vs B comparison matrix with radar + feature cards. 1440×900.
+  Fork-and-fill: { A_NAME / B_NAME / row labels / scores } placeholders.
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=1440"/>
+<title>{ A_NAME } vs { B_NAME } · ifq.ai</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&family=Noto+Serif+SC:wght@700;900&display=swap" rel="stylesheet"/>
+<style>
+  :root{--accent:#D4532B;--accent-deep:#A83518;--accent-soft:#FFB27A;--ink:#111;--ink-soft:#3A3532;--paper:#FAF7F2;--cream:#F1EBE0;--display:'Newsreader','Noto Serif SC',Georgia,serif;--mono:'JetBrains Mono',ui-monospace,monospace}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--paper);color:var(--ink);font-family:-apple-system,Inter,sans-serif;-webkit-font-smoothing:antialiased}
+  .page{width:1440px;min-height:900px;margin:0 auto;padding:48px 72px 72px;position:relative}
+
+  header{display:flex;justify-content:space-between;align-items:flex-end;padding-bottom:32px;border-bottom:2px solid var(--ink)}
+  .kicker{font-family:var(--mono);font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent-deep);margin-bottom:10px}
+  h1{font-family:var(--display);font-size:56px;font-weight:700;letter-spacing:-.015em;line-height:1.05}
+  h1 .vs{color:var(--accent);font-style:italic;padding:0 .3em}
+  .meta{font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:var(--ink-soft);text-align:right;line-height:1.8}
+
+  .grid{margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .col{padding:28px;border:1px solid rgba(17,17,17,.14);background:#fff}
+  .col.a{border-top:4px solid var(--ink)}
+  .col.b{border-top:4px solid var(--accent)}
+  .col h2{font-family:var(--display);font-size:36px;font-weight:700;margin-bottom:6px}
+  .col .sub{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:20px}
+  .col ul{list-style:none}
+  .col li{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px dashed rgba(17,17,17,.12);font-size:15px}
+  .col li:last-child{border-bottom:0}
+  .col li .lbl{color:var(--ink-soft)}
+  .col li .val{font-family:var(--mono);font-size:13px;font-weight:600}
+
+  .verdict{margin-top:28px;padding:24px 28px;background:var(--cream);border-left:4px solid var(--accent);font-family:var(--display);font-size:22px;line-height:1.5;font-style:italic}
+  .verdict strong{font-style:normal;font-weight:700;color:var(--accent-deep)}
+
+  .radar{position:absolute;right:72px;bottom:80px;width:280px;height:280px;opacity:.88}
+  .radar svg{width:100%;height:100%}
+
+  footer{margin-top:48px;display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+  .sig{display:flex;align-items:center;gap:10px}
+  .sig svg{width:16px;height:16px}
+</style>
+</head>
+<body>
+<main class="page">
+  <header>
+    <div>
+      <div class="kicker">{ CATEGORY · e.g. BENCHMARK · MODEL COMPARISON }</div>
+      <h1>{ A_NAME }<span class="vs">vs</span>{ B_NAME }</h1>
+    </div>
+    <div class="meta">
+      Reviewed · 2026 · 04<br/>
+      Source: ifq.ai lab<br/>
+      Scope: { SCOPE }
+    </div>
+  </header>
+
+  <div class="grid">
+    <article class="col a">
+      <h2>{ A_NAME }</h2>
+      <div class="sub">Contender A</div>
+      <ul>
+        <li><span class="lbl">{ row 1 }</span><span class="val">{ A · value }</span></li>
+        <li><span class="lbl">{ row 2 }</span><span class="val">{ A · value }</span></li>
+        <li><span class="lbl">{ row 3 }</span><span class="val">{ A · value }</span></li>
+        <li><span class="lbl">{ row 4 }</span><span class="val">{ A · value }</span></li>
+        <li><span class="lbl">{ row 5 }</span><span class="val">{ A · value }</span></li>
+      </ul>
+    </article>
+    <article class="col b">
+      <h2>{ B_NAME }</h2>
+      <div class="sub">Contender B</div>
+      <ul>
+        <li><span class="lbl">{ row 1 }</span><span class="val">{ B · value }</span></li>
+        <li><span class="lbl">{ row 2 }</span><span class="val">{ B · value }</span></li>
+        <li><span class="lbl">{ row 3 }</span><span class="val">{ B · value }</span></li>
+        <li><span class="lbl">{ row 4 }</span><span class="val">{ B · value }</span></li>
+        <li><span class="lbl">{ row 5 }</span><span class="val">{ B · value }</span></li>
+      </ul>
+    </article>
+  </div>
+
+  <div class="verdict">
+    <strong>Verdict.</strong> { one-sentence summary of who wins for whom. }
+  </div>
+
+  <div class="radar" aria-hidden="true">
+    <svg viewBox="-150 -150 300 300">
+      <!-- rings -->
+      <circle r="120" fill="none" stroke="rgba(17,17,17,.12)"/>
+      <circle r="90"  fill="none" stroke="rgba(17,17,17,.12)"/>
+      <circle r="60"  fill="none" stroke="rgba(17,17,17,.12)"/>
+      <circle r="30"  fill="none" stroke="rgba(17,17,17,.12)"/>
+      <!-- spokes (6 axes) -->
+      <g stroke="rgba(17,17,17,.12)">
+        <line x1="0" y1="-120" x2="0" y2="120"/>
+        <line x1="-104" y1="-60" x2="104" y2="60"/>
+        <line x1="-104" y1="60"  x2="104" y2="-60"/>
+      </g>
+      <!-- Polygon A (ink) — edit values in [-120..120] for 6 axes -->
+      <polygon points="0,-90 78,-45 78,45 0,90 -60,35 -60,-35" fill="rgba(17,17,17,.18)" stroke="#111" stroke-width="1.5"/>
+      <!-- Polygon B (accent) -->
+      <polygon points="0,-108 95,-55 60,35 0,72 -70,40 -90,-52" fill="rgba(212,83,43,.22)" stroke="#D4532B" stroke-width="1.5"/>
+    </svg>
+  </div>
+
+  <footer>
+    <div>ifq.ai · lab · 2026</div>
+    <div class="sig">
+      <svg viewBox="-16 -16 32 32"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="#D4532B"/></svg>
+      Designed with ifq.ai
+    </div>
+  </footer>
+</main>
+</body>
+</html>

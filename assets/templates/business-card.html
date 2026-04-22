@@ -1,0 +1,79 @@
+<!doctype html>
+<!--
+  IFQ Design Skills · Template T-business-card
+  Business card, print-ready. Trim 90×54mm, with 3mm bleed → 96×60mm.
+  Use CMYK-ish printable palette; ink #111 + rust accent #D4532B.
+  Fork-and-fill: { NAME / TITLE / EMAIL / PHONE / URL / HANDLE } placeholders.
+  Export: Print from Chrome at 100% with "Background graphics" on → PDF.
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<title>{ NAME } · Business Card</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,700;1,700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Serif+SC:wght@700&display=swap" rel="stylesheet"/>
+<style>
+  @page{size:96mm 60mm;margin:0}
+  :root{--accent:#D4532B;--accent-deep:#A83518;--ink:#111;--paper:#FAF7F2;--cream:#F1EBE0;--display:'Newsreader','Noto Serif SC',Georgia,serif;--mono:'JetBrains Mono',ui-monospace,monospace}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#E5E0D6;color:var(--ink);font-family:-apple-system,Inter,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+
+  .sheet{display:flex;gap:16mm;padding:24mm 16mm;justify-content:center;flex-wrap:wrap}
+
+  .card{width:96mm;height:60mm;position:relative;overflow:hidden;box-shadow:0 2mm 6mm rgba(0,0,0,.08);background:var(--paper)}
+  /* 3mm bleed safe-zone indicator (hide when printing) */
+  .card::after{content:"";position:absolute;inset:3mm;border:0.2mm dashed rgba(17,17,17,.12);pointer-events:none}
+  @media print { .card::after{display:none} .sheet{padding:0;gap:0} body{background:#fff} }
+
+  /* ---------- Front ---------- */
+  .front{padding:6mm 7mm;display:flex;flex-direction:column;justify-content:space-between;border-top:1.4mm solid var(--accent)}
+  .front .brand{display:flex;align-items:center;gap:2mm;font-family:var(--display);font-size:14pt;font-weight:700;letter-spacing:-.01em}
+  .front .brand .dot{color:var(--accent)}
+  .front .name{font-family:var(--display);font-size:22pt;font-weight:700;letter-spacing:-.015em;line-height:1.05}
+  .front .title{font-family:var(--mono);font-size:7pt;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-deep);margin-top:1.5mm}
+
+  .front .spark{position:absolute;right:7mm;top:6mm;width:9mm;height:9mm}
+
+  /* ---------- Back ---------- */
+  .back{background:#1C1A17;color:var(--paper);padding:6mm 7mm;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+  .back::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 15%,rgba(212,83,43,.28),transparent 60%)}
+  .back .big{font-family:var(--display);font-style:italic;font-size:18pt;font-weight:400;line-height:1.15;position:relative;max-width:64mm}
+  .back .big em{color:var(--accent-soft,#FFB27A);font-style:italic}
+  .back .contact{position:relative;font-family:var(--mono);font-size:7.5pt;letter-spacing:.08em;line-height:1.7}
+  .back .contact .row{display:flex;justify-content:space-between}
+  .back .colophon{position:relative;display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:6pt;letter-spacing:.18em;text-transform:uppercase;opacity:.7;margin-top:1.5mm}
+  .back .sig{display:flex;align-items:center;gap:1mm}
+  .back .sig svg{width:3mm;height:3mm}
+</style>
+</head>
+<body>
+<main class="sheet">
+  <!-- FRONT -->
+  <article class="card front">
+    <div class="brand">ifq<span class="dot">.ai</span></div>
+    <svg class="spark" viewBox="-16 -16 32 32"><path d="M0 -12 L2.6 -2.6 L12 0 L2.6 2.6 L0 12 L-2.6 2.6 L-12 0 L-2.6 -2.6 Z" fill="#D4532B"/></svg>
+    <div>
+      <div class="name">{ NAME }</div>
+      <div class="title">{ TITLE · e.g. Designer · Founder }</div>
+    </div>
+  </article>
+
+  <!-- BACK -->
+  <article class="card back">
+    <div class="big">"Type. Hit enter. <em>A design that ships.</em>"</div>
+    <div>
+      <div class="contact">
+        <div class="row"><span>{ EMAIL }</span><span>{ PHONE }</span></div>
+        <div class="row"><span>{ URL · ifq.ai }</span><span>{ HANDLE · @... }</span></div>
+      </div>
+      <div class="colophon">
+        <span>ifq.ai · design · 2026</span>
+        <span class="sig">
+          <svg viewBox="-16 -16 32 32"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="#D4532B"/></svg>
+          ifq.ai
+        </span>
+      </div>
+    </div>
+  </article>
+</main>
+</body>
+</html>
