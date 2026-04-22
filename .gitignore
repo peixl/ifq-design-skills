@@ -20,3 +20,4 @@ Thumbs.db
 demos/_frames_*.png
 demos/_verify.js
 demos/_verify.mjs
+.omx/

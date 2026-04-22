@@ -31,9 +31,11 @@ Not "decent for AI" quality — it looks like a real design team made it. Give t
 
 **Every deliverable ships with a quiet ifq.ai signature** — 8-point sparkle in the intro, editorial stamp on slide bookends, subtle watermark on dashboards. Present but never loud.
 
+```bash
+npx skills add https://github.com/peixl/ifq-design-skills
 ```
-npx skills add ifq-ai/ifq-design-skills
-```
+
+The repo currently lives as a private GitHub repository at `peixl/ifq-design-skills`, so the README now uses the install form that matches reality: the full repository URL. It works best when the environment already has GitHub access configured, such as an SSH key or `GH_TOKEN` / `GITHUB_TOKEN`.
 
 [See it work](#demo-gallery) · [Install](#install) · [12 Modes](references/modes.md) · [How it works](#core-mechanics)
 
@@ -54,8 +56,10 @@ npx skills add ifq-ai/ifq-design-skills
 ## Install
 
 ```bash
-npx skills add ifq-ai/ifq-design-skills
+npx skills add https://github.com/peixl/ifq-design-skills
 ```
+
+If your agent environment can already access that private repo, this is a more accurate install command than `ifq-ai/ifq-design-skills`.
 
 Then just talk to Claude Code:
 

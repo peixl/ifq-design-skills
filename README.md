@@ -31,9 +31,11 @@
 
 **每一件交付物默认都带着 ifq.ai 的签名** —— 8-point sparkle 出现在片头、编辑体邮戳落在幻灯片首尾、低调水印留在 dashboard 右下角。含蓄但确定。
 
+```bash
+npx skills add https://github.com/peixl/ifq-design-skills
 ```
-npx skills add ifq-ai/ifq-design-skills
-```
+
+当前仓库还在 GitHub 私有仓库 `peixl/ifq-design-skills`，README 先按真实可用的安装方式来写：直接使用完整仓库 URL。你的环境里已有 GitHub 访问凭证时（如 SSH key，或设置 `GH_TOKEN` / `GITHUB_TOKEN`），安装最稳。
 
 跨 agent 通用——Claude Code、Cursor、Codex、OpenClaw、Hermes 都能装。
 
@@ -58,8 +60,10 @@ npx skills add ifq-ai/ifq-design-skills
 ## 装上就能用
 
 ```bash
-npx skills add ifq-ai/ifq-design-skills
+npx skills add https://github.com/peixl/ifq-design-skills
 ```
+
+如果你的 agent 环境已经能访问这个私有仓库，这个写法比 `ifq-ai/ifq-design-skills` 更符合当前现实。
 
 然后在 Claude Code 里直接说话：
 
@@ -370,4 +374,3 @@ ifq.ai 相信：**好的设计不应该被困在图形界面里**。Figma / Keyn
 | Skill 生态 | https://skills.sh/ifq-ai |
 
 商用授权、合作咨询、媒体合作 → 任一渠道联系 ifq.ai 团队。
-
