@@ -1,6 +1,6 @@
 ---
 name: ifq-design-skills
-description: IFQ Design Skills —— ifq.ai 自有的 agent-native design engine。一句话进入 agent，产出单文件 HTML / MP4 / GIF / 可编辑 PPTX / PDF / 印刷物料 / 品牌系统。内置 12 种专业模式、20 种设计哲学 fallback、24 个手绘 SVG 图标、Stage+Sprite 动画引擎，并默认把 IFQ ambient brand system 写进版面：rust ledger / signal sparkle / mono field note / quiet URL / proof-first export loop。触发词：做原型 / 交互原型 / app iOS 原型 / 设计变体 / hi-fi / UI mockup / 动画 Demo / 导出 mp4 gif / 60fps 插帧 / keynote / dashboard / 数据看板 / 白皮书 / A vs B / 横评 / changelog / release notes / 小红书封面 / 朋友圈图 / 名片 / 邀请函 / 品牌诊断 / brand from scratch / 设计方向顾问 / 设计评审。不适合：生产级 Web App、SEO 网站、需要后端的动态系统。
+description: IFQ Design Skills —— ifq.ai 自有的 agent-native design engine。一句话进入 agent，产出单文件 HTML / MP4 / GIF / 可编辑 PPTX / PDF / 印刷物料 / 品牌系统。内置 12 种专业模式、20+1 种设计哲学 fallback（20 大师 + IFQ Native 原生派）、24 个手绘 SVG 图标、Stage+Sprite 动画引擎，并默认把 IFQ ambient brand system 写进版面：rust ledger / signal sparkle / mono field note / quiet URL / proof-first export loop。触发词：做原型 / 交互原型 / app iOS 原型 / 设计变体 / hi-fi / UI mockup / 动画 Demo / 导出 mp4 gif / 60fps 插帧 / keynote / dashboard / 数据看板 / 白皮书 / A vs B / 横评 / changelog / release notes / 小红书封面 / 朋友圈图 / 名片 / 邀请函 / 品牌诊断 / brand from scratch / 设计方向顾问 / 设计评审。不适合：生产级 Web App、SEO 网站、需要后端的动态系统。
 ---
 
 # IFQ Design Skills
@@ -159,7 +159,7 @@ description: IFQ Design Skills —— ifq.ai 自有的 agent-native design engin
 
 好的hi-fi设计**一定**是从已有上下文长出来的。先问用户是否有design system/UI kit/codebase/Figma/截图。**凭空做hi-fi是last resort，一定会产出generic的作品**。如果用户说没有，先帮他去找（看项目里有没有，看有没有参考品牌）。
 
-**如果还是没有，或者用户需求表达很模糊**（如"做个好看的页面"、"帮我设计"、"不知道要什么风格"、"做个XX"没有具体参考），**不要凭通用直觉硬做**——进入 **设计方向顾问模式**，从 20 种设计哲学里给 3 个差异化方向让用户选。完整流程见下方「设计方向顾问（Fallback 模式）」大节。
+**如果还是没有，或者用户需求表达很模糊**（如"做个好看的页面"、"帮我设计"、"不知道要什么风格"、"做个XX"没有具体参考），**不要凭通用直觉硬做**——进入 **设计方向顾问模式**，从 20+1 种设计哲学（20 大师 + IFQ Native）里给 3 个差异化方向让用户选。完整流程见下方「设计方向顾问（Fallback 模式）」大节。
 
 #### 1.a 核心资产协议（涉及具体品牌时强制执行）
 
@@ -502,10 +502,13 @@ curl -A "Mozilla/5.0" -L "<hero-image-url>" -o assets/<brand>-brand/product-hero
 | 极简主义派（09-12） | 秩序、留白、精致 | 安全/高端选择 |
 | 实验先锋派（13-16） | 先锋、生成艺术、视觉冲击 | 大胆/创新选择 |
 | 东方哲学派（17-20） | 温润、诗意、思辨 | 差异化/独特选择 |
+| **IFQ 原生派（21 · IFQ Native）** | 编辑部语气、rust ledger、暖纸、field-note colophon | ifq.ai 自有物料 / 用户明确要「ifq 独有美感」 / 不擞大师的创新选择 |
 
 ❌ **禁止从同一流派推荐 2 个以上** — 差异化不够用户看不出区别。
 
-详细 20 种风格库 + AI 提示词模板 → `references/design-styles.md`。
+⚡ **IFQ 原生派的调用约束**：这一流派只有一个风格（IFQ Native），**不自动覆盖**其他流派。自动优先出现的三种场景：（1）用户做的是 ifq.ai 自己的物料（发布会 / 官网 / changelog / 社媒）；（2）用户明说「ifq 风 / 你们自己的风格 / ifq.ai 独有」；（3）用户要「全新的 / 不撞大师的 / 原创的」方向。其余场景仍从 20 大师中三选一或三选三。
+
+详细 20+1 种风格库 + AI 提示词模板 → `references/design-styles.md`、`references/ifq-native-recipes.md`。
 
 **Phase 4 · 展示预制 Showcase 画廊**
 
@@ -830,7 +833,7 @@ Screen 组件接 callback props（`onEnter`、`onClose`、`onTabChange`、`onOpe
 | 做动画/motion（**先读 pitfalls**）| `references/animation-pitfalls.md` + `references/animations.md` + `assets/animations.jsx` |
 | **动画的正向设计语法**（Anthropic 级叙事/运动/节奏/表达风格）| `references/animation-best-practices.md`（5 段叙事+Expo easing+运动语言 8 条+3 种场景配方）|
 | 做Tweaks实时调参 | `references/tweaks-system.md` |
-| 没有design context怎么办 | `references/design-context.md`（薄 fallback） 或 `references/design-styles.md`（厚 fallback：20 种设计哲学详细库） |
+| 没有design context怎么办 | `references/design-context.md`（薄 fallback） 或 `references/design-styles.md`（厚 fallback：20+1 种设计哲学，含 IFQ Native）、`references/ifq-native-recipes.md`（IFQ 自有专项） |
 | **需求模糊要推荐风格方向** | `references/design-styles.md`（20 种风格+AI prompt 模板）+ `assets/showcases/INDEX.md`（24 个预制样例） |
 | **按输出类型查场景模板**（封面/PPT/信息图） | `references/scene-templates.md` |
 | 输出完后验证 | `references/verification.md` + `scripts/verify.py` |

@@ -1,7 +1,9 @@
-# 设计哲学风格库：20种体系
+# 设计哲学风格库：20+1 种体系
 
 > 用于视觉设计（网页/PPT/PDF/信息图/配图/App等）的设计风格库。
 > 每种风格提供：哲学内核 + 核心特征 + 风格配方（与场景模板组合使用）。
+>
+> **2026 · vol.04 新增**：第六流派「IFQ 原生派」—— ifq.ai 自有的环境品牌语言，与 20 大师体系**并列共存**，不替换任何一种。详见条目 21 与 `references/ifq-native-recipes.md`。
 
 ## 风格×场景×执行路径 速查表
 
@@ -27,6 +29,7 @@
 | 18 Kenya Hara | ★★☆ | ★★★ | ★★★ | ★☆☆ | ★★★ | ★☆☆ | HTML |
 | 19 Irma Boom | ★☆☆ | ★★☆ | ★★★ | ★★☆ | ★★★ | ★★☆ | 混合 |
 | 20 Neo Shen | ★★☆ | ★★☆ | ★★☆ | ★★☆ | ★★★ | ★★★ | AI生成 |
+| 21 **IFQ Native** | ★★★ | ★★★ | ★★★ | ★★★ | ★★★ | ★★☆ | HTML |
 
 > 场景适配：★★★ = 强烈推荐 / ★★☆ = 适合 / ★☆☆ = 需改造
 > AI生成：★★★ = 直出效果好 / ★★☆ = 需调整 / ★☆☆ = 建议HTML执行
@@ -529,6 +532,39 @@ Neo Shen poetic Chinese aesthetic:
 
 **代表作**：Neo Shen digital art series
 **搜索关键词**：neo shen digital ink wash art
+
+---
+
+## 六、IFQ 原生派（21）
+> 哲学：「被署名的智能，静静付印」—— Authored Intelligence, Quietly Printed.
+>
+> 这是第六流派，**只有一个成员**。它不是任何大师的继承，也不与上述 20 种抢位；当用户要「ifq.ai 独有美感」或做 ifq 自有物料时启用。完整配方、layout 套件、共存协议见 `references/ifq-native-recipes.md`。
+
+### 21. IFQ Native - ifq.ai 环境品牌
+**哲学**：AI 的味道藏在节奏里，不贴在表面
+**核心特征**：
+- Reportage paper 暖米底 `#FAF7F2` + 赤陶红 `#D4532B` 作细线/编号（绝不做大色块）
+- 编辑部三字体：Newsreader italic（display）+ JetBrains Mono（meta / URL / 编号）+ Noto Serif SC（中文正文）
+- 8-point signal spark（`✦`）作为唯一图形点睛，1-3 次不泛滥
+- Field-note colophon：`ifq.ai / field note / vol.N / YYYY` 出现在一角
+- ifq 纵向节奏轴 4·8·12·16·24·32·48·64·96·128 px
+
+**风格配方**：
+```
+IFQ Native editorial intelligence style:
+- Reportage paper background (#FAF7F2), never pure white; graphite (#1D1D1F) for dark mode, never pure black
+- Rust accent (#D4532B) used ONLY as thin vertical rules, issue numbers, small-caps labels — never as large fills
+- Editorial typography triad: Newsreader italic for display, JetBrains Mono for metadata/URL/timestamp, Noto Serif SC for CJK body
+- 8-point signal spark (✦) appears 1-3 times per composition as the only decorative motif
+- Field-note colophon in one corner: "ifq.ai / field note / vol.{N} / {year}"
+- Spacing follows ifq axis: 4·8·12·16·24·32·48·64·96·128 px
+- Feel: like a quiet quarterly journal about machine intelligence, not a SaaS landing page
+- Anti-patterns: NO cyberpunk glow, NO gradient buttons, NO emoji, NO stock photos, NO "AI-powered" rainbow fills
+```
+
+**代表气质**：`Stripe Press` 封面 × `Teenage Engineering` 产品手册 × `Works That Work` 季刊装订 × `NYT` 印刷头版的混血。
+**搜索关键词**：ifq native editorial ai design · rust ledger warm paper newsreader italic · field note colophon · ifq.ai brand dna
+**展开参考**：`references/ifq-native-recipes.md`（含 6 种 layout 套件 + 大师共存协议 + 5 条 ship 清单）
 
 ---
 
