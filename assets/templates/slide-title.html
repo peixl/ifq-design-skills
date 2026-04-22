@@ -1,0 +1,74 @@
+<!doctype html>
+<!--
+  IFQ Design Skills · Template T-slide-title
+  1920×1080 title slide with IfqStamp colophon.
+  Intended to be exported via scripts/export_deck_pptx.mjs into a real PPTX.
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<title>{ TALK TITLE } · ifq.ai</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&family=Noto+Serif+SC:wght@700;900&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --ifq-accent:#D4532B; --ifq-ink:#111; --ifq-paper:#FAF7F2; --ifq-cream:#F1EBE0;
+    --ifq-display:'Newsreader','Noto Serif SC',Georgia,serif;
+    --ifq-mono:'JetBrains Mono',monospace;
+  }
+  html, body { margin: 0; padding: 0; background:#222; font-family: -apple-system, Inter, sans-serif; }
+  .slide { width: 1920px; height: 1080px; background: var(--ifq-paper); color: var(--ifq-ink); position: relative; padding: 96px 128px; display: flex; flex-direction: column; justify-content: space-between; }
+  .rule { position: absolute; top: 96px; bottom: 96px; left: 96px; width: 4px; background: var(--ifq-accent); }
+
+  .eyebrow { font-family: var(--ifq-mono); font-size: 18px; letter-spacing: 3px; text-transform: uppercase; color: var(--ifq-accent); }
+  .title { font-family: var(--ifq-display); font-weight: 700; font-size: 180px; line-height: 0.96; letter-spacing: -4px; margin: 40px 0 48px; text-wrap: pretty; }
+  .title em { font-style: italic; color: #A83518; }
+  .sub { font-family: var(--ifq-display); font-style: italic; font-size: 40px; color: #3A3532; max-width: 1100px; line-height: 1.35; }
+
+  .meta { display: flex; justify-content: space-between; align-items: flex-end; font-family: var(--ifq-mono); font-size: 18px; color: #3A3532; }
+  .meta__left { display: flex; gap: 48px; }
+  .meta__left b { color: var(--ifq-ink); font-weight: 600; }
+
+  .stamp { display: inline-flex; align-items: center; gap: 12px; padding: 10px 18px; border: 2px solid var(--ifq-accent); font-family: var(--ifq-mono); font-size: 14px; letter-spacing: 2px; text-transform: uppercase; color: var(--ifq-ink); }
+  .stamp svg { width: 16px; height: 16px; }
+
+  .spark-cluster { position: absolute; right: 160px; top: 180px; display: flex; gap: 28px; align-items: center; }
+  .spark-cluster svg { width: 96px; height: 96px; }
+  .spark-cluster .small { width: 42px; height: 42px; opacity: 0.7; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="rule"></div>
+
+  <div class="spark-cluster" aria-hidden="true">
+    <svg class="small" viewBox="-12 -12 24 24"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="#FFB27A"/></svg>
+    <svg viewBox="-12 -12 24 24">
+      <defs>
+        <linearGradient id="tsg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#FFB27A"/><stop offset="1" stop-color="#A83518"/></linearGradient>
+      </defs>
+      <path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="url(#tsg)"/>
+    </svg>
+  </div>
+
+  <header>
+    <div class="eyebrow">{ EYEBROW · 2026 }</div>
+  </header>
+
+  <main>
+    <h1 class="title">{ Your talk title, <em>italicized punch</em>. }</h1>
+    <p class="sub">{ One-line thesis of the talk — 12 to 25 words, italic serif voice. }</p>
+  </main>
+
+  <footer class="meta">
+    <div class="meta__left">
+      <div><b>{ SPEAKER NAME }</b><br/>{ ROLE · COMPANY }</div>
+      <div><b>{ EVENT NAME }</b><br/>{ DATE · LOCATION }</div>
+    </div>
+    <div class="stamp">
+      <svg viewBox="-12 -12 24 24"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="#D4532B"/></svg>
+      DESIGNED WITH IFQ.AI
+    </div>
+  </footer>
+</div>
+</body>
+</html>

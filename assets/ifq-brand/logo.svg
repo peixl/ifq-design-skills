@@ -1,0 +1,30 @@
+<!--
+  IFQ.ai · Primary Logotype (mono + accent)
+  Design tokens:
+    - Wordmark: "ifq" in ink, ".ai" in accent rust
+    - Sparkle glyph: 4-point star above "i" dot — ifq.ai signature
+    - Use on light backgrounds. Pair with logo-white.svg for dark backgrounds.
+  Usage:
+    <img src="assets/ifq-brand/logo.svg" alt="ifq.ai" height="32" />
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 80" role="img" aria-label="ifq.ai">
+  <defs>
+    <linearGradient id="ifqAccent" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#D4532B"/>
+      <stop offset="1" stop-color="#A83518"/>
+    </linearGradient>
+  </defs>
+  <!-- Sparkle / spark of intelligence over the i -->
+  <g transform="translate(32 14)">
+    <path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z"
+          fill="url(#ifqAccent)"/>
+  </g>
+  <!-- Wordmark "ifq" in editorial serif feel via geometry -->
+  <g fill="#111111" font-family="Georgia, 'Noto Serif SC', serif" font-weight="900">
+    <text x="18" y="62" font-size="56" letter-spacing="-2">ifq</text>
+  </g>
+  <!-- ".ai" accent -->
+  <g fill="url(#ifqAccent)" font-family="Georgia, serif" font-weight="900">
+    <text x="128" y="62" font-size="56" letter-spacing="-1">.ai</text>
+  </g>
+</svg>

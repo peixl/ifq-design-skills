@@ -1,0 +1,72 @@
+{
+  "$schema": "./templates.schema.json",
+  "version": "2.0",
+  "author": "ifq.ai",
+  "description": "IFQ Design Skills · built-in HTML templates. Each entry points to a self-contained HTML scaffold with the IFQ brand already wired in. Agents should Read the template before generating, then fork-and-fill (not blank-start).",
+  "templates": [
+    {
+      "id": "T-hero-landing",
+      "mode": ["M-02", "M-12"],
+      "name": "Editorial Hero Landing",
+      "file": "assets/templates/hero-landing.html",
+      "viewport": "1440×900",
+      "notes": "Newsreader display + rust accent + right-side IfqSpark. Best for product launch landing / personal branding."
+    },
+    {
+      "id": "T-slide-title",
+      "mode": ["M-08"],
+      "name": "Keynote Title Slide",
+      "file": "assets/templates/slide-title.html",
+      "viewport": "1920×1080",
+      "notes": "Single title slide with IfqStamp + speaker-attribution band. Pair with slide-body + slide-closing."
+    },
+    {
+      "id": "T-dashboard",
+      "mode": ["M-04"],
+      "name": "Command Center Dashboard",
+      "file": "assets/templates/dashboard-command-center.html",
+      "viewport": "1440×900",
+      "notes": "Left nav + top KPI strip + 3×3 metric grid + right feed. Uses hand-drawn radar/arrow icons for status."
+    },
+    {
+      "id": "T-infographic-vertical",
+      "mode": ["M-03", "M-07"],
+      "name": "Vertical Infographic (小红书长图)",
+      "file": "assets/templates/infographic-vertical.html",
+      "viewport": "1242×3200",
+      "notes": "Multi-section scroll with timeline + pull-quotes + colophon. IfqStamp at footer."
+    },
+    {
+      "id": "T-social-x",
+      "mode": ["M-09"],
+      "name": "X/Twitter Share Card",
+      "file": "assets/templates/social-x-card.html",
+      "viewport": "1200×675",
+      "notes": "OG-ready share card with large headline + rust accent rule."
+    },
+    {
+      "id": "T-compare-vs",
+      "mode": ["M-05"],
+      "name": "A vs B Comparison Matrix",
+      "file": "assets/templates/compare-vs.html",
+      "viewport": "1440×900",
+      "notes": "Two-column matrix with radar chart footer. Ready for benchmark data."
+    },
+    {
+      "id": "T-changelog",
+      "mode": ["M-07"],
+      "name": "Changelog Timeline",
+      "file": "assets/templates/changelog-timeline.html",
+      "viewport": "1200×variable",
+      "notes": "Left-rail dates + right event cards + hand-drawn icons."
+    },
+    {
+      "id": "T-business-card",
+      "mode": ["M-10"],
+      "name": "Business Card (90×54mm + 3mm bleed)",
+      "file": "assets/templates/business-card.html",
+      "viewport": "96×60mm",
+      "notes": "Print-ready with bleed & safe-zone marks. Front + back."
+    }
+  ]
+}

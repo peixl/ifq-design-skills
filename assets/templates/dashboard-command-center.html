@@ -1,0 +1,190 @@
+<!doctype html>
+<!--
+  IFQ Design Skills · Template T-dashboard (Command Center)
+  1440×900 Dashboard with hand-drawn status icons.
+  Data is placeholder — replace with real data before delivery.
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<title>Command Center · ifq.ai</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --ifq-accent:#D4532B; --ifq-accent-soft:#FFB27A; --ifq-ink:#0F0F0F; --ifq-paper:#FAF7F2;
+    --ifq-surface:#FFFFFF; --ifq-line:rgba(17,17,17,0.08); --ifq-mono:'JetBrains Mono',monospace;
+    --ifq-display:'Newsreader',Georgia,serif; --ok:#2E7D5B; --warn:#C89B2A; --err:#B1422A;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--ifq-paper); color: var(--ifq-ink); font-family: -apple-system, Inter, sans-serif; font-feature-settings: 'tnum'; }
+  .shell { display: grid; grid-template-columns: 220px 1fr; width: 1440px; height: 900px; }
+
+  /* Left nav */
+  aside { background: var(--ifq-ink); color: var(--ifq-paper); padding: 24px 20px; display: flex; flex-direction: column; gap: 8px; }
+  aside .brand { display: flex; align-items: center; gap: 8px; font-family: var(--ifq-display); font-weight: 900; font-size: 20px; margin-bottom: 32px; }
+  aside .brand svg { width: 16px; height: 16px; color: var(--ifq-accent-soft); }
+  aside .brand b { color: var(--ifq-accent-soft); }
+  aside .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; font-family: var(--ifq-mono); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: rgba(250,247,242,0.65); cursor: pointer; border-left: 2px solid transparent; }
+  aside .nav-item.active { color: var(--ifq-paper); border-left-color: var(--ifq-accent-soft); background: rgba(255,255,255,0.04); }
+  aside .nav-item svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* Main */
+  main { padding: 28px 36px; overflow: auto; }
+  .head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--ifq-line); }
+  .head h1 { font-family: var(--ifq-display); font-size: 32px; letter-spacing: -0.5px; }
+  .head p { font-family: var(--ifq-mono); font-size: 11px; letter-spacing: 1.4px; text-transform: uppercase; color: rgba(17,17,17,0.55); margin-top: 4px; }
+  .head__right { display: flex; gap: 10px; font-family: var(--ifq-mono); font-size: 12px; }
+  .head__right span { padding: 6px 12px; border: 1px solid var(--ifq-line); border-radius: 2px; }
+  .head__right .active { background: var(--ifq-ink); color: var(--ifq-paper); border-color: var(--ifq-ink); }
+
+  /* KPI strip */
+  .kpi { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--ifq-line); background: var(--ifq-surface); margin-bottom: 24px; }
+  .kpi__cell { padding: 20px 24px; border-right: 1px solid var(--ifq-line); position: relative; }
+  .kpi__cell:last-child { border-right: none; }
+  .kpi__label { font-family: var(--ifq-mono); font-size: 10px; letter-spacing: 1.4px; text-transform: uppercase; color: rgba(17,17,17,0.55); }
+  .kpi__num { font-family: var(--ifq-display); font-size: 40px; font-weight: 900; letter-spacing: -1px; margin-top: 8px; }
+  .kpi__delta { font-family: var(--ifq-mono); font-size: 11px; margin-top: 6px; display: flex; align-items: center; gap: 4px; }
+  .kpi__delta.up { color: var(--ok); } .kpi__delta.down { color: var(--err); }
+  .kpi__delta svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+  /* 3x3 grid */
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .card { background: var(--ifq-surface); border: 1px solid var(--ifq-line); padding: 18px 20px; min-height: 160px; position: relative; }
+  .card__label { font-family: var(--ifq-mono); font-size: 10px; letter-spacing: 1.4px; text-transform: uppercase; color: rgba(17,17,17,0.55); display: flex; align-items: center; gap: 6px; }
+  .card__label svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .card__title { font-family: var(--ifq-display); font-size: 22px; font-weight: 700; letter-spacing: -0.3px; margin-top: 8px; }
+  .card__meta { font-family: var(--ifq-mono); font-size: 11px; color: rgba(17,17,17,0.55); margin-top: 4px; }
+  .spark { margin-top: 14px; width: 100%; height: 44px; }
+
+  .status { position: absolute; top: 16px; right: 16px; width: 8px; height: 8px; border-radius: 50%; }
+  .status.ok { background: var(--ok); } .status.warn { background: var(--warn); } .status.err { background: var(--err); }
+
+  /* Corner watermark */
+  .wm { position: fixed; bottom: 14px; right: 18px; display: flex; align-items: center; gap: 6px; opacity: 0.45; font-family: var(--ifq-mono); font-size: 10px; letter-spacing: 1px; color: var(--ifq-ink); pointer-events: none; }
+  .wm svg { width: 11px; height: 11px; }
+  .wm b { color: var(--ifq-accent); }
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside>
+    <div class="brand">
+      <svg viewBox="-12 -12 24 24"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="currentColor"/></svg>
+      <span>ifq<b>.ai</b></span>
+    </div>
+    <div class="nav-item active"><svg><use href="../ifq-brand/icons/hand-drawn-icons.svg#i-grid"/></svg> Overview</div>
+    <div class="nav-item"><svg><use href="../ifq-brand/icons/hand-drawn-icons.svg#i-radar"/></svg> Metrics</div>
+    <div class="nav-item"><svg><use href="../ifq-brand/icons/hand-drawn-icons.svg#i-sparkles"/></svg> Insights</div>
+    <div class="nav-item"><svg><use href="../ifq-brand/icons/hand-drawn-icons.svg#i-layers"/></svg> Projects</div>
+    <div class="nav-item"><svg><use href="../ifq-brand/icons/hand-drawn-icons.svg#i-palette"/></svg> Design System</div>
+    <div class="nav-item"><svg><use href="../ifq-brand/icons/hand-drawn-icons.svg#i-link"/></svg> Integrations</div>
+  </aside>
+
+  <main>
+    <div class="head">
+      <div>
+        <h1>{ Dashboard title }</h1>
+        <p>Last updated · 3 min ago · real data</p>
+      </div>
+      <div class="head__right">
+        <span>1D</span><span>7D</span><span class="active">30D</span><span>90D</span>
+      </div>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi__cell">
+        <div class="kpi__label">Active users</div>
+        <div class="kpi__num">12,438</div>
+        <div class="kpi__delta up"><svg viewBox="0 0 24 24"><path d="M5 15 L12 8 L19 15"/></svg> +8.4% vs 30d</div>
+      </div>
+      <div class="kpi__cell">
+        <div class="kpi__label">Designs shipped</div>
+        <div class="kpi__num">1,284</div>
+        <div class="kpi__delta up"><svg viewBox="0 0 24 24"><path d="M5 15 L12 8 L19 15"/></svg> +12.1%</div>
+      </div>
+      <div class="kpi__cell">
+        <div class="kpi__label">Avg. review score</div>
+        <div class="kpi__num">8.6<span style="font-size:24px;opacity:0.4">/10</span></div>
+        <div class="kpi__delta up"><svg viewBox="0 0 24 24"><path d="M5 15 L12 8 L19 15"/></svg> +0.3</div>
+      </div>
+      <div class="kpi__cell">
+        <div class="kpi__label">AI slop flagged</div>
+        <div class="kpi__num">0.4%</div>
+        <div class="kpi__delta down"><svg viewBox="0 0 24 24"><path d="M5 9 L12 16 L19 9"/></svg> −1.2pp</div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <span class="status ok"></span>
+        <div class="card__label"><svg><use href="../ifq-brand/icons/hand-drawn-icons.svg#i-rocket"/></svg> Launches</div>
+        <div class="card__title">14 shipped</div>
+        <div class="card__meta">this month · 4 product, 10 marketing</div>
+        <svg class="spark" viewBox="0 0 300 44" preserveAspectRatio="none"><polyline points="0,30 30,24 60,28 90,18 120,22 150,12 180,16 210,8 240,10 270,4 300,6" fill="none" stroke="#D4532B" stroke-width="1.8"/></svg>
+      </div>
+      <div class="card">
+        <span class="status ok"></span>
+        <div class="card__label"><svg><use href="../ifq-brand/icons/hand-drawn-icons.svg#i-sparkles"/></svg> Prompts resolved</div>
+        <div class="card__title">96.8%</div>
+        <div class="card__meta">1,284 total · 41 needing review</div>
+        <svg class="spark" viewBox="0 0 300 44" preserveAspectRatio="none"><polyline points="0,14 30,18 60,10 90,16 120,8 150,12 180,6 210,10 240,4 270,8 300,2" fill="none" stroke="#111" stroke-width="1.8"/></svg>
+      </div>
+      <div class="card">
+        <span class="status warn"></span>
+        <div class="card__label"><svg><use href="../ifq-brand/icons/hand-drawn-icons.svg#i-radar"/></svg> Brand compliance</div>
+        <div class="card__title">91.2%</div>
+        <div class="card__meta">12 assets need refresh</div>
+        <svg class="spark" viewBox="0 0 300 44" preserveAspectRatio="none"><polyline points="0,10 30,14 60,8 90,18 120,10 150,20 180,12 210,22 240,14 270,24 300,16" fill="none" stroke="#C89B2A" stroke-width="1.8"/></svg>
+      </div>
+      <div class="card">
+        <span class="status ok"></span>
+        <div class="card__label"><svg><use href="../ifq-brand/icons/hand-drawn-icons.svg#i-film"/></svg> Motion renders</div>
+        <div class="card__title">320 mp4</div>
+        <div class="card__meta">60fps · palette-optimized gif</div>
+        <svg class="spark" viewBox="0 0 300 44" preserveAspectRatio="none"><polyline points="0,30 30,20 60,28 90,14 120,22 150,10 180,18 210,6 240,14 270,4 300,10" fill="none" stroke="#D4532B" stroke-width="1.8"/></svg>
+      </div>
+      <div class="card">
+        <span class="status ok"></span>
+        <div class="card__label"><svg><use href="../ifq-brand/icons/hand-drawn-icons.svg#i-deck"/></svg> Decks exported</div>
+        <div class="card__title">186 pptx</div>
+        <div class="card__meta">real text frames, not images</div>
+        <svg class="spark" viewBox="0 0 300 44" preserveAspectRatio="none"><polyline points="0,20 30,14 60,22 90,10 120,18 150,8 180,14 210,4 240,12 270,6 300,8" fill="none" stroke="#111" stroke-width="1.8"/></svg>
+      </div>
+      <div class="card">
+        <span class="status err"></span>
+        <div class="card__label"><svg><use href="../ifq-brand/icons/hand-drawn-icons.svg#i-idea"/></svg> Advisor triggers</div>
+        <div class="card__title">28%</div>
+        <div class="card__meta">vague-prompt fallback rate</div>
+        <svg class="spark" viewBox="0 0 300 44" preserveAspectRatio="none"><polyline points="0,24 30,30 60,26 90,34 120,28 150,36 180,30 210,38 240,32 270,40 300,36" fill="none" stroke="#B1422A" stroke-width="1.8"/></svg>
+      </div>
+      <div class="card">
+        <span class="status ok"></span>
+        <div class="card__label"><svg><use href="../ifq-brand/icons/hand-drawn-icons.svg#i-compass"/></svg> Philosophies used</div>
+        <div class="card__title">20 / 20</div>
+        <div class="card__meta">all 5 schools represented</div>
+        <svg class="spark" viewBox="0 0 300 44" preserveAspectRatio="none"><polyline points="0,22 30,22 60,20 90,18 120,20 150,18 180,14 210,14 240,10 270,8 300,6" fill="none" stroke="#D4532B" stroke-width="1.8"/></svg>
+      </div>
+      <div class="card">
+        <span class="status ok"></span>
+        <div class="card__label"><svg><use href="../ifq-brand/icons/hand-drawn-icons.svg#i-check"/></svg> Playwright pass rate</div>
+        <div class="card__title">98.2%</div>
+        <div class="card__meta">pre-delivery click tests</div>
+        <svg class="spark" viewBox="0 0 300 44" preserveAspectRatio="none"><polyline points="0,6 30,8 60,4 90,10 120,6 150,12 180,4 210,10 240,2 270,8 300,4" fill="none" stroke="#2E7D5B" stroke-width="1.8"/></svg>
+      </div>
+      <div class="card">
+        <span class="status ok"></span>
+        <div class="card__label"><svg><use href="../ifq-brand/icons/hand-drawn-icons.svg#i-arrow"/></svg> Next sprint</div>
+        <div class="card__title">4 modes in beta</div>
+        <div class="card__meta">M-05 · M-09 · M-11 · M-12</div>
+        <svg class="spark" viewBox="0 0 300 44" preserveAspectRatio="none"><polyline points="0,26 30,22 60,24 90,18 120,20 150,14 180,16 210,10 240,12 270,6 300,4" fill="none" stroke="#D4532B" stroke-width="1.8"/></svg>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="wm">
+  <svg viewBox="-12 -12 24 24"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="#D4532B"/></svg>
+  dashboard · <b>ifq.ai</b>
+</div>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!-- ifq.ai · Sparkle monogram (app icon / favicon base) -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="ifq.ai monogram">
+  <defs>
+    <linearGradient id="ifqMonoBg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#1a1a1a"/>
+      <stop offset="1" stop-color="#2a2a2a"/>
+    </linearGradient>
+    <linearGradient id="ifqMonoStar" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#FFB27A"/>
+      <stop offset="1" stop-color="#D4532B"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#ifqMonoBg)"/>
+  <path d="M32 12 L35.5 28.5 L52 32 L35.5 35.5 L32 52 L28.5 35.5 L12 32 L28.5 28.5 Z"
+        fill="url(#ifqMonoStar)"/>
+</svg>

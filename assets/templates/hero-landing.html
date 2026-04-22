@@ -1,0 +1,116 @@
+<!doctype html>
+<!--
+  IFQ Design Skills · Template T-hero-landing
+  Editorial hero landing with ifq.ai brand signature baked in.
+  Fork-and-fill: replace { HEADLINE / EYEBROW / CTA / BODY } placeholders.
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=1440"/>
+<title>{ HEADLINE } · ifq.ai</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&family=Noto+Serif+SC:wght@700;900&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --ifq-accent:#D4532B; --ifq-accent-deep:#A83518; --ifq-accent-soft:#FFB27A;
+    --ifq-ink:#111; --ifq-ink-soft:#3A3532; --ifq-paper:#FAF7F2; --ifq-cream:#F1EBE0;
+    --ifq-display:'Newsreader','Noto Serif SC',Georgia,serif;
+    --ifq-mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--ifq-paper); color: var(--ifq-ink); font-family: -apple-system, BlinkMacSystemFont, Inter, sans-serif; }
+  .page { max-width: 1440px; margin: 0 auto; min-height: 900px; padding: 40px 80px 80px; position: relative; }
+
+  /* Editorial vertical rule */
+  .rule-left { position: absolute; top: 40px; bottom: 40px; left: 60px; width: 3px; background: var(--ifq-accent); }
+
+  /* Header band */
+  .nav { display: flex; justify-content: space-between; align-items: center; padding-bottom: 40px; border-bottom: 1px solid rgba(17,17,17,0.12); }
+  .nav__brand { display: flex; align-items: center; gap: 10px; font-family: var(--ifq-display); font-weight: 900; font-size: 22px; letter-spacing: -0.5px; }
+  .nav__brand svg.spark { width: 18px; height: 18px; color: var(--ifq-accent); }
+  .nav__brand b { color: var(--ifq-accent); }
+  .nav__links { display: flex; gap: 32px; font-family: var(--ifq-mono); font-size: 12px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--ifq-ink-soft); }
+
+  /* Hero */
+  .hero { display: grid; grid-template-columns: 7fr 5fr; gap: 80px; margin-top: 96px; align-items: start; }
+  .hero__eyebrow { font-family: var(--ifq-mono); font-size: 12px; letter-spacing: 2.4px; text-transform: uppercase; color: var(--ifq-accent); margin-bottom: 24px; }
+  .hero__title { font-family: var(--ifq-display); font-weight: 700; font-size: 96px; line-height: 0.98; letter-spacing: -2.5px; text-wrap: pretty; }
+  .hero__title em { font-style: italic; color: var(--ifq-accent-deep); }
+  .hero__sub { margin-top: 32px; font-size: 20px; line-height: 1.5; max-width: 520px; color: var(--ifq-ink-soft); text-wrap: pretty; }
+  .hero__cta { margin-top: 48px; display: inline-flex; align-items: center; gap: 10px; padding: 16px 28px; background: var(--ifq-ink); color: var(--ifq-paper); font-family: var(--ifq-mono); font-size: 13px; letter-spacing: 1.6px; text-transform: uppercase; text-decoration: none; }
+  .hero__cta svg { width: 14px; height: 14px; }
+
+  /* Hero visual slot */
+  .hero__visual { position: relative; aspect-ratio: 4/5; background: var(--ifq-cream); border: 1px solid rgba(17,17,17,0.1); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .hero__visual::before { content: "{ HERO IMAGE · replace with real asset }"; font-family: var(--ifq-mono); font-size: 11px; color: var(--ifq-ink-soft); opacity: .45; letter-spacing: 1px; }
+  .hero__spark { position: absolute; top: 32px; right: 32px; width: 64px; height: 64px; }
+
+  /* Stats strip */
+  .stats { margin-top: 120px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid rgba(17,17,17,0.12); border-bottom: 1px solid rgba(17,17,17,0.12); }
+  .stats__cell { padding: 24px 28px; border-right: 1px solid rgba(17,17,17,0.08); }
+  .stats__cell:last-child { border-right: none; }
+  .stats__num { font-family: var(--ifq-display); font-size: 44px; font-weight: 900; letter-spacing: -1px; }
+  .stats__lbl { margin-top: 8px; font-family: var(--ifq-mono); font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--ifq-ink-soft); }
+
+  /* Colophon watermark */
+  .colophon { position: absolute; bottom: 24px; right: 80px; display: flex; align-items: center; gap: 8px; opacity: 0.55; font-family: var(--ifq-mono); font-size: 10px; letter-spacing: 1px; }
+  .colophon svg { width: 12px; height: 12px; }
+  .colophon b { color: var(--ifq-accent); }
+
+  /* Sparkle animation */
+  @keyframes ifqSpin { to { transform: rotate(360deg); } }
+  @keyframes ifqPulse { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.15); opacity: 0.85; } }
+  .sparkle-anim { animation: ifqSpin 6s linear infinite; transform-origin: 50% 50%; }
+  .sparkle-anim > * { animation: ifqPulse 1.8s ease-in-out infinite; transform-origin: 50% 50%; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="rule-left"></div>
+
+  <nav class="nav">
+    <div class="nav__brand">
+      <svg class="spark" viewBox="-12 -12 24 24"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="currentColor"/></svg>
+      <span>ifq<b>.ai</b></span>
+    </div>
+    <div class="nav__links"><span>Work</span><span>Skills</span><span>Journal</span><span>Contact</span></div>
+  </nav>
+
+  <section class="hero">
+    <div>
+      <div class="hero__eyebrow">{ EYEBROW · 2 WORDS }</div>
+      <h1 class="hero__title">{ HEADLINE.<br/> <em>Make it pretty.</em> }</h1>
+      <p class="hero__sub">{ SUPPORTING SENTENCE — 20–30 words that situate the product and its audience. Keep it one paragraph. }</p>
+      <a class="hero__cta" href="#">{ CTA TEXT }
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.6 12.2 C 7.4 11.8 15.4 11.6 20.2 12"/><path d="M15.8 7.2 L20.4 12 L15.4 16.6"/></svg>
+      </a>
+    </div>
+
+    <div class="hero__visual">
+      <svg class="hero__spark sparkle-anim" viewBox="-12 -12 24 24">
+        <defs>
+          <linearGradient id="heroGrad" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0" stop-color="#FFB27A"/><stop offset="1" stop-color="#A83518"/>
+          </linearGradient>
+        </defs>
+        <path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="url(#heroGrad)"/>
+      </svg>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="stats__cell"><div class="stats__num">12</div><div class="stats__lbl">Modes</div></div>
+    <div class="stats__cell"><div class="stats__num">24</div><div class="stats__lbl">Hand-drawn Icons</div></div>
+    <div class="stats__cell"><div class="stats__num">20</div><div class="stats__lbl">Design Philosophies</div></div>
+    <div class="stats__cell"><div class="stats__num">∞</div><div class="stats__lbl">Variants per Prompt</div></div>
+  </section>
+
+  <div class="colophon">
+    <svg viewBox="-12 -12 24 24"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="#D4532B"/></svg>
+    designed with <b>ifq.ai</b>
+  </div>
+</div>
+</body>
+</html>
