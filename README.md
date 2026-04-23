@@ -79,6 +79,26 @@ git clone https://github.com/peixl/ifq-design-skills ~/.agents/skills/ifq-design
 
 ---
 
+## 给 AI agent（30 秒上手）
+
+本仓库根有 `AGENTS.md`，`SKILL.md` 最顶部有「🤖 Agent Cheat Sheet」，两处都是为 agent 写的。落地后任何 runtime（Claude Code / Codex / OpenCode / OpenClaw / Hermes / Cursor）的动作都一样：
+
+1. **读** [SKILL.md](SKILL.md) 的 Cheat Sheet + Fast Path（约前 150 行）→ 能力、权限、三步环路一眼看完。
+2. **路由** [references/modes.md](references/modes.md) → 选 12 模式之一 → 在 [assets/templates/INDEX.json](assets/templates/INDEX.json) 找模板 fork，**不要从白纸开始**。
+3. **验证**（默认 Tier 0 · 零安装）：`npm run verify:lite -- <file>` 扫占位符 → `npm run preview -- <file>` 拿到 `file://` URL 自己用浏览器工具打开。
+
+**能力与权限**（SKILL.md frontmatter 里有机读 `capabilities:` / `permissions:` / `security:` 块，OpenClaw / Hermes 可直接按块授权）：
+
+- 读：skill 根目录下所有文件
+- 写：用户当前 workspace（不会写到 workspace 之外）
+- 运行：仅 `npm run preview | verify:lite | smoke | install:export` + 可选 `ffmpeg`
+- 网络：#0 事实校验用 WebSearch；产出的 HTML 会走 Google Fonts / unpkg / jsDelivr
+- **scripts/ 目录零 `child_process`、零 `eval`、零对外网络请求**——静态安全扫描（ClawHub 等）直接通过
+
+只想要 HTML 的任务永远停在 Tier 0。只有用户明确要 MP4 / GIF / PDF / PPTX 时才 `npm run install:export` 拉 Tier 2 依赖；只有要自动化多 viewport 截图时才 `pip install playwright` 拉 Tier 1。
+
+---
+
 ## 说给它听
 
 下面是真实的对话。左边是你随口一句，右边是 skill 真正去做的事。

@@ -2,6 +2,17 @@
 
 > Any AI coding agent reading this file: **this repo IS a skill**, not an app. Your job when invoked in this workspace is to treat [`SKILL.md`](SKILL.md) as the operating manual and follow it. This AGENTS.md exists so Codex CLI, OpenCode, sst, and any other AGENTS.md-aware runtime finds the skill without extra configuration.
 
+## First-contact protocol (60 seconds · any runtime)
+
+When you land in this repo with a design-ish user request:
+
+1. **Read** [`SKILL.md`](SKILL.md) top to the end of the "🤖 Agent Cheat Sheet" block (≈ first 120 lines). That alone tells you capabilities, permissions, tier policy, and the three-move loop.
+2. **Route** via [`references/modes.md`](references/modes.md) → pick one of the 12 modes → read [`assets/templates/INDEX.json`](assets/templates/INDEX.json) → fork the template into the user's working directory. **Never start from a blank HTML.**
+3. **Verify lite** with `npm run verify:lite -- <file>` then `npm run preview -- <file>` (both zero-install · Tier 0).
+4. Only escalate to Tier 1 (`python scripts/verify.py`) or Tier 2 (`npm run install:export` + ffmpeg) when the user explicitly asks for headless screenshots, MP4/GIF, PDF, or PPTX.
+
+If the user's request is **not** a visual design deliverable, exit this skill cleanly and hand back to your default agent — do not force-fit.
+
 ## What this repo is
 
 A design engine packaged as a skill. One prompt in → a shippable HTML / MP4 / GIF / PPTX / PDF / SVG out, with the IFQ ambient brand layer woven into the layout.
@@ -18,8 +29,8 @@ Do **not** engage for: production web apps, SEO-critical marketing sites, backen
 
 ```bash
 # write HTML into the project, then:
-npm run preview -- path/to/design.html       # opens in the user's system default browser
-npm run verify:lite -- path/to/design.html   # zero-dep placeholder scan
+npm run preview -- path/to/design.html       # prints a file:// URL (no child process)
+npm run verify:lite -- path/to/design.html   # pure Node placeholder scan
 ```
 
 Works on macOS / Linux / Windows without a single `npm install`.
@@ -33,6 +44,14 @@ Works on macOS / Linux / Windows without a single `npm install`.
 | Automated headless multi-viewport screenshots + console capture | `pip install playwright && python -m playwright install chromium` |
 
 Never push these on the user if they only asked for HTML. `playwright` lives under `optionalDependencies` on purpose.
+
+## Safety posture (scanner-clean)
+
+- Zero `child_process` / `spawn` / `exec` in any `scripts/**` file.
+- Zero `eval` / `new Function` anywhere.
+- No outbound network calls from any script at runtime.
+- The skill never writes outside the user's workspace; it never installs anything silently.
+- Full capability / permission declaration lives in `SKILL.md` frontmatter (`capabilities:`, `permissions:`, `security:` blocks) — permission-aware runtimes (OpenClaw, Hermes) can grant scopes from there.
 
 ## Agent runtime pointers
 
@@ -57,7 +76,7 @@ This skill uses runtime-agnostic verbs. Translate them to your runtime's actual 
 | **write file** | create or overwrite a file |
 | **run command** | execute a shell command |
 | **web search** | search the open web (for `#0 fact-verification` — see SKILL.md) |
-| **preview** | `npm run preview -- <file>` — opens in the user's default browser |
+| **preview** | `npm run preview -- <file>` — prints a `file://` URL for you to hand to a browser tool or the user |
 | **verify (lite)** | `npm run verify:lite -- <file>` — zero-dep placeholder scan |
 | **verify (deep, optional)** | `python scripts/verify.py <file>` — only if Tier-1 installed |
 
@@ -76,3 +95,4 @@ From SKILL.md core principle #0: **Before making any factual claim about a speci
 ---
 
 `compiled by ifq.ai · 2026`
+

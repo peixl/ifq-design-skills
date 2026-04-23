@@ -3,7 +3,56 @@ name: ifq-design-skills
 description: Use this skill when the user asks for a visual design deliverable built from HTML — interactive prototype, slide deck, motion demo, infographic, dashboard, landing, whitepaper, changelog, business card, social cover, or brand system — and wants a single-file HTML plus optional MP4, GIF, editable PPTX, print-ready PDF, or SVG. Also use for design critiques, brand diagnoses, multi-variant exploration, or 3-direction advisory (from 20 master styles plus the IFQ Native recipe). Triggers include prototype, hi-fi mockup, UI mockup, design variants, tweaks, animation demo, mp4/gif export, 60fps, keynote, PPTX, dashboard, whitepaper, A-vs-B, benchmark, changelog, release notes, social cover, business card, invitation, brand from scratch, design critique. Do not use for production web apps, SEO sites, backend-dependent systems, or pure copy edits. Outputs weave the IFQ ambient brand layer (rust ledger, signal spark, mono field note, quiet URL, editorial contrast) into layout rather than stamped logos.
 version: 2.1.0
 license: See LICENSE
-platforms: [macos, linux]
+platforms: [macos, linux, windows]
+entrypoints:
+  # Agents: open these three files in order before touching anything else.
+  - SKILL.md              # protocol (this file)
+  - references/modes.md   # 12 modes → which template to fork
+  - assets/templates/INDEX.json  # template registry
+capabilities:
+  # Declarative summary so permission-aware runtimes (OpenClaw, Hermes) can
+  # grant the right scopes up-front without reading the whole prose.
+  read_files: true          # reads templates, references, assets under the skill root
+  write_files: true         # writes the final .html deliverable to the user's project dir
+  run_shell: optional       # only for `npm run preview | verify:lite | smoke | install:export` + ffmpeg
+  network: optional         # only for core-principle #0 web-search fact checks + Google Fonts / CDN asset fetches inside the produced HTML
+  spawn_subprocess: false   # scripts are child_process-free (see Security posture)
+  eval_dynamic_code: false  # no eval / new Function anywhere in scripts
+permissions:
+  filesystem:
+    read:  ["${skill_root}/**"]
+    write: ["${workspace}/**"]   # never writes outside the user's current project
+  shell:
+    allowlist:
+      - "npm run preview"
+      - "npm run verify:lite"
+      - "npm run smoke"
+      - "npm run install:export"   # only when user asks for MP4/PDF/PPTX export
+      - "ffmpeg"                   # only when user asks for MP4/GIF export
+  network:
+    allowlist:
+      - "web_search"               # for #0 fact verification (any search provider)
+      - "https://fonts.googleapis.com"  # Google Fonts inside produced HTML
+      - "https://fonts.gstatic.com"
+      - "https://unpkg.com"             # React + Babel standalone (produced HTML only)
+      - "https://cdn.jsdelivr.net"      # produced-HTML asset fallback
+security:
+  audit_clean: true
+  zero_child_process: true      # no child_process / spawn / exec anywhere
+  zero_dynamic_eval: true       # no eval / new Function
+  zero_outbound_from_scripts: true  # scripts/*.mjs|cjs|js|py make no network calls
+  no_secrets_in_repo: true
+  zero_install_core_loop: true  # Tier 0 needs only Node ≥18.17
+compatibility:
+  # Neutral-verb → runtime-tool mapping lives in references/agent-compatibility.md.
+  # Any runtime with "read file / write file / run shell" works with zero adapters.
+  claude_code: native
+  codex_cli: native      # AGENTS.md at repo root points here
+  opencode:   native      # same AGENTS.md
+  openclaw:   native      # plugins.allow + gateway restart
+  hermes:     native      # `hermes skills install github:peixl/ifq-design-skills`
+  cursor:     native      # @file pin SKILL.md at chat start
+  generic:    native      # any agent with fs + shell
 metadata:
   hermes:
     category: creative
@@ -11,6 +60,7 @@ metadata:
   clawhub:
     category: creative
     tags: [design, html, prototype, brand]
+    audit: passes-static-security-scan
   agentskills:
     standard: "agentskills.io/v1"
 ---
@@ -18,6 +68,45 @@ metadata:
 # IFQ Design Skills
 
 > *"One prompt. One command. A design that ships — and breathes like ifq.ai."*
+
+## 🤖 Agent Cheat Sheet (read this first · 30 seconds)
+
+**What this skill is:** a design engine. In → one natural-language request. Out → one shippable HTML (optionally MP4 / GIF / PPTX / PDF / SVG) with the IFQ ambient brand layer woven in.
+
+**Three-move loop** (works in every agent runtime):
+
+1. **Route.** Read [`references/modes.md`](references/modes.md) → pick one of 12 modes → read [`assets/templates/INDEX.json`](assets/templates/INDEX.json) → pick the template file. **Never start from a blank page.**
+2. **Fork & fill.** Copy that template into the user's working dir, inline [`assets/ifq-brand/ifq-tokens.css`](assets/ifq-brand/ifq-tokens.css), weave ≥ 3 IFQ ambient marks (rules: [`references/ifq-brand-spec.md`](references/ifq-brand-spec.md)).
+3. **Verify (lite, zero-install).** Run `npm run verify:lite -- <file.html>` for the placeholder scan, then `npm run preview -- <file.html>` to get a `file://` URL to hand-inspect. Deep/Playwright/export tiers are **opt-in only** when the user asks.
+
+**Neutral verbs → your tool** (do not hard-code tool names in the skill):
+
+| Verb here | Your runtime tool |
+|---|---|
+| `read file` | Read / open_file / apply_patch read |
+| `write file` | Write / apply_patch / file.write |
+| `run shell` | Bash / shell / terminal.run |
+| `web search` | WebSearch / browser / mcp search |
+| `preview` | `npm run preview -- <file>` (prints `file://` URL; no child process, no auto-launch) |
+| `verify lite` | `npm run verify:lite -- <file>` (pure Node, zero deps) |
+| `verify deep` | `python scripts/verify.py <file>` (Tier 1, opt-in) |
+
+**Dependency tiers** (agents: stay in Tier 0 unless the user asks for more):
+
+- **Tier 0 — core loop:** Node ≥ 18.17 only. Zero `npm install`. Covers HTML write + preview + lite verify + smoke.
+- **Tier 1 — deep verify (opt-in):** Python ≥ 3.9 + Playwright + Chromium. Only for headless multi-viewport screenshots or console capture.
+- **Tier 2 — MP4 / PDF / PPTX export (opt-in):** `npm run install:export` pulls Playwright + pdf-lib + pptxgenjs + sharp + Chromium. MP4 also needs `ffmpeg` on PATH.
+
+**Safety posture (scanner-clean · see `security:` block above):**
+
+- Zero `child_process` / `spawn` / `exec` anywhere in `scripts/**`.
+- Zero `eval` / `new Function` anywhere.
+- No outbound network calls from any script at runtime (produced HTML may load fonts/CDN JS; that's opt-in content, not skill behavior).
+- The skill never writes outside `${workspace}`. It does not touch `~/.ssh`, global npm, system paths, or install anything silently.
+
+**First-read order for any agent (universal):** Cheat Sheet (this block) → Fast Path below → `references/modes.md` → `assets/templates/INDEX.json` → only then the task-specific reference files.
+
+---
 
 ## Purpose
 
@@ -798,7 +887,7 @@ Screen 组件接 callback props（`onEnter`、`onClose`、`onTabChange`、`onOpe
    🛑 **检查点4：交付前自己肉眼过一遍浏览器**。AI写的代码经常有interaction bug。
 8. **总结**：极简，只说caveats和next steps。
 9. **（默认）导出视频 · 必带 SFX + BGM**：动画 HTML 的**默认交付形态是带音频的 MP4**，不是纯画面。无声版本等于半成品——用户潜意识感知「画在动但没声音响应」，廉价感的根源就在这里。流水线：
-   - `scripts/render-video.js` 录 25fps 纯画面 MP4（只是中间产物，**不是成品**）
+   - `scripts/render-video.js` 录 25fps 纯画面 **WebM**（只是中间产物，**不是成品**）。脚本收尾会**打印**出最终 ffmpeg 命令（H.264 / CRF 18 / yuv420p / +faststart），agent 直接把它粘进 shell 运行即可产出 MP4——不再 `spawn('ffmpeg', ...)`，保持 scripts/ 目录对静态扫描器干净。
    - `scripts/convert-formats.sh` 派生 60fps MP4 + palette 优化 GIF（视平台需要）
    - `scripts/add-music.sh` 加 BGM（6 首场景化配乐：tech/ad/educational/tutorial + alt 变体）
    - SFX 按 `references/audio-design-rules.md` 设计 cue 清单（时间轴 + 音效类型），用 `assets/sfx/<category>/*.mp3` 37 个预制资源，按配方 A/B/C/D 选密度（发布 hero ≈ 6个/10s，工具演示 ≈ 0-2个/10s）

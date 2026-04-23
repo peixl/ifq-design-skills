@@ -68,6 +68,25 @@ git clone https://github.com/peixl/ifq-design-skills ~/.agents/skills/ifq-design
 
 ---
 
+## For AI agents (30-second onboarding)
+
+This repo is shaped for agents. The root [`AGENTS.md`](AGENTS.md) and the top of [`SKILL.md`](SKILL.md) both carry an "Agent Cheat Sheet" — whichever your runtime reads first (Claude Code · Codex · OpenCode · OpenClaw · Hermes · Cursor), the three moves are the same:
+
+1. **Read** [SKILL.md](SKILL.md) through the cheat sheet + Fast Path (~first 150 lines). Capabilities, permissions, tier policy, three-move loop — all there.
+2. **Route** via [references/modes.md](references/modes.md) → pick one of 12 modes → fork the template listed in [assets/templates/INDEX.json](assets/templates/INDEX.json). **Never start from blank HTML.**
+3. **Verify** (default Tier 0 · zero install): `npm run verify:lite -- <file>` for the placeholder scan, then `npm run preview -- <file>` for a `file://` URL your browser tool (or the user) can open.
+
+**Declarative capability / permission / security blocks** live in `SKILL.md` frontmatter so OpenClaw and Hermes can grant scopes without parsing prose:
+
+- Reads the skill root; writes only under the user's workspace.
+- Shell allowlist: `npm run preview | verify:lite | smoke | install:export`, plus `ffmpeg` if the user asks for MP4/GIF.
+- Network: `WebSearch` (for the #0 fact-verification rule) and the Google Fonts / unpkg / jsDelivr endpoints the produced HTML loads at runtime.
+- **`scripts/` is 100% `child_process`-free, `eval`-free, and makes zero outbound network calls.** Static security scanners (ClawHub etc.) pass clean.
+
+Stay in Tier 0 unless the user actually asks for an export. Only then run `npm run install:export` (Tier 2, pulls Playwright + Chromium + friends) or `pip install playwright` (Tier 1, for headless multi-viewport screenshots).
+
+---
+
 ## What it hears
 
 Real prompts. Left: what you say. Right: what the skill actually does.
