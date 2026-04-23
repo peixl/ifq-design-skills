@@ -1,0 +1,49 @@
+name: Skills Publish Check
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - SKILL.md
+      - README.md
+      - README.en.md
+      - package.json
+      - .well-known/**
+      - scripts/**
+      - assets/**
+      - references/**
+  pull_request:
+    paths:
+      - SKILL.md
+      - README.md
+      - README.en.md
+      - package.json
+      - .well-known/**
+      - scripts/**
+      - assets/**
+      - references/**
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate skills.sh publish spec
+        run: npm run verify:publish
+
+      - name: Run smoke test
+        run: npm run smoke

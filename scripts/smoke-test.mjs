@@ -27,6 +27,33 @@ async function readText(p) {
   return fs.readFile(p, 'utf8');
 }
 
+function runPythonSyntaxCheck(fullPath) {
+  const checker = 'import ast, pathlib, sys; ast.parse(pathlib.Path(sys.argv[1]).read_text(encoding="utf8"))';
+  const candidates = process.platform === 'win32'
+    ? [
+        ['py', ['-3', '-c', checker, fullPath]],
+        ['python', ['-c', checker, fullPath]],
+        ['python3', ['-c', checker, fullPath]],
+      ]
+    : [
+        ['python3', ['-c', checker, fullPath]],
+        ['python', ['-c', checker, fullPath]],
+      ];
+
+  let lastResult = null;
+  for (const [command, args] of candidates) {
+    const result = spawnSync(command, args, { encoding: 'utf8' });
+    if (result.error && result.error.code === 'ENOENT') continue;
+    lastResult = result;
+    break;
+  }
+
+  return lastResult ?? {
+    status: 1,
+    stderr: 'python interpreter not found',
+  };
+}
+
 async function check1_TemplateIndex() {
   console.log(`\n${BOLD}[1/6] Template INDEX.json consistency${RESET}`);
   const indexPath = path.join(ROOT, 'assets/templates/INDEX.json');
@@ -95,7 +122,7 @@ async function check5_ScriptSyntax() {
     const full = path.join(scriptsDir, f);
     let result;
     if (f.endsWith('.py')) {
-      result = spawnSync('python3', ['-c', `import ast; ast.parse(open(${JSON.stringify(full)}).read())`], { encoding: 'utf8' });
+      result = runPythonSyntaxCheck(full);
     } else {
       result = spawnSync('node', ['--check', full], { encoding: 'utf8' });
     }
