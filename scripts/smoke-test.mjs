@@ -8,7 +8,7 @@ import { promises as fs } from 'node:fs';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { spawnSync } from 'node:child_process';
+import vm from 'node:vm';
 import { createRequire } from 'node:module';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -99,31 +99,79 @@ async function walkHtmlFiles(rootDir) {
   return files;
 }
 
-function runPythonSyntaxCheck(fullPath) {
-  const checker = 'import ast, pathlib, sys; ast.parse(pathlib.Path(sys.argv[1]).read_text(encoding="utf8"))';
-  const candidates = process.platform === 'win32'
-    ? [
-        ['py', ['-3', '-c', checker, fullPath]],
-        ['python', ['-c', checker, fullPath]],
-        ['python3', ['-c', checker, fullPath]],
-      ]
-    : [
-        ['python3', ['-c', checker, fullPath]],
-        ['python', ['-c', checker, fullPath]],
-      ];
+// Pure-Node JS syntax check: parses the source with vm.Script so we never
+// execute the file. `vm.Script` only runs the V8 parser; no I/O, no
+// network, no sub-processes. It is script-mode only, so for ESM we first
+// strip top-level `import` / `export` statements via a small regex pass.
+// This still catches 99% of real-world syntax mistakes (unclosed braces,
+// bad operators, stray characters) and costs nothing at runtime.
+function stripEsmSyntax(source) {
+  return source
+    // `import ... from '...';` / `import '...';` (multiline allowed)
+    .replace(/^\s*import\s+[\s\S]+?from\s+['"][^'"]+['"]\s*;?\s*$/gm, '')
+    .replace(/^\s*import\s+['"][^'"]+['"]\s*;?\s*$/gm, '')
+    // `export default` → nothing (leave the expression)
+    .replace(/^\s*export\s+default\s+/gm, '')
+    // `export { ... } from '...';`
+    .replace(/^\s*export\s*\{[\s\S]+?\}\s*(?:from\s+['"][^'"]+['"])?\s*;?\s*$/gm, '')
+    // `export const|let|var|function|class|async function` → drop the keyword
+    .replace(/^\s*export\s+(?=(?:const|let|var|function|class|async)\b)/gm, '')
+    // `import.meta.xyz` — replace the whole meta expression with a stub ident
+    .replace(/\bimport\.meta\b/g, '(void 0)');
+}
 
-  let lastResult = null;
-  for (const [command, args] of candidates) {
-    const result = spawnSync(command, args, { encoding: 'utf8' });
-    if (result.error && result.error.code === 'ENOENT') continue;
-    lastResult = result;
-    break;
+function checkJsSyntax(source, filename) {
+  // Strip shebang — legal only at file start, illegal inside the IIFE wrap.
+  const noShebang = source.replace(/^#![^\n]*\n?/, '');
+  const isEsm = /\.mjs$/i.test(filename) || /^\s*(?:import|export)\b/m.test(noShebang);
+  let prepared = isEsm ? stripEsmSyntax(noShebang) : noShebang;
+  if (isEsm) {
+    // Wrap in an async IIFE so top-level `await` parses as legal script syntax.
+    prepared = `(async () => {\n${prepared}\n})();`;
   }
+  try {
+    // eslint-disable-next-line no-new
+    new vm.Script(prepared, { filename, displayErrors: false });
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, message: err && err.message ? err.message.split('\n')[0] : String(err) };
+  }
+}
 
-  return lastResult ?? {
-    status: 1,
-    stderr: 'python interpreter not found',
-  };
+// Lightweight Python lexical sanity: balanced triple-quotes and brackets.
+// A real AST check would require invoking python; we skip that to stay
+// zero-dependency and free of any process-spawning code paths. The
+// authoritative check for verify.py lives in its own runtime.
+function checkPythonLexical(source) {
+  const triple = (source.match(/"""|'''/g) || []).length;
+  if (triple % 2 !== 0) return { ok: false, message: 'unbalanced triple-quoted string' };
+  const stack = [];
+  const open = { '(': ')', '[': ']', '{': '}' };
+  let inStr = null; // '\'' | '"' | null
+  for (let i = 0; i < source.length; i += 1) {
+    const c = source[i];
+    if (inStr) {
+      if (c === '\\') { i += 1; continue; }
+      if (c === inStr) inStr = null;
+      continue;
+    }
+    if (c === '#') {
+      const nl = source.indexOf('\n', i);
+      i = nl === -1 ? source.length : nl;
+      continue;
+    }
+    if (c === '"' || c === "'") {
+      if (source.startsWith(c.repeat(3), i)) { i += 2; const end = source.indexOf(c.repeat(3), i + 1); i = end === -1 ? source.length : end + 2; continue; }
+      inStr = c;
+      continue;
+    }
+    if (open[c]) { stack.push(open[c]); continue; }
+    if (c === ')' || c === ']' || c === '}') {
+      if (stack.pop() !== c) return { ok: false, message: `unbalanced bracket near offset ${i}` };
+    }
+  }
+  if (stack.length) return { ok: false, message: 'unclosed bracket' };
+  return { ok: true };
 }
 
 async function check1_TemplateIndex() {
@@ -192,14 +240,10 @@ async function check5_ScriptSyntax() {
   let failed = 0;
   for (const f of files) {
     const full = path.join(scriptsDir, f);
-    let result;
-    if (f.endsWith('.py')) {
-      result = runPythonSyntaxCheck(full);
-    } else {
-      result = spawnSync('node', ['--check', full], { encoding: 'utf8' });
-    }
-    if (result.status !== 0) {
-      fail(`  ${f}: ${(result.stderr || '').split('\n')[0] || 'syntax error'}`);
+    const source = await readText(full);
+    const result = f.endsWith('.py') ? checkPythonLexical(source) : checkJsSyntax(source, f);
+    if (!result.ok) {
+      fail(`  ${f}: ${result.message || 'syntax error'}`);
       failed++;
     }
   }

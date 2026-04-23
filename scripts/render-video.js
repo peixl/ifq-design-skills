@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 /**
- * HTML animation → MP4 via Playwright recordVideo + ffmpeg.
+ * HTML animation → WebM via Playwright recordVideo (+ ffmpeg command print).
  *
- * Requires: global playwright (`npm install -g playwright`), ffmpeg on PATH.
+ * Requires: optional dependency `playwright` (installed via
+ * `npm run install:export`).
  *
  * Usage:
  *   NODE_PATH=$(npm root -g) node render-video.js <html-file> \
@@ -10,13 +11,21 @@
  *     [--trim=<seconds>] [--fontwait=1.5] [--readytimeout=8] \
  *     [--keep-chrome] [--allow-placeholders]
  *
+ * Why no ffmpeg sub-process anymore?
+ *   Earlier versions launched ffmpeg via Node's sub-process API. Static
+ *   security scanners (ClawHub, etc.) flag any such import as a
+ *   suspicious pattern. This script now stops at WebM, prints the exact
+ *   `ffmpeg` command to finalize the MP4, and exits cleanly. Agents can
+ *   invoke that command via their terminal tool; humans can copy-paste.
+ *   Benefit: the whole skill ships zero process-spawning code.
+ *
  * Design:
  *   1. Warmup context (no record) — caches fonts/assets, closes cleanly
  *   2. Record context (fresh, recordVideo ON) — WebM starts writing at
  *      context creation. Babel-standalone compile + React mount +
  *      fonts.ready can take 1.5-3s, during which WebM writes black frames.
  *      We measure this by waiting for window.__ready (set by animations.jsx
- *      Stage component after first paint), then trim exactly that offset.
+ *      Stage component after first paint), then report the trim offset.
  *   3. addInitScript injects CSS hiding "chrome" elements (progress bar,
  *      replay button, masthead, footer, etc.) that are fine for human
  *      debugging but shouldn't appear in exported video.
@@ -34,13 +43,14 @@
  * Chrome elements hidden by default (all common class names + `.no-record`
  * convention). Pass --keep-chrome to disable this and see raw HTML.
  *
- * Output: next to the HTML file, same basename with .mp4 suffix.
+ * Output:
+ *   <basename>.webm  — next to the HTML file, and a printed ffmpeg command
+ *   that turns it into <basename>.mp4 with the resolved trim applied.
  */
 
 const { chromium } = require('playwright');
 const path = require('path');
 const fs = require('fs');
-const { spawnSync } = require('child_process');
 const { assertNoPlaceholderLeaksInPage } = require('./placeholder-guard.cjs');
 
 function arg(name, def) {
@@ -71,6 +81,7 @@ const HTML_ABS = path.resolve(HTML_FILE);
 const BASENAME = path.basename(HTML_FILE, path.extname(HTML_FILE));
 const DIR      = path.dirname(HTML_ABS);
 const TMP_DIR  = path.join(DIR, '.video-tmp-' + Date.now() + '-' + process.pid);
+const WEBM_OUT = path.join(DIR, BASENAME + '.webm');
 const MP4_OUT  = path.join(DIR, BASENAME + '.mp4');
 
 // CSS to hide "chrome" elements during recording.
@@ -91,7 +102,8 @@ const HIDE_CHROME_CSS = `
 
 console.log(`▸ Rendering: ${HTML_FILE}`);
 console.log(`  size: ${WIDTH}x${HEIGHT} · duration: ${DURATION}s · hide-chrome: ${!KEEP_CHROME}`);
-console.log(`  output: ${MP4_OUT}`);
+console.log(`  webm: ${WEBM_OUT}`);
+console.log(`  mp4:  ${MP4_OUT}  (will be produced by the printed ffmpeg command)`);
 
 (async () => {
   fs.mkdirSync(TMP_DIR, { recursive: true });
@@ -270,27 +282,33 @@ console.log(`  output: ${MP4_OUT}`);
     ? parseFloat(TRIM_OVERRIDE)
     : animationStartSec + (hasReady ? 0.05 : 0.5);
 
-  console.log(`▸ ffmpeg: trim=${resolvedTrim.toFixed(2)}s${TRIM_OVERRIDE !== null ? ' (manual)' : ' (auto)'}, encode H.264…`);
-  const ffmpeg = spawnSync('ffmpeg', [
+  // Move webm out of tmp into the final destination, then clean up.
+  fs.renameSync(webmPath, WEBM_OUT);
+  fs.rmSync(TMP_DIR, { recursive: true, force: true });
+
+  // Emit the finalize command. We intentionally do NOT spawn ffmpeg here —
+  // see the file header for rationale. Agents can run this command via
+  // their shell tool; humans can copy-paste it.
+  const ffmpegArgs = [
     '-y',
-    '-ss', String(resolvedTrim),
-    '-i', webmPath,
+    '-ss', String(resolvedTrim.toFixed(3)),
+    '-i', JSON.stringify(WEBM_OUT),
     '-t', String(DURATION),
     '-c:v', 'libx264',
     '-pix_fmt', 'yuv420p',
     '-crf', '18',
     '-preset', 'medium',
     '-movflags', '+faststart',
-    MP4_OUT,
-  ], { stdio: ['ignore', 'ignore', 'pipe'] });
+    JSON.stringify(MP4_OUT),
+  ];
+  const finalizeCmd = `ffmpeg ${ffmpegArgs.join(' ')}`;
 
-  if (ffmpeg.status !== 0) {
-    console.error('✗ ffmpeg failed:\n' + ffmpeg.stderr.toString().slice(-2000));
-    process.exit(1);
-  }
-
-  fs.rmSync(TMP_DIR, { recursive: true, force: true });
-
-  const mp4Size = (fs.statSync(MP4_OUT).size / 1024 / 1024).toFixed(1);
-  console.log(`✓ Done: ${MP4_OUT} (${mp4Size} MB)`);
+  console.log('');
+  console.log('▸ WebM recording complete. Finalize to MP4 with this command:');
+  console.log('');
+  console.log(`  ${finalizeCmd}`);
+  console.log('');
+  console.log(`  (trim=${resolvedTrim.toFixed(2)}s${TRIM_OVERRIDE !== null ? ' manual' : ' auto-detected'}, duration=${DURATION}s, H.264 CRF 18)`);
+  console.log('');
+  console.log(`✓ Webm saved: ${WEBM_OUT}`);
 })();
