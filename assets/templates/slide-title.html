@@ -73,24 +73,57 @@
 </div>
 <script>
   (function () {
-    function normalizeIfqDate(value) {
+    function resolveIfqYear(value) {
       if (!value) {
         return null;
       }
 
-      const parsed = value instanceof Date ? value : new Date(value);
-      return Number.isNaN(parsed.getTime()) ? null : parsed;
+      if (value instanceof Date) {
+        return Number.isNaN(value.getTime()) ? null : String(value.getFullYear());
+      }
+
+      const rawValue = typeof value === 'string' ? value.trim() : value;
+      if (!rawValue) {
+        return null;
+      }
+
+      if (typeof rawValue === 'string') {
+        // Parse numeric date strings explicitly so authored dates stay stable across runtimes.
+        const match = rawValue.match(
+          /^(\d{4})[-/](\d{2})[-/](\d{2})(?:[T\s](\d{2})(?::(\d{2})(?::(\d{2})(\.\d{1,3})?)?)?(?:\s?(Z|[+-]\d{2}:?\d{2}))?)?$/
+        );
+
+        if (!match) {
+          return null;
+        }
+
+        const [, year, month, day] = match;
+        const calendarDate = new Date(Number(year), Number(month) - 1, Number(day));
+        if (
+          Number.isNaN(calendarDate.getTime()) ||
+          calendarDate.getFullYear() !== Number(year) ||
+          calendarDate.getMonth() + 1 !== Number(month) ||
+          calendarDate.getDate() !== Number(day)
+        ) {
+          return null;
+        }
+
+        return year;
+      }
+
+      const parsed = new Date(rawValue);
+      return Number.isNaN(parsed.getTime()) ? null : String(parsed.getFullYear());
     }
 
     const metaTag = document.querySelector('meta[name="ifq:created-at"]');
-    const createdAt =
-      normalizeIfqDate(window.IFQ_CREATION_DATE) ||
-      normalizeIfqDate(document.documentElement.getAttribute('data-ifq-created-at')) ||
-      normalizeIfqDate(metaTag && metaTag.getAttribute('content')) ||
-      new Date();
+    const candidate =
+      window.IFQ_CREATION_DATE ||
+      document.documentElement.getAttribute('data-ifq-created-at') ||
+      (metaTag && metaTag.getAttribute('content'));
+    const year = resolveIfqYear(candidate) || String(new Date().getFullYear());
 
     document.querySelectorAll('[data-ifq-year]').forEach(function (node) {
-      node.textContent = String(createdAt.getFullYear());
+      node.textContent = year;
     });
   })();
 </script>

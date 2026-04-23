@@ -61,6 +61,7 @@ const IFQ_DATE_ASSIGN_PATTERN = /querySelectorAll\(\s*['"`]\[data-ifq-|querySele
 const IFQ_YEAR_RESOLVER_PATTERN = /getFullYear\(|year\s*:/;
 const IFQ_MONTH_RESOLVER_PATTERN = /getMonth\(|month\s*:/;
 const IFQ_DAY_RESOLVER_PATTERN = /getDate\(|day\s*:/;
+const IFQ_IMPLICIT_STRING_DATE_PATTERN = /new Date\(candidate\)|value instanceof Date\s*\?\s*value\s*:\s*new Date\(value\)/;
 
 function findPlaceholderLeaks(text) {
   const findings = [];
@@ -264,6 +265,7 @@ async function check7_IfqDateResolverCoverage() {
       if (raw.includes('data-ifq-year') && !IFQ_YEAR_RESOLVER_PATTERN.test(raw)) missing.push('year resolver');
       if (raw.includes('data-ifq-month') && !IFQ_MONTH_RESOLVER_PATTERN.test(raw)) missing.push('month resolver');
       if (raw.includes('data-ifq-day') && !IFQ_DAY_RESOLVER_PATTERN.test(raw)) missing.push('day resolver');
+      if (IFQ_IMPLICIT_STRING_DATE_PATTERN.test(raw)) missing.push('explicit date parsing');
 
       if (missing.length > 0) {
         fail(`  ${path.relative(ROOT, filePath)}: missing ${missing.join(', ')}`);

@@ -46,11 +46,77 @@ function normalizeIfqDate(value) {
   }
 
   if (value instanceof Date) {
-    return Number.isNaN(value.getTime()) ? null : value;
+    return Number.isNaN(value.getTime())
+      ? null
+      : buildIfqDateParts(value, value.getFullYear(), value.getMonth() + 1, value.getDate());
   }
 
-  const parsed = new Date(value);
-  return Number.isNaN(parsed.getTime()) ? null : parsed;
+  const rawValue = typeof value === 'string' ? value.trim() : value;
+  if (!rawValue) {
+    return null;
+  }
+
+  if (typeof rawValue === 'string') {
+    // Parse numeric date strings explicitly so authored dates stay stable across runtimes.
+    const match = rawValue.match(
+      /^(\d{4})[-/](\d{2})[-/](\d{2})(?:[T\s](\d{2})(?::(\d{2})(?::(\d{2})(\.\d{1,3})?)?)?(?:\s?(Z|[+-]\d{2}:?\d{2}))?)?$/
+    );
+
+    if (!match) {
+      return null;
+    }
+
+    const [, year, month, day, hour = '00', minute = '00', second = '00', fraction = '', zone] = match;
+    const calendarDate = new Date(Number(year), Number(month) - 1, Number(day));
+    if (
+      Number.isNaN(calendarDate.getTime()) ||
+      calendarDate.getFullYear() !== Number(year) ||
+      calendarDate.getMonth() + 1 !== Number(month) ||
+      calendarDate.getDate() !== Number(day)
+    ) {
+      return null;
+    }
+
+    const millisecond = fraction ? Number(fraction.slice(1).padEnd(3, '0')) : 0;
+    let parsed;
+
+    if (zone) {
+      const normalizedZone = zone === 'Z' || zone.includes(':')
+        ? zone
+        : `${zone.slice(0, 3)}:${zone.slice(3)}`;
+      parsed = new Date(
+        `${year}-${month}-${day}T${hour}:${minute}:${second}.${String(millisecond).padStart(3, '0')}${normalizedZone}`
+      );
+    } else if (match[4] !== undefined) {
+      parsed = new Date(
+        Number(year),
+        Number(month) - 1,
+        Number(day),
+        Number(hour),
+        Number(minute),
+        Number(second),
+        millisecond
+      );
+    } else {
+      parsed = calendarDate;
+    }
+
+    return Number.isNaN(parsed.getTime()) ? null : buildIfqDateParts(parsed, year, month, day);
+  }
+
+  const parsed = new Date(rawValue);
+  return Number.isNaN(parsed.getTime())
+    ? null
+    : buildIfqDateParts(parsed, parsed.getFullYear(), parsed.getMonth() + 1, parsed.getDate());
+}
+
+function buildIfqDateParts(parsedDate, year, month, day) {
+  return {
+    date: parsedDate,
+    year: String(year),
+    month: String(month).padStart(2, '0'),
+    day: String(day).padStart(2, '0'),
+  };
 }
 
 function resolveIfqCreationDate(explicitDate) {
@@ -79,11 +145,12 @@ function resolveIfqCreationDate(explicitDate) {
     }
   }
 
-  return new Date();
+  const now = new Date();
+  return buildIfqDateParts(now, now.getFullYear(), now.getMonth() + 1, now.getDate());
 }
 
 function resolveIfqYear(explicitDate) {
-  return resolveIfqCreationDate(explicitDate).getFullYear();
+  return Number(resolveIfqCreationDate(explicitDate).year);
 }
 
 function resolveIfqColophon(explicitDate) {
