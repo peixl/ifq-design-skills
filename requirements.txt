@@ -1,6 +1,14 @@
-# IFQ Design Skills · Python runtime deps
-# Required by scripts/verify.py and any other Python helpers.
-# Install:  pip install -r requirements.txt
-#           python -m playwright install chromium
+# IFQ Design Skills · optional Python runtime deps
+#
+# The core skill runs WITHOUT Python. The system browser handles preview,
+# and `scripts/verify-lite.mjs` (pure Node, zero-dep) handles placeholder scans.
+#
+# Playwright is ONLY needed for the deep verifier (`scripts/verify.py`) —
+# which is optional and only useful when you want headless multi-viewport
+# screenshots + console-error capture in one shot.
+#
+# Install only when you actually need the deep verifier:
+#   pip install -r requirements.txt
+#   python -m playwright install chromium
 
 playwright>=1.47.0

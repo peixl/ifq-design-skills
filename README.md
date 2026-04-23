@@ -53,6 +53,8 @@ npx skills add peixl/ifq-design-skills -g -y
 
 装完直接对 agent 说话。skill 自己判断任务、自己路由模式、自己挑模板、自己跑验证。
 
+**核心链路零依赖**：写 HTML → `npm run preview -- <file>` 在系统默认浏览器里看 → `npm run verify:lite -- <file>` 扫占位符。**不需要装 Playwright、Chromium、Python、ffmpeg**。只有当用户真的要导出 MP4 / PDF / PPTX 时，才用 `npm run install:export` 按需拉齐。
+
 **其他 agent 一键安装**：
 
 ```bash
@@ -62,9 +64,18 @@ hermes skills install github:peixl/ifq-design-skills
 # Claude Code（personal）
 git clone https://github.com/peixl/ifq-design-skills ~/.claude/skills/ifq-design-skills
 
+# OpenClaw
+openclaw skills install ifq-design-skills   # 或 symlink 到 ~/.openclaw/skills/
+
+# Codex CLI / OpenCode / 任何读取 AGENTS.md 的 agent
+# 本仓库根已内置 AGENTS.md —— 克隆后 agent 自动认得
+git clone https://github.com/peixl/ifq-design-skills
+
 # 共享给所有 agent（推荐）
 git clone https://github.com/peixl/ifq-design-skills ~/.agents/skills/ifq-design-skills
 ```
+
+完整矩阵与工具映射：[references/agent-compatibility.md](references/agent-compatibility.md)。
 
 ---
 
@@ -339,13 +350,24 @@ ifq-design-skills/
 
 ## 验证
 
+**Lite 档（默认，零依赖）**：
+
 ```bash
-npm run smoke
+npm run preview -- path/to/design.html   # 在你的系统默认浏览器里打开
+npm run verify:lite -- path/to/design.html   # 纯静态扫占位符残留（YYYY / {…} / lorem / 空 data-ifq-*）
+npm run smoke                              # 一分钟 skill 自检
 ```
 
-一分钟内给出 skill 体检：模板索引 · IFQ brand toolkit · 图标 sprite · references 路由 · `scripts/` 语法。
+不需要装 Playwright、不需要 Chromium、不需要 Python。跨 macOS / Linux / Windows 即跑。
 
-单件作品走 Playwright 截图 + 可点击验证 + 导出格式核对。详见 [references/verification.md](references/verification.md)。
+**Deep 档（按需，仅导出或自动化才装）**：
+
+```bash
+npm run install:export   # 一键装齐 playwright + pdf-lib + pptxgenjs + sharp + Chromium
+python scripts/verify.py path/to/design.html   # headless 多 viewport 截图 + 控制台错误
+```
+
+单件作品在需要自动截图/可点击测试/导出 MP4 PDF PPTX 时才走 Deep 档。详见 [references/verification.md](references/verification.md)。
 
 ---
 

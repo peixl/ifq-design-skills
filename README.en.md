@@ -339,13 +339,24 @@ ifq-design-skills/
 
 ## Verification
 
+**Lite tier (default, zero-dependency):**
+
 ```bash
-npm run smoke
+npm run preview -- path/to/design.html       # opens in your system default browser
+npm run verify:lite -- path/to/design.html   # pure static placeholder scan (YYYY / {…} / lorem / empty data-ifq-*)
+npm run smoke                                # one-minute skill health check
 ```
 
-A one-minute health check: template index · IFQ brand toolkit · icon sprite · references router · `scripts/` syntax.
+No Playwright, no Chromium, no Python. Runs on macOS / Linux / Windows out of the box.
 
-Per-deliverable verification runs Playwright screenshots, click tests, and export parity. See [references/verification.md](references/verification.md).
+**Deep tier (on-demand, only when you export or need CI automation):**
+
+```bash
+npm run install:export                              # pulls playwright + pdf-lib + pptxgenjs + sharp + Chromium in one shot
+python scripts/verify.py path/to/design.html       # headless multi-viewport screenshots + console-error capture
+```
+
+Escalate to the deep tier only when you actually need automated screenshots, click-tests, or MP4 / PDF / PPTX export. See [references/verification.md](references/verification.md).
 
 ---
 

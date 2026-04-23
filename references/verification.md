@@ -1,91 +1,109 @@
 # Verification：证据优先的输出验证流程
 
-IFQ 的验证不是“随手看一眼没问题就算完”，而是**先定义什么算完成，再收集对应证据**。
+IFQ 的验证不是"随手看一眼没问题就算完"，而是**先定义什么算完成，再收集对应证据**。
 
-一些 design-agent 原生环境（如 Claude.ai Artifacts）有内置验证器。大部分 agent 环境没有，所以这里默认用 Playwright 和脚本化检查补齐。
+**验证分两档。默认走 Lite（零依赖），必要时才升级 Deep（Playwright）。**
 
 核心原则：
 
-- 没有截图，不算看过
-- 没有交互验证，不算可点
+- 没有浏览器里看过，不算看过
+- 没有静态占位符扫，不算交付
 - 没有导出核对，不算可交付
 - 没有控制台检查，不算能运行
 
-## 验证清单
+## ⚡ 两档验证（先记这一张表）
 
-每次产出 HTML 后，至少走一遍这套 evidence contract：
+| 档 | 命令 | 依赖 | 覆盖 | 何时用 |
+|---|------|------|------|-------|
+| **Lite**（默认） | `npm run preview -- <file>` + `npm run verify:lite -- <file>` | **零依赖**，Node ≥18.17 即可 | 人眼浏览器看 + 静态占位符扫（YYYY/MM/DD/{…}/lorem/template-stub/空 data-ifq-*） | 所有日常交付（99% 情况） |
+| **Deep**（按需） | `python scripts/verify.py <file>` | Python + `pip install playwright` + `playwright install chromium` | headless 多 viewport 截图 + console-error 抓取 + rendered-text 扫描 | 自动化截图 / 批量 regress / CI / 多分辨率核对 |
 
-### 1. 浏览器渲染检查（必做）
+**不要默认推 Deep 档给用户**——让用户为了看个 HTML 装 500MB Chromium 是 skill 体验噩梦。
 
-最基础：**HTML能不能打开**？在macOS上：
+## Lite 档 · 日常验证四步
 
-```bash
-open -a "Google Chrome" "/path/to/your/design.html"
-```
-
-或者用Playwright截图（下一节）。
-
-### 2. 控制台错误检查
-
-HTML文件里最常见的问题是JS报错导致白屏。用Playwright跑一遍：
+### 1. 浏览器渲染检查（默认用系统默认浏览器）
 
 ```bash
-python <skill-root>/scripts/verify.py path/to/design.html   # <skill-root> = 本 skill 安装路径，各 agent 自解析
+# 跨平台（推荐）
+npm run preview -- path/to/design.html
+
+# 或手动
+open path/to/design.html          # macOS
+xdg-open path/to/design.html      # Linux
+start path/to/design.html         # Windows
 ```
 
-这个脚本会：
-1. 用headless chromium打开HTML
-2. 截图保存到项目目录
-3. 抓取控制台错误
-4. 检查成品里是否还残留 `YYYY`、`MM`、`DD` 或 `{ ... }` 这类未替换占位符
-5. 检查 `data-ifq-year` / `data-ifq-month` / `data-ifq-day` 是否已经被填成真实日期，而不是空节点
-6. 报告status
+用户在自己系统默认浏览器里看。零安装，零配置。
 
-同一条保护也已经接到了导出链：PDF / PPTX / MP4 导出前，会先检查渲染后的页面文本；发现未替换占位符会直接中止导出。
-
-详见`scripts/verify.py`。
-
-### 3. 多视口检查
-
-如果是响应式设计，抓多个viewport：
+### 2. 静态占位符扫（零依赖）
 
 ```bash
-python verify.py design.html --viewports 1920x1080,1440x900,768x1024,375x667
+npm run verify:lite -- path/to/design.html
 ```
 
-### 4. 交互检查
+纯 Node，扫这几类：
 
-Tweaks、动画、按钮切换——默认的静态截图看不到。**建议让用户自己开浏览器点一遍**，或者用Playwright录屏：
+- `{ something }` — 未填充的 brace 占位符
+- `YYYY` / `MM` / `DD` / `<year>` — 未替换的日期 token
+- `lorem ipsum` / `Your headline here` / `TODO:` — 模板残留
+- 空的 `data-ifq-year|month|day` 节点 — 运行时忘了填日期
 
-```python
-page.video.record('interaction.mp4')
-```
+**这一步在大部分交付场景就够用了**。命中就修，修到没警告再交付。
 
-### 5. 幻灯片逐页检查
+### 3. 交互检查（人工）
 
-Deck类HTML，一张张截：
+Tweaks、动画、按钮切换——静态扫不到。让用户或自己在浏览器里点一遍，特别是：
+
+- tab / segment / filter 切换
+- modal 开关
+- tweaks 拖动
+- 滚动 sticky 行为
+
+### 4. 幻灯片快速浏览
+
+在浏览器里按 `→` 翻页，用键盘走一遍。幻灯片逐页截图请用 Deep 档。
+
+## Deep 档 · 需要自动化时再装
+
+**安装（按需，一次）**：
 
 ```bash
-python verify.py deck.html --slides 10  # 截前10张
-```
+# Node 侧
+npm run install:export           # 一键装齐 playwright + pdf-lib + pptxgenjs + sharp + Chromium
 
-生成 `deck-slide-01.png`、`deck-slide-02.png`... 方便快速浏览。
-
-## Playwright Setup
-
-首次使用需要：
-
-```bash
-# 如果还没装
-npm install -g playwright
-npx playwright install chromium
-
-# 或者Python版
+# 或 Python 侧（仅 verify.py 需要）
 pip install playwright
-playwright install chromium
+python -m playwright install chromium
 ```
 
-如果用户已经全局安装 Playwright，直接用即可。
+### Deep 档命令速查
+
+```bash
+# 基础：headless 截图 + 控制台错误抓取 + rendered-text 占位符扫
+python scripts/verify.py design.html
+
+# 多 viewport
+python scripts/verify.py design.html --viewports 1920x1080,1440x900,768x1024,375x667
+
+# 幻灯片逐页截前 N 张
+python scripts/verify.py deck.html --slides 10
+
+# 输出到指定目录
+python scripts/verify.py design.html --output ./screenshots/
+
+# 非 headless，真实浏览器弹出来给你看
+python scripts/verify.py design.html --show
+```
+
+Deep 档覆盖 Lite 档的能力集，再加：
+
+- rendered DOM 文本扫（JS 执行后的最终文本）
+- `console.error` / `pageerror` 捕获
+- 像素级多 viewport 截图比对
+- 幻灯片翻页自动化
+
+同一条占位符保护也接到了导出链：PDF / PPTX / MP4 导出前会先检查渲染后的页面文本；发现未替换占位符会直接中止导出。
 
 ## 截图最佳实践
 

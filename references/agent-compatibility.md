@@ -4,16 +4,25 @@
 
 The skill itself uses neutral verbs (`read file`, `write file`, `run command`, `web search`, `take screenshot`). This file maps those verbs to each runtime's actual tool surface and documents install paths, slash commands, and discovery endpoints.
 
-## Universal prerequisites
+## Universal prerequisites — tiered, default is ZERO install
+
+The skill is designed so the **core design loop costs nothing to install**. Heavier tooling is pulled in on demand only when the user actually asks for an export or CI-grade verification.
 
 ```
-Node ≥ 18.17                    # scripts/*.mjs, smoke, pptx/pdf export
-Python ≥ 3.9                    # scripts/verify.py (Playwright)
-ffmpeg                          # scripts/render-video.js, scripts/add-music.sh
-npx playwright install chromium # verification
+Tier 0 · CORE LOOP (zero-install)
+  Node ≥ 18.17             # scripts/preview.mjs, scripts/verify-lite.mjs, scripts/smoke-test.mjs
+  a default system browser # preview uses `open` / `xdg-open` / `start`
+
+Tier 1 · DEEP VERIFY (optional, on demand)
+  Python ≥ 3.9             # scripts/verify.py
+  pip install playwright && python -m playwright install chromium
+
+Tier 2 · EXPORT PIPELINE (optional, on demand)
+  npm run install:export   # pulls playwright + pdf-lib + pptxgenjs + sharp + Chromium in one shot
+  ffmpeg (brew / apt)      # only for MP4/GIF via scripts/render-video.js + scripts/add-music.sh
 ```
 
-Optional: `sharp`, `pptxgenjs`, `pdf-lib` come from `package.json`.
+`playwright`, `pdf-lib`, `pptxgenjs`, `sharp` are all declared under `optionalDependencies` in `package.json` — `npm install --omit=optional` succeeds and keeps the skill lightweight. Never push Tier 1 or Tier 2 onto users whose task only needs HTML.
 
 ## Recommended install path — shared across every agent
 
@@ -51,7 +60,9 @@ ln -s ~/.agents/skills/ifq-design-skills .claude/skills/ifq-design-skills
 | write file | `Write`, `Edit` |
 | run command | `Bash` |
 | web search | `WebSearch`, `WebFetch` |
-| verify / screenshot | `Bash` → `python scripts/verify.py` |
+| preview (default) | `Bash` → `npm run preview -- <file>` |
+| verify (default) | `Bash` → `npm run verify:lite -- <file>` |
+| verify (deep, optional) | `Bash` → `python scripts/verify.py <file>` |
 
 No config changes required.
 
@@ -102,7 +113,9 @@ Hermes loads this skill in three levels, matching the agentskills.io standard:
 | write file | `file.write` |
 | run command | `terminal.run`, `execute_code` |
 | web search | `web.search`, `web.fetch` (or `duckduckgo_search` fallback) |
-| verify / screenshot | `terminal.run` → `python scripts/verify.py` |
+| preview (default) | `terminal.run` → `npm run preview -- <file>` |
+| verify (default) | `terminal.run` → `npm run verify:lite -- <file>` |
+| verify (deep, optional) | `terminal.run` → `python scripts/verify.py <file>` |
 
 ### Conditional activation
 
@@ -182,7 +195,9 @@ openclaw gateway status   # expect: ok, mode=local
 | write file | `filesystem/write` |
 | run command | `shell/exec` |
 | web search | `browser/search`, `browser/fetch` |
-| verify / screenshot | `shell/exec` → `scripts/verify.py` |
+| preview (default) | `shell/exec` → `npm run preview -- <file>` |
+| verify (default) | `shell/exec` → `npm run verify:lite -- <file>` |
+| verify (deep, optional) | `shell/exec` → `scripts/verify.py` |
 
 ### Known issues and fixes
 
@@ -223,7 +238,9 @@ system) or wants exports (mp4/gif/pptx/pdf/svg), read
 | write file | `apply_patch` |
 | run command | `shell` |
 | web search | not native — user supplies URLs |
-| verify / screenshot | `shell` → `python scripts/verify.py` |
+| preview (default) | `shell` → `npm run preview -- <file>` |
+| verify (default) | `shell` → `npm run verify:lite -- <file>` |
+| verify (deep, optional) | `shell` → `python scripts/verify.py <file>` |
 
 Optional env hint so Codex finds the skill quickly:
 
@@ -233,7 +250,50 @@ export CODEX_SKILLS_PATH="$HOME/.codex/skills"
 
 ---
 
-## 5 · Cursor
+## 5 · OpenCode (sst/opencode)
+
+OpenCode is an AGENTS.md-native terminal agent. It reads the repo's root `AGENTS.md` automatically on every session, so no per-runtime config is required — **this repo ships `AGENTS.md` at root**, pointing OpenCode straight at `SKILL.md`.
+
+### Install
+
+```bash
+# Route A — per-project: clone directly into your workspace, opencode finds AGENTS.md on open
+git clone https://github.com/peixl/ifq-design-skills
+
+# Route B — globally shared: symlink into the cross-agent shared dir
+git clone https://github.com/peixl/ifq-design-skills ~/.agents/skills/ifq-design-skills
+ln -s ~/.agents/skills/ifq-design-skills ~/.config/opencode/skills/ifq-design-skills
+```
+
+### Slash-style prompts
+
+OpenCode does not have slash commands, but because `AGENTS.md` is loaded into the system prompt, you can just say:
+
+```
+make a 12-slide editorial keynote about AI agents
+critique this landing page and propose 3 directions
+export the current deck to PPTX
+```
+
+and the agent routes through this skill.
+
+### Tool mapping
+
+| Neutral verb | OpenCode tool |
+|---|---|
+| read file | `read` |
+| write file | `write`, `edit` |
+| run command | `bash` |
+| web search | `webfetch` (or MCP search server) |
+| preview (default) | `bash` → `npm run preview -- <file>` |
+| verify (default) | `bash` → `npm run verify:lite -- <file>` |
+| verify (deep, optional) | `bash` → `python scripts/verify.py <file>` |
+
+OpenCode works zero-install for the core loop — it never prompts the user to install Playwright unless an export task actually triggers Tier 2.
+
+---
+
+## 6 · Cursor
 
 Cursor does not load skills automatically but honors `@file` pins in chat.
 
@@ -260,21 +320,21 @@ I need a 12-slide editorial keynote for tomorrow's AI agents talk.
 
 ---
 
-## 6 · Generic fallback — any agent with filesystem + shell
+## 7 · Generic fallback — any agent with filesystem + shell
 
 Minimum steps for any runtime with file read/write and shell:
 
 1. Clone the repo (or symlink `~/.agents/skills/ifq-design-skills`).
-2. Point the agent at `SKILL.md` as its entry doc.
-3. Ensure the agent can run `node`, `python3`, and `ffmpeg` in the cloned directory.
-4. `npm install && npx playwright install chromium`.
-5. Run `npm run smoke` — a passing smoke means the skill is wired correctly.
+2. Point the agent at `SKILL.md` as its entry doc. The root `AGENTS.md` also points here, which most AGENTS.md-aware tools (Codex CLI, OpenCode, sst) pick up automatically.
+3. Ensure the agent can run `node` in the cloned directory. The default design loop needs nothing else.
+4. Run `npm run smoke` — a passing smoke means the skill is wired correctly.
+5. **Only when the user asks to export** MP4 / GIF / PDF / PPTX, run `npm run install:export` once.
 
-Covers Continue, Aider, GitHub Copilot Chat with `@workspace`, Sweep, and any MCP-capable client.
+Covers Continue, Aider, GitHub Copilot Chat with `@workspace`, Sweep, sst/OpenCode, and any MCP-capable client.
 
 ---
 
-## 7 · Web discovery via `/.well-known/skills/`
+## 8 · Web discovery via `/.well-known/skills/`
 
 For any Hermes instance (or compatible client) to discover this skill from its homepage, publish a static manifest at:
 

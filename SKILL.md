@@ -21,7 +21,7 @@ metadata:
 
 ## Purpose
 
-A design engine for agents. Given a natural-language request, this skill picks one of 12 professional modes, forks a pre-built template, fills it with user context, weaves in the IFQ ambient brand layer, verifies with Playwright, and compiles to HTML / MP4 / GIF / PPTX / PDF / SVG. Agent-agnostic: works inside Claude Code, Codex CLI, OpenClaw, Hermes, Cursor, and any agent that can read files, write files, run shell commands, and optionally browse the web.
+A design engine for agents. Given a natural-language request, this skill picks one of 12 professional modes, forks a pre-built template, fills it with user context, weaves in the IFQ ambient brand layer, previews in the user's system default browser, and — on demand — compiles to MP4 / GIF / PPTX / PDF / SVG. Agent-agnostic: works inside Claude Code, Codex CLI, OpenCode, OpenClaw, Hermes, Cursor, and any agent that can read files, write files, and run shell commands. **Zero-install core loop.** Heavy dependencies (Playwright / pdf-lib / pptxgenjs / sharp / ffmpeg) are only required when the user actually asks for an export; they live under `optionalDependencies` and are pulled in on demand via `npm run install:export`.
 
 ## When to use
 
@@ -44,7 +44,26 @@ A design engine for agents. Given a natural-language request, this skill picks o
 2. **Fork** that template into the working file, inline [`assets/ifq-brand/ifq-tokens.css`](assets/ifq-brand/ifq-tokens.css), weave in at least three ambient marks (see [`references/ifq-brand-spec.md`](references/ifq-brand-spec.md)).
 3. **Verify** with [`scripts/verify.py`](scripts/verify.py); export via [`scripts/`](scripts/); run `npm run smoke` for a skill-level health check.
 
-Agent-specific tool mappings (Claude Code · Codex CLI · OpenClaw · Hermes · Cursor) live in [`references/agent-compatibility.md`](references/agent-compatibility.md). Do not hard-code a specific agent's tool names inside this skill's workflow.
+Agent-specific tool mappings (Claude Code · Codex CLI · OpenCode · OpenClaw · Hermes · Cursor) live in [`references/agent-compatibility.md`](references/agent-compatibility.md). Do not hard-code a specific agent's tool names inside this skill's workflow.
+
+### Agent runtime quickref（AI agent 加载本 skill 后可直接照抄）
+
+| Runtime | 安装路径（推荐共享） | 加载方式 | 核心动词 → 工具 |
+|---------|---------------------|---------|----------------|
+| **Claude Code** | `~/.claude/skills/ifq-design-skills` → 符号链 `~/.agents/skills/` | frontmatter 自动发现 | read=Read · write=Write · run=Bash · search=WebSearch |
+| **Codex CLI (OpenAI)** | `~/.codex/skills/ifq-design-skills` | 在 `AGENTS.md` 指向 `SKILL.md` | read/write=apply_patch · run=shell |
+| **OpenCode** | 读取仓库根 `AGENTS.md`（本仓库已内置） | AGENTS.md 自动注入 | read=read · write=write · run=bash |
+| **OpenClaw** | `~/.openclaw/skills/ifq-design-skills` | `plugins.allow` 列 + gateway 重启 | read=filesystem/read · write=filesystem/write · run=shell/exec |
+| **Hermes** | `hermes skills install github:peixl/ifq-design-skills` | 原生 progressive disclosure | read=file.read/skill_view · write=file.write · run=terminal.run |
+| **Cursor** | git clone 后 `@file` pin | 聊天开头 `@ifq-design-skills/SKILL.md` | read=@file · write=Apply · run=terminal |
+| **Generic fallback** | 任何有 fs + shell 的 agent | 指向 `SKILL.md` 即可 | 见 `references/agent-compatibility.md` §6 |
+
+**AI agent 加载本 skill 的最小必读顺序**（任何 runtime 都一样）：
+
+1. 本节 Fast Path（下方）→ 知道什么时候跑、要什么输入、输出是什么。
+2. `references/modes.md` 的 12 种模式表 → 路由到具体流水线。
+3. `assets/templates/INDEX.json` → 找到可 fork 的模板 HTML，禁止从白纸开始。
+4. 需要验证时：`npm run verify:lite -- <file>`（零依赖）→ 需要导出时再读 `references/video-export.md` / `references/editable-pptx.md`。
 
 ## ⚡ 最短执行协议（Fast Path · 先读这一段）
 
@@ -58,8 +77,15 @@ Agent-specific tool mappings (Claude Code · Codex CLI · OpenClaw · Hermes · 
 - **IFQ Ambient System（默认开启）**：默认把 IFQ 写进页面结构，而不是只贴 logo。每个交付物至少融合 3 个 IFQ 标记：`Signal Spark` / `Rust Ledger` / `Mono Field Note` / `Quiet URL` / `Editorial Contrast`。规范见 [`references/ifq-brand-spec.md`](references/ifq-brand-spec.md) 和 [`assets/ifq-brand/BRAND-DNA.md`](assets/ifq-brand/BRAND-DNA.md)。
 - **共品牌规则**：用户品牌为主角，但 IFQ authored layer 默认仍在场。不要和用户 logo 争主位；把 IFQ 放进 colophon、motion cue、quiet URL、field-note stamp、layout rhythm。
 - **Style Recipes**：风格组织方式用“风格配方 / scene template / protocol”，不要再靠“DNA 神话”表达方法论。
-- **Verification**：Playwright 截图验证（`scripts/verify.py`），默认拦截 `YYYY` / `MM` / `DD` / `{ ... }` 这类未替换占位符；App 原型必须 ≥ 1 个可点击交互；动画检查 60fps + BGM fade + 文件体积；Deck 导出 PDF 页数 = HTML slides。
-- **Dependencies**：Node ≥18.17 + `playwright / pdf-lib / pptxgenjs / sharp`；Python ≥3.9 + `playwright`；System `ffmpeg` + `npx playwright install chromium`。详见 `package.json` / `requirements.txt` / `references/smoke-test.md`。
+- **Verification（分两档，默认走 lite）**：
+  - **Lite（默认·零依赖）**：`npm run preview -- <file.html>` 用**系统默认浏览器**打开人眼复核 + `npm run verify:lite -- <file.html>` 做纯静态占位符扫描（`YYYY` / `MM` / `DD` / `{ ... }` / lorem / template-stub / 空 `data-ifq-*`）。不装 Playwright、不装 Chromium、不装 Python，跨平台即跑。这是**默认路径**。
+  - **Deep（按需）**：`python scripts/verify.py <file.html>` = headless 多 viewport 截图 + console-error 抓取 + rendered-text 扫描。只在需要自动化截图或交互点击测试时才装。
+  - 其他硬闸：App 原型必须 ≥ 1 个可点击交互；动画检查 60fps + BGM fade + 文件体积；Deck 导出 PDF 页数 = HTML slides。
+- **Dependencies（tiered · 默认零安装）**：
+  - **Tier 0 · 核心环路（写 HTML + 系统浏览器预览 + lite 验证）**：仅 Node ≥18.17。**零 npm install**，克隆即可跑。
+  - **Tier 1 · 深度验证（可选）**：Python ≥3.9 + `pip install playwright` + `python -m playwright install chromium`。
+  - **Tier 2 · 导出 MP4/GIF/PDF/PPTX（可选，按需）**：`npm run install:export` 一键装齐 `playwright / pdf-lib / pptxgenjs / sharp` + Chromium；视频还需 `ffmpeg`（`brew install ffmpeg` / `apt install ffmpeg`）。
+  - 只用 HTML 交付的任务永远不要求用户装 Playwright。详见 `package.json` / `requirements.txt` / `references/smoke-test.md`。
 - **Agent-agnostic 术语**：本 skill 统一用中性动词（`读取文件 / 写入文件 / 运行命令 / 网络搜索 / 截图验证`）。各 agent 的实际工具映射（Claude Code · Codex · OpenClaw · Hermes · Cursor · ifq CLI）见 [`references/agent-compatibility.md`](references/agent-compatibility.md)。
 - **Routing**：`模式触发` → 设计方向顾问 Fallback → Junior Designer 主干。模式触发时先 `读取模板`（`assets/templates/INDEX.json` → 对应 html），再 fork-and-fill，**禁止从白纸开始**。
 - **Smoke test**：跑 `npm run smoke` 一分钟验证 skill 完整性（模板索引、identity toolkit、图标 sprite、references 路由、脚本语法）。
@@ -692,7 +718,7 @@ Screen 组件接 callback props（`onEnter`、`onClose`、`onTabChange`、`onOpe
 
 ### 3. 交付前跑真实点击测试
 
-静态截图只能看 layout，交互 bug 要点过才发现。用 Playwright 跑 3 项最小点击测试：进入详情 / 关键标注点 / tab 切换。检查 `pageerror` 为 0 再交付。Playwright 可用 `npx playwright` 调用，或按本机全局安装路径（`npm root -g` + `/playwright`）。
+静态截图只能看 layout，交互 bug 要点过才发现。**默认让用户/自己用系统浏览器点一遍**（`npm run preview -- <file.html>` 或直接 `open <file.html>` / `xdg-open` / `start`），跑 3 项最小点击测试：进入详情 / 关键标注点 / tab 切换。控制台要无红字。仅当需要**自动化**交互验证（CI、批量 regress）时才升级到 Playwright（`npm run install:export` 装齐或者 `python scripts/verify.py`）。不要因为一个简单 demo 就强推用户装 Chromium。
 
 ### 4. 品位锚点（pursue list，fallback 首选）
 
@@ -768,7 +794,7 @@ Screen 组件接 callback props（`onEnter`、`onClose`、`onTabChange`、`onOpe
 5. **Junior pass**：HTML里写assumptions+placeholders+reasoning comments。
    🛑 **检查点3：尽早show给用户（哪怕只是灰色方块+标签），等反馈再写组件**。
 6. **Full pass**：填placeholder，做variations，加Tweaks。做到一半再show一次，不要等全做完。
-7. **验证**：用Playwright截图（见 `references/verification.md`），检查控制台错误，发给用户。
+7. **验证**：默认走 lite 档——`npm run verify:lite -- <file>` 扫占位符残留，再 `npm run preview -- <file>` 在系统默认浏览器里肉眼复核。动画 / 多 viewport regress 再升级到 `scripts/verify.py`（见 `references/verification.md`）。
    🛑 **检查点4：交付前自己肉眼过一遍浏览器**。AI写的代码经常有interaction bug。
 8. **总结**：极简，只说caveats和next steps。
 9. **（默认）导出视频 · 必带 SFX + BGM**：动画 HTML 的**默认交付形态是带音频的 MP4**，不是纯画面。无声版本等于半成品——用户潜意识感知「画在动但没声音响应」，廉价感的根源就在这里。流水线：
@@ -889,7 +915,7 @@ Screen 组件接 callback props（`onEnter`、`onClose`、`onTabChange`、`onOpe
 
 本 skill 设计为 **agent-agnostic**——Claude Code、Codex、Cursor、Trae、OpenClaw、Hermes Agent 或任何支持 markdown-based skill 的 agent 都可以使用。以下是和原生「设计型 IDE」（如 Claude.ai Artifacts）对比时的通用差异处理方式：
 
-- **没有内置的 fork-verifier agent**：用 `scripts/verify.py`（Playwright 封装）人工驱动验证
+- **没有内置的 fork-verifier agent**：默认 `scripts/preview.mjs` + `scripts/verify-lite.mjs`（零依赖，系统浏览器 + 静态扫描）；要深一点用 `scripts/verify.py`（Playwright 封装）
 - **没有 asset 注册到 review pane**：直接用 agent 的 Write 能力写文件，用户在自己的浏览器/IDE 里打开
 - **没有 Tweaks host postMessage**：改成**纯前端 localStorage 版**，详见 `references/tweaks-system.md`
 - **没有 `window.claude.complete` 免配置 helper**：若 HTML 里要调 LLM，用一个可复用的 mock 或让用户填自己的 API key，详见 `references/react-setup.md`
@@ -904,7 +930,7 @@ Skill 路径引用均采用**相对本 skill 根目录**的形式（`references/
 - 避免>1000行的大文件，拆成多个JSX文件import进主文件
 - 幻灯片、动画等固定尺寸内容，**播放位置**存localStorage——刷新不丢
 - HTML放项目目录，不要散落到`~/Downloads`
-- 最终产出用浏览器打开检查或用Playwright截图
+- 最终产出用**系统默认浏览器**打开检查（`npm run preview -- <file>` / `open` / `xdg-open` / `start`）；只有真正需要自动化截图或 CI regress 时才升级到 Playwright
 
 ## Skill 推广水印（仅动画产出）
 
