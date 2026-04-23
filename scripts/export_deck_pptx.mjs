@@ -28,29 +28,41 @@
 import pptxgen from 'pptxgenjs';
 import fs from 'fs/promises';
 import path from 'path';
+import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const require = createRequire(import.meta.url);
+const { assertNoPlaceholderLeaksInPage } = require('./placeholder-guard.cjs');
 
 function parseArgs() {
   const args = {};
   const a = process.argv.slice(2);
-  for (let i = 0; i < a.length; i += 2) {
-    const k = a[i].replace(/^--/, '');
-    args[k] = a[i + 1];
+  for (let i = 0; i < a.length; i++) {
+    const current = a[i];
+    if (!current.startsWith('--')) continue;
+    const key = current.replace(/^--/, '');
+    const next = a[i + 1];
+    if (!next || next.startsWith('--')) {
+      args[key] = true;
+      continue;
+    }
+    args[key] = next;
+    i += 1;
   }
   if (!args.slides || !args.out) {
-    console.error('用法: node export_deck_pptx.mjs --slides <dir> --out <file.pptx>');
+    console.error('用法: node export_deck_pptx.mjs --slides <dir> --out <file.pptx> [--allow-placeholders]');
     console.error('');
     console.error('⚠️ HTML 必须符合 4 条硬约束（见 references/editable-pptx.md）。');
     console.error('   视觉自由度优先的场景请改用 export_deck_pdf.mjs 导出 PDF。');
     process.exit(1);
   }
+  args.allowPlaceholders = Boolean(args['allow-placeholders']);
   return args;
 }
 
 async function main() {
-  const { slides, out } = parseArgs();
+  const { slides, out, allowPlaceholders } = parseArgs();
   const slidesDir = path.resolve(slides);
   const outFile = path.resolve(out);
 
@@ -64,8 +76,6 @@ async function main() {
 
   console.log(`Converting ${files.length} slides via html2pptx...`);
 
-  const { createRequire } = await import('module');
-  const require = createRequire(import.meta.url);
   let html2pptx;
   try {
     html2pptx = require(path.join(__dirname, 'html2pptx.js'));
@@ -83,7 +93,10 @@ async function main() {
     const f = files[i];
     const fullPath = path.join(slidesDir, f);
     try {
-      await html2pptx(fullPath, pres);
+      await html2pptx(fullPath, pres, {
+        assertNoPlaceholderLeaksInPage,
+        allowPlaceholders,
+      });
       console.log(`  [${i + 1}/${files.length}] ${f} ✓`);
     } catch (e) {
       console.error(`  [${i + 1}/${files.length}] ${f} ✗  ${e.message}`);

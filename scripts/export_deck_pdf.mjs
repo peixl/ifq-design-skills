@@ -24,25 +24,38 @@ import { chromium } from 'playwright';
 import { PDFDocument } from 'pdf-lib';
 import fs from 'fs/promises';
 import path from 'path';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
+const { assertNoPlaceholderLeaksInPage } = require('./placeholder-guard.cjs');
 
 function parseArgs() {
   const args = { width: 1920, height: 1080 };
   const a = process.argv.slice(2);
-  for (let i = 0; i < a.length; i += 2) {
-    const k = a[i].replace(/^--/, '');
-    args[k] = a[i + 1];
+  for (let i = 0; i < a.length; i++) {
+    const current = a[i];
+    if (!current.startsWith('--')) continue;
+    const key = current.replace(/^--/, '');
+    const next = a[i + 1];
+    if (!next || next.startsWith('--')) {
+      args[key] = true;
+      continue;
+    }
+    args[key] = next;
+    i += 1;
   }
   if (!args.slides || !args.out) {
-    console.error('用法: node export_deck_pdf.mjs --slides <dir> --out <file.pdf> [--width 1920] [--height 1080]');
+    console.error('用法: node export_deck_pdf.mjs --slides <dir> --out <file.pdf> [--width 1920] [--height 1080] [--allow-placeholders]');
     process.exit(1);
   }
   args.width = parseInt(args.width);
   args.height = parseInt(args.height);
+  args.allowPlaceholders = Boolean(args['allow-placeholders']);
   return args;
 }
 
 async function main() {
-  const { slides, out, width, height } = parseArgs();
+  const { slides, out, width, height, allowPlaceholders } = parseArgs();
   const slidesDir = path.resolve(slides);
   const outFile = path.resolve(out);
 
@@ -65,6 +78,7 @@ async function main() {
     const url = 'file://' + path.join(slidesDir, f);
     await page.goto(url, { waitUntil: 'networkidle' }).catch(() => page.goto(url));
     await page.waitForTimeout(1200);  // web-font paint
+    await assertNoPlaceholderLeaksInPage(page, { label: f, allowPlaceholders });
     // emulate "screen" so CSS colors/backgrounds render the same as browser
     await page.emulateMedia({ media: 'screen' });
     const buf = await page.pdf({

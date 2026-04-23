@@ -9,7 +9,8 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=1242"/>
-<title>{ TITLE } · ifq.ai field note</title>
+<meta name="ifq:created-at" content="{ CREATED_AT · optional ISO-8601, defaults to now }"/>
+<title>{ TITLE } · ifq.ai</title>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,700;1,400&family=Noto+Serif+SC:wght@700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
 <style>
   :root {
@@ -50,7 +51,7 @@
 <main class="page">
   <div class="rule"></div>
 
-  <div class="kicker">ifq.ai · { KICKER · WHITE PAPER · 2026 } </div>
+  <div class="kicker">ifq.ai · { KICKER · WHITE PAPER } · <span data-ifq-year></span></div>
   <h1>{ TITLE — pair with <em>italic accent</em> }</h1>
   <p class="lead">{ LEAD — one-sentence premise, 80–140 chars. }</p>
 
@@ -73,9 +74,9 @@
     <div>
       <h2>{ Section 2 headline }</h2>
       <ul class="timeline">
-        <li><div class="t">2026 · 04</div><div class="e">{ milestone one }</div></li>
-        <li><div class="t">2026 · 05</div><div class="e">{ milestone two }</div></li>
-        <li><div class="t">2026 · 06</div><div class="e">{ milestone three }</div></li>
+        <li><div class="t">{ YYYY · MM }</div><div class="e">{ milestone one }</div></li>
+        <li><div class="t">{ YYYY · MM }</div><div class="e">{ milestone two }</div></li>
+        <li><div class="t">{ YYYY · MM }</div><div class="e">{ milestone three }</div></li>
       </ul>
     </div>
   </section>
@@ -89,12 +90,35 @@
   </section>
 
   <div class="colophon">
-    <div>ifq.ai / { PUBLICATION / YEAR }</div>
+    <div>ifq.ai / { PUBLICATION } / <span data-ifq-year></span></div>
     <div class="stamp">
       <svg viewBox="-16 -16 32 32"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="#D4532B"/></svg>
-      ifq.ai / field note
+      ifq.ai
     </div>
   </div>
 </main>
+<script>
+  (function () {
+    function normalizeIfqDate(value) {
+      if (!value) {
+        return null;
+      }
+
+      const parsed = value instanceof Date ? value : new Date(value);
+      return Number.isNaN(parsed.getTime()) ? null : parsed;
+    }
+
+    const metaTag = document.querySelector('meta[name="ifq:created-at"]');
+    const createdAt =
+      normalizeIfqDate(window.IFQ_CREATION_DATE) ||
+      normalizeIfqDate(document.documentElement.getAttribute('data-ifq-created-at')) ||
+      normalizeIfqDate(metaTag && metaTag.getAttribute('content')) ||
+      new Date();
+
+    document.querySelectorAll('[data-ifq-year]').forEach(function (node) {
+      node.textContent = String(createdAt.getFullYear());
+    });
+  })();
+</script>
 </body>
 </html>

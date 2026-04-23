@@ -8,7 +8,7 @@
  *   NODE_PATH=$(npm root -g) node render-video.js <html-file> \
  *     [--duration=30] [--width=1920] [--height=1080] \
  *     [--trim=<seconds>] [--fontwait=1.5] [--readytimeout=8] \
- *     [--keep-chrome]
+ *     [--keep-chrome] [--allow-placeholders]
  *
  * Design:
  *   1. Warmup context (no record) — caches fonts/assets, closes cleanly
@@ -41,6 +41,7 @@ const { chromium } = require('playwright');
 const path = require('path');
 const fs = require('fs');
 const { spawnSync } = require('child_process');
+const { assertNoPlaceholderLeaksInPage } = require('./placeholder-guard.cjs');
 
 function arg(name, def) {
   const p = process.argv.find(a => a.startsWith('--' + name + '='));
@@ -64,6 +65,7 @@ const TRIM_OVERRIDE = arg('trim', null);              // manual override (second
 const FONT_WAIT = parseFloat(arg('fontwait', '1.5')); // fallback when no __ready signal
 const READY_TIMEOUT = parseFloat(arg('readytimeout', '8'));
 const KEEP_CHROME = hasFlag('keep-chrome');
+const ALLOW_PLACEHOLDERS = hasFlag('allow-placeholders');
 
 const HTML_ABS = path.resolve(HTML_FILE);
 const BASENAME = path.basename(HTML_FILE, path.extname(HTML_FILE));
@@ -237,6 +239,11 @@ console.log(`  output: ${MP4_OUT}`);
     console.log(`     own Stage, see references/animation-pitfalls.md §12 for the pattern.`);
     console.log('');
   }
+
+  await assertNoPlaceholderLeaksInPage(page, {
+    label: path.basename(HTML_ABS),
+    allowPlaceholders: ALLOW_PLACEHOLDERS,
+  });
 
   // Now let the animation play out its full duration
   await page.waitForTimeout(DURATION * 1000 + 300);

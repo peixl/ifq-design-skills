@@ -663,9 +663,18 @@
   <div class="footer">
     <span class="footer-text">Takram Style</span>
     <span class="footer-text">CLAUDE.md Optimization</span>
-    <span class="footer-text">2026</span>
+    <span class="footer-text" data-ifq-year></span>
   </div>
 
 </div>
+<script>
+(function () {
+  const metaTag = document.querySelector('meta[name="ifq:created-at"]');
+  const candidate = window.IFQ_CREATION_DATE || document.documentElement.getAttribute('data-ifq-created-at') || (metaTag && metaTag.getAttribute('content'));
+  const parsed = candidate ? new Date(candidate) : new Date();
+  const year = Number.isNaN(parsed.getTime()) ? new Date().getFullYear() : parsed.getFullYear();
+  document.querySelectorAll('[data-ifq-year]').forEach(function (node) { node.textContent = String(year); });
+})();
+</script>
 </body>
 </html>

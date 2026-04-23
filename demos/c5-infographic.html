@@ -428,7 +428,7 @@
 <div class="stage" id="stage">
 
   <div class="watermark" id="watermark">IFQ · DESIGN</div>
-  <div class="v2-mark">V2 · 2026</div>
+  <div class="v2-mark">V2 · <span data-ifq-year></span></div>
 
   <!-- Left: JSON data -->
   <div class="split-left" id="splitLeft" style="opacity:0">
@@ -809,5 +809,14 @@
 })();
 </script>
 
+<script>
+(function () {
+  const metaTag = document.querySelector('meta[name="ifq:created-at"]');
+  const candidate = window.IFQ_CREATION_DATE || document.documentElement.getAttribute('data-ifq-created-at') || (metaTag && metaTag.getAttribute('content'));
+  const parsed = candidate ? new Date(candidate) : new Date();
+  const year = Number.isNaN(parsed.getTime()) ? new Date().getFullYear() : parsed.getFullYear();
+  document.querySelectorAll('[data-ifq-year]').forEach(function (node) { node.textContent = String(year); });
+})();
+</script>
 </body>
 </html>

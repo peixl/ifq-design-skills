@@ -8,6 +8,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=1440"/>
+<meta name="ifq:created-at" content="{ CREATED_AT · optional ISO-8601, defaults to now }"/>
 <title>{ HEADLINE } · ifq.ai</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -83,7 +84,7 @@
 
   <section class="hero">
     <div>
-      <div class="hero__eyebrow">{ SIGNAL · 2026 }</div>
+      <div class="hero__eyebrow">{ SIGNAL } · <span data-ifq-year></span></div>
       <h1 class="hero__title">{ HEADLINE.<br/> <em>Make it pretty.</em> }</h1>
       <p class="hero__sub">{ SUPPORTING SENTENCE — 20–30 words that situate the product and its audience. Keep it one paragraph. }</p>
       <a class="hero__cta" href="#">{ CTA TEXT }
@@ -115,5 +116,28 @@
     ifq.ai / field signal / { ISSUE }
   </div>
 </div>
+<script>
+  (function () {
+    function normalizeIfqDate(value) {
+      if (!value) {
+        return null;
+      }
+
+      const parsed = value instanceof Date ? value : new Date(value);
+      return Number.isNaN(parsed.getTime()) ? null : parsed;
+    }
+
+    const metaTag = document.querySelector('meta[name="ifq:created-at"]');
+    const createdAt =
+      normalizeIfqDate(window.IFQ_CREATION_DATE) ||
+      normalizeIfqDate(document.documentElement.getAttribute('data-ifq-created-at')) ||
+      normalizeIfqDate(metaTag && metaTag.getAttribute('content')) ||
+      new Date();
+
+    document.querySelectorAll('[data-ifq-year]').forEach(function (node) {
+      node.textContent = String(createdAt.getFullYear());
+    });
+  })();
+</script>
 </body>
 </html>

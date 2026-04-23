@@ -342,7 +342,7 @@
 
     <!-- RIGHT -->
     <div class="hero-right">
-      <div class="corner-mark">Portfolio 2026</div>
+      <div class="corner-mark">Portfolio <span data-ifq-year></span></div>
       <div class="portrait-wrap">
         <div class="portrait-circle"></div>
         <div class="portrait-frame"></div>
@@ -365,5 +365,14 @@
     <div class="arrow-down"></div>
   </div>
 
+<script>
+(function () {
+  const metaTag = document.querySelector('meta[name="ifq:created-at"]');
+  const candidate = window.IFQ_CREATION_DATE || document.documentElement.getAttribute('data-ifq-created-at') || (metaTag && metaTag.getAttribute('content'));
+  const parsed = candidate ? new Date(candidate) : new Date();
+  const year = Number.isNaN(parsed.getTime()) ? new Date().getFullYear() : parsed.getFullYear();
+  document.querySelectorAll('[data-ifq-year]').forEach(function (node) { node.textContent = String(year); });
+})();
+</script>
 </body>
 </html>

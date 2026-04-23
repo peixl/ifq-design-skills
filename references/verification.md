@@ -37,7 +37,11 @@ python <skill-root>/scripts/verify.py path/to/design.html   # <skill-root> = 本
 1. 用headless chromium打开HTML
 2. 截图保存到项目目录
 3. 抓取控制台错误
-4. 报告status
+4. 检查成品里是否还残留 `YYYY`、`MM`、`DD` 或 `{ ... }` 这类未替换占位符
+5. 检查 `data-ifq-year` / `data-ifq-month` / `data-ifq-day` 是否已经被填成真实日期，而不是空节点
+6. 报告status
+
+同一条保护也已经接到了导出链：PDF / PPTX / MP4 导出前，会先检查渲染后的页面文本；发现未替换占位符会直接中止导出。
 
 详见`scripts/verify.py`。
 
@@ -195,4 +199,7 @@ python verify.py design.html --output ./screenshots/
 
 # headless=false，打开真实浏览器给你看
 python verify.py design.html --show
+
+# 只在故意预览模板骨架时跳过占位符检查
+python verify.py template.html --allow-placeholders
 ```

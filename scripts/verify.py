@@ -18,6 +18,7 @@ import argparse
 import sys
 import os
 import time
+import re
 from pathlib import Path
 
 
@@ -26,7 +27,122 @@ def parse_viewport(s):
     return {'width': int(w), 'height': int(h)}
 
 
-def verify_html(html_path, viewports=None, slides=0, output_dir=None, show=False, wait=2000):
+DEFAULT_PLACEHOLDER_PATTERNS = [
+    ('brace-placeholder', re.compile(r'\{[^{}\n]{1,120}\}')),
+    ('year-token', re.compile(r'(?<![A-Za-z0-9_])(YYYY|<year>)(?![A-Za-z0-9_])')),
+    ('month-day-token', re.compile(r'(?<![A-Za-z0-9_])(MM|DD)(?![A-Za-z0-9_])')),
+]
+
+TEMPORAL_PLACEHOLDERS = [
+    {'selector': '[data-ifq-year]', 'token': 'data-ifq-year', 'pattern': re.compile(r'^\d{4}$')},
+    {'selector': '[data-ifq-month]', 'token': 'data-ifq-month', 'pattern': re.compile(r'^(0[1-9]|1[0-2])$')},
+    {'selector': '[data-ifq-day]', 'token': 'data-ifq-day', 'pattern': re.compile(r'^(0[1-9]|[12][0-9]|3[01])$')},
+]
+
+
+def clip_context(text, start, end, radius=36):
+    left = max(0, start - radius)
+    right = min(len(text), end + radius)
+    snippet = text[left:right].replace('\n', ' ')
+    return re.sub(r'\s+', ' ', snippet).strip()
+
+
+def compile_ignore_patterns(raw_patterns):
+    compiled = []
+    for raw in raw_patterns or []:
+        try:
+            compiled.append(re.compile(raw))
+        except re.error as exc:
+            print(f"ERROR: 无效的 --ignore-placeholder 正则: {raw} ({exc})")
+            sys.exit(1)
+    return compiled
+
+
+def find_unresolved_placeholders(text_blocks, ignore_patterns=None):
+    findings = []
+    seen = set()
+    ignore_patterns = ignore_patterns or []
+
+    for block in text_blocks:
+        label = block.get('label', 'text')
+        text = block.get('text', '') or ''
+        if not text.strip():
+            continue
+
+        for pattern_name, pattern in DEFAULT_PLACEHOLDER_PATTERNS:
+            for match in pattern.finditer(text):
+                token = match.group(0)
+                if any(ignore.search(token) for ignore in ignore_patterns):
+                    continue
+
+                key = (label, pattern_name, token, match.start())
+                if key in seen:
+                    continue
+                seen.add(key)
+
+                findings.append({
+                    'label': label,
+                    'pattern': pattern_name,
+                    'token': token,
+                    'context': clip_context(text, match.start(), match.end()),
+                })
+
+    return findings
+
+
+def collect_text_blocks(page):
+    return page.evaluate("""() => {
+        const blocks = [];
+        const push = (label, text) => {
+          if (typeof text === 'string' && text.trim()) {
+            blocks.push({ label, text });
+          }
+        };
+
+        push('title', document.title || '');
+        push('body', document.body ? document.body.innerText || '' : '');
+        return blocks;
+    }""")
+
+
+def collect_temporal_placeholder_states(page):
+        return page.evaluate(r"""(placeholderDefs) => {
+        return placeholderDefs.flatMap((definition) => {
+          return Array.from(document.querySelectorAll(definition.selector)).map((node) => ({
+            token: definition.token,
+            value: (node.textContent || '').trim(),
+            context: ((node.parentElement && (node.parentElement.innerText || node.parentElement.textContent)) || node.outerHTML || '')
+              .replace(/\s+/g, ' ')
+              .trim()
+              .slice(0, 160),
+          }));
+        });
+    }""", [{'selector': item['selector'], 'token': item['token']} for item in TEMPORAL_PLACEHOLDERS])
+
+
+def find_unresolved_temporal_placeholders(states):
+    findings = []
+    validators = {item['token']: item['pattern'] for item in TEMPORAL_PLACEHOLDERS}
+
+    for state in states:
+        token = state.get('token')
+        value = state.get('value', '') or ''
+        validator = validators.get(token)
+        if validator and validator.match(value):
+            continue
+
+        findings.append({
+            'label': 'rendered-dom',
+            'pattern': 'unresolved-ifq-date-token',
+            'token': f'[{token}]',
+            'context': state.get('context', '(empty)') or '(empty)',
+        })
+
+    return findings
+
+
+def verify_html(html_path, viewports=None, slides=0, output_dir=None, show=False, wait=2000,
+                allow_placeholders=False, ignore_placeholder_patterns=None):
     try:
         from playwright.sync_api import sync_playwright
     except ImportError:
@@ -52,6 +168,8 @@ def verify_html(html_path, viewports=None, slides=0, output_dir=None, show=False
 
     console_errors = []
     page_errors = []
+    placeholder_findings = []
+    ignore_patterns = compile_ignore_patterns(ignore_placeholder_patterns)
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=not show)
@@ -66,6 +184,15 @@ def verify_html(html_path, viewports=None, slides=0, output_dir=None, show=False
             print(f"\n→ 打开 {file_url} @ {viewport['width']}x{viewport['height']}")
             page.goto(file_url, wait_until='networkidle')
             page.wait_for_timeout(wait)
+
+            if not allow_placeholders:
+                placeholder_findings.extend(find_unresolved_placeholders(
+                    collect_text_blocks(page),
+                    ignore_patterns=ignore_patterns,
+                ))
+                placeholder_findings.extend(find_unresolved_temporal_placeholders(
+                    collect_temporal_placeholder_states(page)
+                ))
 
             if slides > 0:
                 for i in range(slides):
@@ -105,6 +232,17 @@ def verify_html(html_path, viewports=None, slides=0, output_dir=None, show=False
     else:
         print("\n✅ 无JavaScript错误")
 
+    if placeholder_findings:
+        print(f"\n❌ Unresolved Placeholders ({len(placeholder_findings)}):")
+        for finding in placeholder_findings[:20]:
+            print(f"  - [{finding['label']}] {finding['token']}  ← {finding['context']}")
+        if len(placeholder_findings) > 20:
+            print(f"  ... 还有{len(placeholder_findings) - 20}条")
+    elif allow_placeholders:
+        print("✅ 已跳过占位符检查")
+    else:
+        print("✅ 未发现未替换占位符")
+
     if console_errors:
         print(f"\n⚠️  Console Errors/Warnings ({len(console_errors)}):")
         for e in console_errors[:20]:
@@ -116,7 +254,7 @@ def verify_html(html_path, viewports=None, slides=0, output_dir=None, show=False
 
     print(f"\n📸 截图保存至: {output_dir}")
 
-    return 0 if not page_errors else 1
+    return 0 if not page_errors and not placeholder_findings else 1
 
 
 def main():
@@ -135,6 +273,10 @@ def main():
                         help="非headless，打开真实浏览器窗口")
     parser.add_argument("--wait", type=int, default=2000,
                         help="打开页面后等待的毫秒数（默认2000）")
+    parser.add_argument("--allow-placeholders", action="store_true",
+                        help="跳过未替换占位符检查（仅在故意预览模板骨架时使用）")
+    parser.add_argument("--ignore-placeholder", action="append", default=[],
+                        help="忽略某个占位符正则；可重复传入")
 
     args = parser.parse_args()
 
@@ -147,6 +289,8 @@ def main():
         output_dir=args.output,
         show=args.show,
         wait=args.wait,
+        allow_placeholders=args.allow_placeholders,
+        ignore_placeholder_patterns=args.ignore_placeholder,
     )
 
 

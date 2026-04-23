@@ -736,7 +736,7 @@ html, body {
   </div>
 
   <!-- Bottom-right watermark -->
-  <div class="watermark-br" id="watermarkBR">V2 · 2026</div>
+  <div class="watermark-br" id="watermarkBR">V2 · <span data-ifq-year></span></div>
 
   <!-- Replay button (hidden during recording) -->
   <button class="replay-btn no-record" id="replayBtn">REPLAY</button>
@@ -1128,6 +1128,15 @@ html, body {
   window.__resume = () => { manualT = null; startMs = null; };
   window.__duration = T.DURATION;
   window.__render = render;
+})();
+</script>
+<script>
+(function () {
+  const metaTag = document.querySelector('meta[name="ifq:created-at"]');
+  const candidate = window.IFQ_CREATION_DATE || document.documentElement.getAttribute('data-ifq-created-at') || (metaTag && metaTag.getAttribute('content'));
+  const parsed = candidate ? new Date(candidate) : new Date();
+  const year = Number.isNaN(parsed.getTime()) ? new Date().getFullYear() : parsed.getFullYear();
+  document.querySelectorAll('[data-ifq-year]').forEach(function (node) { node.textContent = String(year); });
 })();
 </script>
 </body>

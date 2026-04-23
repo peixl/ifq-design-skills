@@ -31,25 +31,38 @@
 import { chromium } from 'playwright';
 import fs from 'fs/promises';
 import path from 'path';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
+const { assertNoPlaceholderLeaksInPage } = require('./placeholder-guard.cjs');
 
 function parseArgs() {
   const args = { width: 1920, height: 1080 };
   const a = process.argv.slice(2);
-  for (let i = 0; i < a.length; i += 2) {
-    const k = a[i].replace(/^--/, '');
-    args[k] = a[i + 1];
+  for (let i = 0; i < a.length; i++) {
+    const current = a[i];
+    if (!current.startsWith('--')) continue;
+    const key = current.replace(/^--/, '');
+    const next = a[i + 1];
+    if (!next || next.startsWith('--')) {
+      args[key] = true;
+      continue;
+    }
+    args[key] = next;
+    i += 1;
   }
   if (!args.html || !args.out) {
-    console.error('用法: node export_deck_stage_pdf.mjs --html <deck.html> --out <file.pdf> [--width 1920] [--height 1080]');
+    console.error('用法: node export_deck_stage_pdf.mjs --html <deck.html> --out <file.pdf> [--width 1920] [--height 1080] [--allow-placeholders]');
     process.exit(1);
   }
   args.width = parseInt(args.width);
   args.height = parseInt(args.height);
+  args.allowPlaceholders = Boolean(args['allow-placeholders']);
   return args;
 }
 
 async function main() {
-  const { html, out, width, height } = parseArgs();
+  const { html, out, width, height, allowPlaceholders } = parseArgs();
   const htmlAbs = path.resolve(html);
   const outFile = path.resolve(out);
 
@@ -66,6 +79,10 @@ async function main() {
 
   await page.goto('file://' + htmlAbs, { waitUntil: 'networkidle' });
   await page.waitForTimeout(2500);  // 等 Google Fonts + deck-stage init
+  await assertNoPlaceholderLeaksInPage(page, {
+    label: path.basename(htmlAbs),
+    allowPlaceholders,
+  });
 
   // 核心修复：把 section 从 shadow DOM slot 拔出来摊平
   const sectionCount = await page.evaluate(({ W, H }) => {

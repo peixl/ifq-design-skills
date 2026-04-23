@@ -896,7 +896,9 @@ async function extractSlideData(page) {
 async function html2pptx(htmlFile, pres, options = {}) {
   const {
     tmpDir = process.env.TMPDIR || '/tmp',
-    slide = null
+    slide = null,
+    assertNoPlaceholderLeaksInPage = null,
+    allowPlaceholders = false,
   } = options;
 
   try {
@@ -922,6 +924,13 @@ async function html2pptx(htmlFile, pres, options = {}) {
       });
 
       await page.goto(`file://${filePath}`);
+
+      if (typeof assertNoPlaceholderLeaksInPage === 'function') {
+        await assertNoPlaceholderLeaksInPage(page, {
+          label: path.basename(filePath),
+          allowPlaceholders,
+        });
+      }
 
       bodyDimensions = await getBodyDimensions(page);
 

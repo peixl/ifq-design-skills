@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // IFQ Design Skills · smoke-test.mjs
-// 60-second sanity check: template index, identity toolkit, icon sprite, references, script syntax, skills.sh publish spec.
+// 60-second sanity check: template index, identity toolkit, icon sprite, references, script syntax,
+// placeholder leaks in shipped HTML, skills.sh publish spec.
 // Usage: npm run smoke   (or: node scripts/smoke-test.mjs)
 
 import { promises as fs } from 'node:fs';
@@ -8,9 +9,11 @@ import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
+import { createRequire } from 'node:module';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
+const require = createRequire(import.meta.url);
 
 const RED = '\x1b[31m', GREEN = '\x1b[32m', DIM = '\x1b[2m', RESET = '\x1b[0m', BOLD = '\x1b[1m';
 const ok = (msg) => console.log(`${GREEN}✓${RESET} ${msg}`);
@@ -25,6 +28,74 @@ async function readJson(p) {
 }
 async function readText(p) {
   return fs.readFile(p, 'utf8');
+}
+
+function stripVisibleText(markup) {
+  return markup
+    .replace(/<(section|div|article)[^>]*class=["'][^"']*\b(code|terminal|snippet|example)\b[^"']*["'][^>]*>[\s\S]*?<\/\1>/gi, ' ')
+    .replace(/<(pre|code)\b[^>]*>[\s\S]*?<\/\1>/gi, ' ')
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<!--[\s\S]*?-->/g, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&#183;|&middot;/gi, '·')
+    .replace(/&#8470;/gi, '№')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function clipContext(text, start, end, radius = 36) {
+  return text.slice(Math.max(0, start - radius), Math.min(text.length, end + radius)).trim();
+}
+
+const SHIPPED_PLACEHOLDER_PATTERNS = [
+  ['brace-placeholder', /\{[^{}\n]{1,120}\}/g],
+  ['year-token', /(^|[^A-Za-z0-9_])(YYYY|<year>)(?=$|[^A-Za-z0-9_])/g],
+  ['month-day-token', /(^|[^A-Za-z0-9_])(MM|DD)(?=$|[^A-Za-z0-9_])/g],
+];
+
+const IFQ_DATE_ATTR_PATTERN = /data-ifq-(year|month|day)/;
+const IFQ_DATE_SOURCE_PATTERN = /IFQ_CREATION_DATE|data-ifq-created-at|ifq:created-at/;
+const IFQ_DATE_ASSIGN_PATTERN = /querySelectorAll\(\s*['"`]\[data-ifq-|querySelectorAll\(\s*`\[data-ifq-\$\{/;
+const IFQ_YEAR_RESOLVER_PATTERN = /getFullYear\(|year\s*:/;
+const IFQ_MONTH_RESOLVER_PATTERN = /getMonth\(|month\s*:/;
+const IFQ_DAY_RESOLVER_PATTERN = /getDate\(|day\s*:/;
+
+function findPlaceholderLeaks(text) {
+  const findings = [];
+  for (const [name, pattern] of SHIPPED_PLACEHOLDER_PATTERNS) {
+    pattern.lastIndex = 0;
+    for (const match of text.matchAll(pattern)) {
+      const token = match[2] || match[0];
+      const offset = match.index + (match[1] ? match[1].length : 0);
+      findings.push({
+        pattern: name,
+        token,
+        context: clipContext(text, offset, offset + token.length),
+      });
+    }
+  }
+  return findings;
+}
+
+async function walkHtmlFiles(rootDir) {
+  const files = [];
+
+  async function walk(currentDir) {
+    const entries = await fs.readdir(currentDir, { withFileTypes: true });
+    for (const entry of entries) {
+      const fullPath = path.join(currentDir, entry.name);
+      if (entry.isDirectory()) {
+        await walk(fullPath);
+      } else if (entry.isFile() && entry.name.endsWith('.html')) {
+        files.push(fullPath);
+      }
+    }
+  }
+
+  await walk(rootDir);
+  return files;
 }
 
 function runPythonSyntaxCheck(fullPath) {
@@ -134,10 +205,109 @@ async function check5_ScriptSyntax() {
   if (failed === 0) ok(`${files.length} scripts syntax-checked`);
 }
 
+async function check6_NoPlaceholderLeaks() {
+  console.log(`\n${BOLD}[6/9] Shipped HTML placeholder leaks${RESET}`);
+  const targetRoots = [
+    path.join(ROOT, 'demos'),
+    path.join(ROOT, 'assets', 'showcases'),
+  ];
+
+  const findings = [];
+  for (const targetRoot of targetRoots) {
+    if (!existsSync(targetRoot)) continue;
+    const htmlFiles = await walkHtmlFiles(targetRoot);
+    for (const filePath of htmlFiles) {
+      const raw = await readText(filePath);
+      const visibleText = stripVisibleText(raw);
+      const fileFindings = findPlaceholderLeaks(visibleText);
+      if (fileFindings.length > 0) {
+        findings.push({
+          filePath,
+          finding: fileFindings[0],
+        });
+      }
+    }
+  }
+
+  if (findings.length === 0) {
+    ok('demos/ and assets/showcases/ have no leaked YYYY-style placeholders');
+    return;
+  }
+
+  for (const { filePath, finding } of findings) {
+    fail(`  ${path.relative(ROOT, filePath)}: ${finding.token} ← ${finding.context}`);
+  }
+}
+
+async function check7_IfqDateResolverCoverage() {
+  console.log(`\n${BOLD}[7/9] IFQ date resolver coverage${RESET}`);
+  const targetRoots = [
+    path.join(ROOT, 'assets', 'templates'),
+    path.join(ROOT, 'demos'),
+    path.join(ROOT, 'assets', 'showcases'),
+  ];
+
+  let checked = 0;
+  for (const targetRoot of targetRoots) {
+    if (!existsSync(targetRoot)) continue;
+    const htmlFiles = await walkHtmlFiles(targetRoot);
+    for (const filePath of htmlFiles) {
+      const raw = await readText(filePath);
+      if (!IFQ_DATE_ATTR_PATTERN.test(raw)) {
+        continue;
+      }
+
+      checked += 1;
+      const missing = [];
+      if (!IFQ_DATE_SOURCE_PATTERN.test(raw)) missing.push('creation-date source');
+      if (!IFQ_DATE_ASSIGN_PATTERN.test(raw)) missing.push('data-ifq assignment');
+      if (raw.includes('data-ifq-year') && !IFQ_YEAR_RESOLVER_PATTERN.test(raw)) missing.push('year resolver');
+      if (raw.includes('data-ifq-month') && !IFQ_MONTH_RESOLVER_PATTERN.test(raw)) missing.push('month resolver');
+      if (raw.includes('data-ifq-day') && !IFQ_DAY_RESOLVER_PATTERN.test(raw)) missing.push('day resolver');
+
+      if (missing.length > 0) {
+        fail(`  ${path.relative(ROOT, filePath)}: missing ${missing.join(', ')}`);
+      }
+    }
+  }
+
+  if (checked > 0 && failures === 0) ok(`${checked} HTML files with data-ifq-* include resolver logic`);
+}
+
+async function check8_PlaceholderGuardBehavior() {
+  console.log(`\n${BOLD}[8/9] Placeholder guard behavior${RESET}`);
+  const { assertNoPlaceholderLeaksInPage } = require(path.join(ROOT, 'scripts', 'placeholder-guard.cjs'));
+
+  const fakePage = {
+    async evaluate(fn, arg) {
+      if (typeof arg === 'string') {
+        return [{ label: 'body', text: 'ifq.ai / 2026' }];
+      }
+
+      if (Array.isArray(arg)) {
+        return [{ token: 'data-ifq-year', value: '', context: 'ifq.ai / ' }];
+      }
+
+      throw new Error('unexpected evaluate signature');
+    },
+  };
+
+  try {
+    await assertNoPlaceholderLeaksInPage(fakePage, { label: 'smoke-fixture.html' });
+    fail('  placeholder-guard.cjs should fail when data-ifq-year is empty');
+  } catch (error) {
+    if (!/\[data-ifq-year\]/.test(error.message)) {
+      fail(`  placeholder-guard.cjs returned unexpected error: ${error.message.split('\n')[0]}`);
+      return;
+    }
+    ok('placeholder-guard.cjs rejects empty data-ifq-year tokens');
+  }
+}
+
 // Mirrors vercel-labs/skills: parseSkillMd + WellKnownProvider.isValidSkillEntry.
 // Keeps the repo publishable to skills.sh on every commit.
-async function check6_PublishSpec() {
-  console.log(`\n${BOLD}[6/6] skills.sh publish spec${RESET}`);
+async function check7_PublishSpec() {
+  console.log(`\n${BOLD}[9/9] skills.sh publish spec${RESET}`);
   const nameRegex = /^[a-z0-9]([a-z0-9-]{0,62}[a-z0-9])?$/;
 
   // SKILL.md frontmatter
@@ -187,7 +357,10 @@ async function check6_PublishSpec() {
   await check3_IconSprite();
   await check4_References();
   await check5_ScriptSyntax();
-  await check6_PublishSpec();
+  await check6_NoPlaceholderLeaks();
+  await check7_IfqDateResolverCoverage();
+  await check8_PlaceholderGuardBehavior();
+  await check7_PublishSpec();
   console.log('');
   if (failures === 0) {
     console.log(`${GREEN}${BOLD}✓ smoke test passed${RESET}`);

@@ -554,7 +554,7 @@
 <body>
   <div class="stage" id="stage">
     <div class="mark">IFQ · DESIGN</div>
-    <div class="mark-right">V2 · 2026</div>
+    <div class="mark-right">V2 · <span data-ifq-year></span></div>
 
     <div class="title-line" id="titleLine">w2 · rough draft now beats perfect draft later</div>
 
@@ -978,6 +978,15 @@
 
   (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve())
     .then(() => requestAnimationFrame(tick));
+</script>
+<script>
+(function () {
+  const metaTag = document.querySelector('meta[name="ifq:created-at"]');
+  const candidate = window.IFQ_CREATION_DATE || document.documentElement.getAttribute('data-ifq-created-at') || (metaTag && metaTag.getAttribute('content'));
+  const parsed = candidate ? new Date(candidate) : new Date();
+  const year = Number.isNaN(parsed.getTime()) ? new Date().getFullYear() : parsed.getFullYear();
+  document.querySelectorAll('[data-ifq-year]').forEach(function (node) { node.textContent = String(year); });
+})();
 </script>
 </body>
 </html>

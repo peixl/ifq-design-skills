@@ -283,7 +283,16 @@
   </div>
 
   <!-- Spec number -->
-  <div class="spec-number">v1.0 / 2026</div>
+  <div class="spec-number">v1.0 / <span data-ifq-year></span></div>
 
+<script>
+(function () {
+  const metaTag = document.querySelector('meta[name="ifq:created-at"]');
+  const candidate = window.IFQ_CREATION_DATE || document.documentElement.getAttribute('data-ifq-created-at') || (metaTag && metaTag.getAttribute('content'));
+  const parsed = candidate ? new Date(candidate) : new Date();
+  const year = Number.isNaN(parsed.getTime()) ? new Date().getFullYear() : parsed.getFullYear();
+  document.querySelectorAll('[data-ifq-year]').forEach(function (node) { node.textContent = String(year); });
+})();
+</script>
 </body>
 </html>

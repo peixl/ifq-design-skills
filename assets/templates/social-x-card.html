@@ -8,6 +8,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=1200"/>
+<meta name="ifq:created-at" content="{ CREATED_AT · optional ISO-8601, defaults to now }"/>
 <title>{ HEADLINE } · ifq.ai</title>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,700;1,700&family=JetBrains+Mono:wght@400;600&family=Noto+Serif+SC:wght@700;900&display=swap" rel="stylesheet"/>
 <style>
@@ -43,7 +44,7 @@
   <div class="inner">
     <div class="top">
       <div class="brand">ifq<span class="dot">.ai</span></div>
-      <div class="tag">{ TAG · e.g. LAUNCH · 2026 }</div>
+      <div class="tag">{ TAG · e.g. LAUNCH } · <span data-ifq-year></span></div>
     </div>
 
     <h1>{ HEADLINE — punchy, <em>italic</em> for key word. }</h1>
@@ -57,5 +58,28 @@
     </div>
   </div>
 </div>
+<script>
+  (function () {
+    function normalizeIfqDate(value) {
+      if (!value) {
+        return null;
+      }
+
+      const parsed = value instanceof Date ? value : new Date(value);
+      return Number.isNaN(parsed.getTime()) ? null : parsed;
+    }
+
+    const metaTag = document.querySelector('meta[name="ifq:created-at"]');
+    const createdAt =
+      normalizeIfqDate(window.IFQ_CREATION_DATE) ||
+      normalizeIfqDate(document.documentElement.getAttribute('data-ifq-created-at')) ||
+      normalizeIfqDate(metaTag && metaTag.getAttribute('content')) ||
+      new Date();
+
+    document.querySelectorAll('[data-ifq-year]').forEach(function (node) {
+      node.textContent = String(createdAt.getFullYear());
+    });
+  })();
+</script>
 </body>
 </html>
