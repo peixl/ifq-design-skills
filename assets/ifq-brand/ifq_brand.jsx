@@ -14,6 +14,7 @@
  *   - IfqSpark        · Animated 8-point sparkle (drop into any hero)
  *   - IfqWatermark    · Quiet authored corner signal
  *   - IfqStamp        · Editorial field-note stamp for slide / infographic / closing footers
+ *   - resolveIfqYear  · Resolve the authored year from a creation date or current date
  *   - IfqHandDrawnIcon · Reference one of the 24 hand-drawn icons by id
  *   - IfqBrand        · Design tokens (colors, type, radii) you can spread into style
  *
@@ -38,6 +39,56 @@ const IfqBrand = {
     mono: "'JetBrains Mono', 'SF Mono', ui-monospace, monospace",
   },
 };
+
+function normalizeIfqDate(value) {
+  if (!value) {
+    return null;
+  }
+
+  if (value instanceof Date) {
+    return Number.isNaN(value.getTime()) ? null : value;
+  }
+
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+function resolveIfqCreationDate(explicitDate) {
+  const direct = normalizeIfqDate(explicitDate);
+  if (direct) {
+    return direct;
+  }
+
+  if (typeof window !== 'undefined') {
+    const globalDate = normalizeIfqDate(window.IFQ_CREATION_DATE);
+    if (globalDate) {
+      return globalDate;
+    }
+
+    if (typeof document !== 'undefined') {
+      const rootDate = normalizeIfqDate(document.documentElement.getAttribute('data-ifq-created-at'));
+      if (rootDate) {
+        return rootDate;
+      }
+
+      const metaTag = document.querySelector('meta[name="ifq:created-at"]');
+      const metaDate = normalizeIfqDate(metaTag && metaTag.getAttribute('content'));
+      if (metaDate) {
+        return metaDate;
+      }
+    }
+  }
+
+  return new Date();
+}
+
+function resolveIfqYear(explicitDate) {
+  return resolveIfqCreationDate(explicitDate).getFullYear();
+}
+
+function resolveIfqColophon(explicitDate) {
+  return `ifq.ai / ${resolveIfqYear(explicitDate)}`;
+}
 
 function IfqLogo({ height = 28, variant = 'light', style }) {
   // variant: 'light' (dark text on light bg) | 'dark' (light text on dark bg)
@@ -125,10 +176,11 @@ function IfqWatermark({ position = 'bottom-right', opacity = 0.55, scale = 1 }) 
   );
 }
 
-function IfqStamp({ label = 'ifq.ai / field note', theme = 'light' }) {
+function IfqStamp({ label, createdAt, theme = 'light' }) {
   // Editorial rectangular stamp — good for slide footers / infographic colophon
   const bg = theme === 'dark' ? '#151515' : '#fff';
   const fg = theme === 'dark' ? IfqBrand.paper : IfqBrand.ink;
+  const resolvedLabel = label || resolveIfqColophon(createdAt);
   return (
     <div style={{
       display: 'inline-flex',
@@ -148,7 +200,7 @@ function IfqStamp({ label = 'ifq.ai / field note', theme = 'light' }) {
         <path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z"
               fill={IfqBrand.accent} />
       </svg>
-      <span>{label}</span>
+      <span>{resolvedLabel}</span>
     </div>
   );
 }

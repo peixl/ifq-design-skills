@@ -107,7 +107,7 @@ IFQ 的秩序感来自 ledger：
 
 IFQ 的 authored line 推荐形式：
 
-- `ifq.ai / field note / 2026`
+- `ifq.ai / YYYY`
 - `ifq.ai / live system`
 - `ifq.ai / release ledger`
 - `ifq.ai / signal`

@@ -56,9 +56,10 @@ IFQ 的赤陶线不是“品牌色条”，而是版面秩序本身。
 
 典型形式：
 
-- `ifq.ai / field note / 2026`
+- `ifq.ai / YYYY`
 - `ifq.ai / live system`
 - `ifq.ai / release ledger`
+- `ifq.ai / field note`
 - `ifq.ai / signal`
 
 它是 authored marker，不是水印。
@@ -108,7 +109,7 @@ Newsreader italic + JetBrains Mono + warm paper + restrained rust accents。
 
 - `IfqStamp`
 - `IfqWatermark`
-- `ifq.ai / field note`
+- `ifq.ai / YYYY`
 - wordmark / mark / outro
 
 ---

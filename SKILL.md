@@ -94,7 +94,7 @@ Agent-specific tool mappings (Claude Code · Codex CLI · OpenClaw · Hermes · 
 |------|------|----------|
 | `Signal Spark` | 8-point sparkle，像 intelligence 被点亮 | hero / motion / stamp |
 | `Rust Ledger` | 赤陶色竖线、编号、分栏、序号体系 | hero / slide / infographic |
-| `Mono Field Note` | `ifq.ai / field note / 2026` 一类 authored 角标 | footer / closing / dashboard |
+| `Mono Field Note` | `ifq.ai / YYYY` 一类 authored 角标 | footer / closing / dashboard |
 | `Quiet URL` | `ifq.ai` 或子域以克制方式出现 | meta / end card / card back |
 | `Editorial Contrast` | Newsreader italic + Mono + warm paper 的整体呼吸 | 全局版式 |
 
@@ -109,7 +109,7 @@ Agent-specific tool mappings (Claude Code · Codex CLI · OpenClaw · Hermes · 
 | 组件 / 资产 | 作用 | 默认 |
 |------------|------|------|
 | `IfqLogo` | IFQ 自有品牌与 header 场景 | 按任务开启 |
-| `IfqStamp` | IFQ authored field note / closing stamp | 开启 |
+| `IfqStamp` | IFQ authored colophon / closing stamp | 开启 |
 | `IfqWatermark` | IFQ quiet corner signal | 开启 |
 | `IfqSpark` | IFQ signal motif / motion cue | 开启 |
 | `assets/ifq-brand/icons/hand-drawn-icons.svg` | 手绘图标库，可跨品牌复用 | 开启 |
@@ -127,7 +127,7 @@ Agent-specific tool mappings (Claude Code · Codex CLI · OpenClaw · Hermes · 
 <!-- React 组件（inline JSX） -->
 <IfqSpark size={80} />
 <IfqWatermark position="bottom-right" />
-<IfqStamp label="ifq.ai / field note" />
+<IfqStamp />
 ```
 
 组件实现见 `assets/ifq-brand/ifq_brand.jsx`（Read 后贴进你的 `<script type="text/babel">`）。

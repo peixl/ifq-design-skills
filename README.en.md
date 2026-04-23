@@ -1,4 +1,4 @@
-<sub>🌐 <a href="README.md">中文</a> · <b>English</b> · <code>ifq.ai / field note / 2026</code></sub>
+<sub>🌐 <a href="README.md">中文</a> · <b>English</b> · <code>ifq.ai / 2026</code></sub>
 
 <div align="center">
 
@@ -177,7 +177,7 @@ Real prompts. Left: what you say. Right: what the skill actually does.
 </td>
 <td>
 
-<sub>M-03 Whitepaper · A4 print-ready HTML · cover / abstract / TOC / chapters / references / colophon · each chapter opens with a mono number and half a page of air · footer <code>ifq.ai / field note / 2026</code> · print-ready PDF with bookmarks</sub>
+<sub>M-03 Whitepaper · A4 print-ready HTML · cover / abstract / TOC / chapters / references / colophon · each chapter opens with a mono number and half a page of air · footer <code>ifq.ai / 2026</code> · print-ready PDF with bookmarks</sub>
 
 </td>
 </tr>
@@ -268,7 +268,7 @@ The Ambient Brand is five environmental markers. Every deliverable weaves in at 
 |------|------------|----------------|
 | **Signal Spark** | 8-point spark. Intelligence, lit | hero · motion cue · stamp center |
 | **Rust Ledger** | Terracotta verticals, dividers, numbering, axes | hero · slides · infographic · dashboard |
-| **Mono Field Note** | `ifq.ai / field note / 2026` in JetBrains Mono | footer · closing · corner |
+| **Mono Field Note** | `ifq.ai / 2026` in JetBrains Mono | footer · closing · corner |
 | **Quiet URL** | The domain, once, quietly | footer · meta · end card |
 | **Editorial Contrast** | Newsreader italic + JetBrains Mono + warm paper | global typographic frame |
 
@@ -357,7 +357,7 @@ Free for personal use. Commercial use — see [LICENSE](LICENSE).
 
 <div align="center">
 
-<sub><code>compiled by ifq.ai&nbsp;&nbsp;·&nbsp;&nbsp;field note&nbsp;&nbsp;·&nbsp;&nbsp;2026</code></sub>
+<sub><code>compiled by ifq.ai&nbsp;&nbsp;·&nbsp;&nbsp;2026</code></sub>
 
 
 </div>

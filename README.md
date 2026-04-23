@@ -1,4 +1,4 @@
-<sub>🌐 <a href="README.en.md">English</a> · <b>中文</b> · <code>ifq.ai / field note / 2026</code></sub>
+<sub>🌐 <a href="README.en.md">English</a> · <b>中文</b> · <code>ifq.ai / 2026</code></sub>
 
 <div align="center">
 
@@ -177,7 +177,7 @@ git clone https://github.com/peixl/ifq-design-skills ~/.agents/skills/ifq-design
 </td>
 <td>
 
-<sub>M-03 白皮书 · A4 可打印 HTML · 扉页 / 摘要 / 目录 / 章节 / 参考 / colophon 全套 · 每章起首 mono 序号 + 半页留白 · 页脚 <code>ifq.ai / field note / 2026</code> · 导出 print-ready PDF + 书签</sub>
+<sub>M-03 白皮书 · A4 可打印 HTML · 扉页 / 摘要 / 目录 / 章节 / 参考 / colophon 全套 · 每章起首 mono 序号 + 半页留白 · 页脚 <code>ifq.ai / 2026</code> · 导出 print-ready PDF + 书签</sub>
 
 </td>
 </tr>
@@ -268,7 +268,7 @@ Ambient Brand 由五个环境级标记组成。每份交付物默认至少融合
 |------|--------|----------|
 | **Signal Spark** | 8-point 火花。intelligence 被点亮的一瞬 | hero 右上 · 动画开场一帧 · 印章中心 |
 | **Rust Ledger** | 赤陶色竖线、分隔、编号、轴线 | hero · slides · infographic · dashboard |
-| **Mono Field Note** | JetBrains Mono 写的 `ifq.ai / field note / 2026` 小字 | footer · closing · 角落 |
+| **Mono Field Note** | JetBrains Mono 写的 `ifq.ai / 2026` 小字 | footer · closing · 角落 |
 | **Quiet URL** | 域名以极低姿态出现一次 | footer · meta · end card |
 | **Editorial Contrast** | Newsreader italic + JetBrains Mono + 暖纸白 | 整体排版骨架 |
 
@@ -357,7 +357,7 @@ npm run smoke
 
 <div align="center">
 
-<sub><code>compiled by ifq.ai&nbsp;&nbsp;·&nbsp;&nbsp;field note&nbsp;&nbsp;·&nbsp;&nbsp;2026</code></sub>
+<sub><code>compiled by ifq.ai&nbsp;&nbsp;·&nbsp;&nbsp;2026</code></sub>
 
 
 </div>

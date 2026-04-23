@@ -15,6 +15,7 @@
   },
   "type": "module",
   "scripts": {
+    "sync:year": "node scripts/sync-authored-year.mjs",
     "smoke": "node scripts/smoke-test.mjs",
     "verify": "python3 scripts/verify.py",
     "verify:publish": "node scripts/validate_publish.cjs",

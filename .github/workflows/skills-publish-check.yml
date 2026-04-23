@@ -37,6 +37,9 @@ jobs:
         with:
           node-version: 20
 
+      - name: Check authored year sync
+        run: npm run sync:year -- --check
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:

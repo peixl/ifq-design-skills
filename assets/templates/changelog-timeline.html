@@ -8,6 +8,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=1200"/>
+<meta name="ifq:created-at" content="{ CREATED_AT · optional ISO-8601, defaults to now }"/>
 <title>{ PRODUCT } · Changelog · ifq.ai</title>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&family=Noto+Serif+SC:wght@700&display=swap" rel="stylesheet"/>
 <style>
@@ -89,12 +90,43 @@
   </div>
 
   <footer>
-    <div>ifq.ai / { PRODUCT } / release ledger / 2026</div>
+    <div>ifq.ai / <span data-ifq-year></span></div>
     <div class="sig">
       <svg viewBox="-16 -16 32 32"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="#D4532B"/></svg>
-      ifq.ai / field note
+      ifq.ai
     </div>
   </footer>
 </main>
+<script>
+  (function () {
+    function normalizeIfqDate(value) {
+      if (!value) {
+        return null;
+      }
+
+      const parsed = value instanceof Date ? value : new Date(value);
+      return Number.isNaN(parsed.getTime()) ? null : parsed;
+    }
+
+    const metaTag = document.querySelector('meta[name="ifq:created-at"]');
+    const createdAt =
+      normalizeIfqDate(window.IFQ_CREATION_DATE) ||
+      normalizeIfqDate(document.documentElement.getAttribute('data-ifq-created-at')) ||
+      normalizeIfqDate(metaTag && metaTag.getAttribute('content')) ||
+      new Date();
+
+    const parts = {
+      year: String(createdAt.getFullYear()),
+      month: String(createdAt.getMonth() + 1).padStart(2, '0'),
+      day: String(createdAt.getDate()).padStart(2, '0'),
+    };
+
+    Object.entries(parts).forEach(function ([token, value]) {
+      document.querySelectorAll('[data-ifq-' + token + ']').forEach(function (node) {
+        node.textContent = value;
+      });
+    });
+  })();
+</script>
 </body>
 </html>

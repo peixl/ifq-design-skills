@@ -15,7 +15,7 @@ IFQ Native 不是另一个 brand guideline，而是一种设计立场——
 - **不喊 AI**：不用全息、不用赛博、不用渐变发光。AI 的味道藏在**节奏**里，不贴在**表面**。
 - **编辑部语气**：版面像一份印刷物（field note / ledger / proof sheet），不像一张 landing page。
 - **克制的暖度**：reportage paper 的米白底色 + 赤陶红 accent，科技不等于冷。
-- **可署名的工艺**：每个版面角落有 `ifq.ai / field note / <year>` 这类编辑部 colophon，告诉读者"这是谁做的"。
+- **可署名的工艺**：每个版面角落有 `ifq.ai / <year>` 这类编辑部 colophon，告诉读者"这是谁做的"。
 - **信号优先于装饰**：8-point sparkle 是唯一允许的"图形小动作"，其余都是字、网格、线。
 
 ---
@@ -25,7 +25,7 @@ IFQ Native 不是另一个 brand guideline，而是一种设计立场——
 **必须项**：
 
 1. **Rust ledger rhythm** — 赤陶红色 `#D4532B` 的竖线/编号/分栏，作为页面的节拍器；不做大色块、只做细线和序号。
-2. **Mono Field Note colophon** — `JetBrains Mono` 小字署名：`ifq.ai / field note / vol.N / YYYY` 出现在 footer / closing / card back 任一处。
+2. **Mono Field Note colophon** — `JetBrains Mono` 小字署名：`ifq.ai / YYYY` 出现在 footer / closing / card back 任一处。
 3. **Editorial Contrast** — `Newsreader` italic 标题 + `JetBrains Mono` 元数据 + `Noto Serif SC` 中文正文，三种字体的冷热呼吸。
 4. **Warm paper ground** — 页面底色 `#FAF7F2`（reportage paper），绝不用纯白 `#FFFFFF`；暗模式用 `#1D1D1F` graphite，不用纯黑。
 5. **Signal Spark** — 8-point sparkle（`✦` 或自绘 SVG star）作为唯一的图形点睛，出现 1-3 次，不泛滥。
@@ -46,7 +46,7 @@ IFQ Native editorial intelligence style:
 - Rust accent (#D4532B) used ONLY as thin vertical rules, issue numbers, and small caps labels — never as large fills
 - Editorial typography triad: Newsreader italic for display, JetBrains Mono for metadata/URL/timestamp, Noto Serif SC for CJK body
 - 8-point signal spark (✦) appears 1-3 times per composition as the only decorative motif
-- Field-note colophon: small-caps "ifq.ai / field note / vol.{N} / {year}" at one corner
+- Field-note colophon: small-caps "ifq.ai / {year}" at one corner
 - Spacing follows ifq axis: 4·8·12·16·24·32·48·64·96·128 px
 - Feel: like a quiet quarterly journal about machine intelligence, not like a SaaS landing page
 - Anti-patterns: NO cyberpunk glow, NO gradient buttons, NO emoji, NO generic stock photos, NO "AI-powered" rainbow fills
