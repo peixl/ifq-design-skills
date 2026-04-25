@@ -8,12 +8,12 @@ import { promises as fs } from 'node:fs';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import vm from 'node:vm';
 import { createRequire } from 'node:module';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 const require = createRequire(import.meta.url);
+const { assertNoPlaceholderLeaksInPage } = require('./placeholder-guard.cjs');
 
 const RED = '\x1b[31m', GREEN = '\x1b[32m', DIM = '\x1b[2m', RESET = '\x1b[0m', BOLD = '\x1b[1m';
 const ok = (msg) => console.log(`${GREEN}✓${RESET} ${msg}`);
@@ -63,6 +63,17 @@ const IFQ_MONTH_RESOLVER_PATTERN = /getMonth\(|month\s*:/;
 const IFQ_DAY_RESOLVER_PATTERN = /getDate\(|day\s*:/;
 const IFQ_IMPLICIT_STRING_DATE_PATTERN = /new Date\(candidate\)|value instanceof Date\s*\?\s*value\s*:\s*new Date\(value\)/;
 
+const SCRIPT_SECURITY_PATTERNS = [
+  ['node:vm import', /^\s*import\s+.+\s+from\s+['"](?:node:)?vm['"]/m],
+  ['node:vm require', /\brequire\(\s*['"](?:node:)?vm['"]\s*\)/],
+  ['node:vm dynamic import', /\bimport\(\s*['"](?:node:)?vm['"]\s*\)/],
+  ['child_process import', /^\s*import\s+.+\s+from\s+['"](?:node:)?child_process['"]/m],
+  ['child_process require', /\brequire\(\s*['"](?:node:)?child_process['"]\s*\)/],
+  ['child_process dynamic import', /\bimport\(\s*['"](?:node:)?child_process['"]\s*\)/],
+  ['eval call', /\beval\s*\(/],
+  ['Function constructor', /\bnew Function\s*\(/],
+];
+
 function findPlaceholderLeaks(text) {
   const findings = [];
   for (const [name, pattern] of SHIPPED_PLACEHOLDER_PATTERNS) {
@@ -99,43 +110,316 @@ async function walkHtmlFiles(rootDir) {
   return files;
 }
 
-// Pure-Node JS syntax check: parses the source with vm.Script so we never
-// execute the file. `vm.Script` only runs the V8 parser; no I/O, no
-// network, no sub-processes. It is script-mode only, so for ESM we first
-// strip top-level `import` / `export` statements via a small regex pass.
-// This still catches 99% of real-world syntax mistakes (unclosed braces,
-// bad operators, stray characters) and costs nothing at runtime.
-function stripEsmSyntax(source) {
-  return source
-    // `import ... from '...';` / `import '...';` (multiline allowed)
-    .replace(/^\s*import\s+[\s\S]+?from\s+['"][^'"]+['"]\s*;?\s*$/gm, '')
-    .replace(/^\s*import\s+['"][^'"]+['"]\s*;?\s*$/gm, '')
-    // `export default` → nothing (leave the expression)
-    .replace(/^\s*export\s+default\s+/gm, '')
-    // `export { ... } from '...';`
-    .replace(/^\s*export\s*\{[\s\S]+?\}\s*(?:from\s+['"][^'"]+['"])?\s*;?\s*$/gm, '')
-    // `export const|let|var|function|class|async function` → drop the keyword
-    .replace(/^\s*export\s+(?=(?:const|let|var|function|class|async)\b)/gm, '')
-    // `import.meta.xyz` — replace the whole meta expression with a stub ident
-    .replace(/\bimport\.meta\b/g, '(void 0)');
+function isIdentifierStart(char) {
+  return /[A-Za-z_$]/.test(char);
 }
 
-function checkJsSyntax(source, filename) {
-  // Strip shebang — legal only at file start, illegal inside the IIFE wrap.
-  const noShebang = source.replace(/^#![^\n]*\n?/, '');
-  const isEsm = /\.mjs$/i.test(filename) || /^\s*(?:import|export)\b/m.test(noShebang);
-  let prepared = isEsm ? stripEsmSyntax(noShebang) : noShebang;
-  if (isEsm) {
-    // Wrap in an async IIFE so top-level `await` parses as legal script syntax.
-    prepared = `(async () => {\n${prepared}\n})();`;
+function isIdentifierPart(char) {
+  return /[A-Za-z0-9_$]/.test(char);
+}
+
+function isDigit(char) {
+  return /[0-9]/.test(char);
+}
+
+function shouldStartRegex(lastToken) {
+  return !new Set([
+    'word',
+    'number',
+    'string',
+    'template',
+    'regex',
+    'close-paren',
+    'close-bracket',
+    'close-brace',
+    'plusplus',
+    'minusminus',
+  ]).has(lastToken);
+}
+
+// Lightweight JS lexical sanity: catch unclosed strings/comments/template
+// literals and mismatched delimiters without importing `node:vm`.
+function checkJsLexical(source) {
+  const text = source.replace(/^#![^\n]*\n?/, '');
+  const delimiterStack = [];
+  const modeStack = [{ type: 'code' }];
+  let i = 0;
+  let line = 1;
+  let lastToken = 'start';
+
+  const topMode = () => modeStack[modeStack.length - 1];
+  const advance = (count = 1) => {
+    for (let step = 0; step < count && i < text.length; step += 1) {
+      if (text[i] === '\n') {
+        line += 1;
+      }
+      i += 1;
+    }
+  };
+
+  while (i < text.length) {
+    const mode = topMode();
+    const char = text[i];
+    const next = text[i + 1];
+
+    if (mode.type === 'line-comment') {
+      if (char === '\n') {
+        modeStack.pop();
+      }
+      advance();
+      continue;
+    }
+
+    if (mode.type === 'block-comment') {
+      if (char === '*' && next === '/') {
+        modeStack.pop();
+        advance(2);
+        continue;
+      }
+      advance();
+      continue;
+    }
+
+    if (mode.type === 'single-quote' || mode.type === 'double-quote') {
+      if (char === '\\') {
+        advance(Math.min(2, text.length - i));
+        continue;
+      }
+      if ((mode.type === 'single-quote' && char === '\'') || (mode.type === 'double-quote' && char === '"')) {
+        modeStack.pop();
+        lastToken = 'string';
+      }
+      advance();
+      continue;
+    }
+
+    if (mode.type === 'template') {
+      if (char === '\\') {
+        advance(Math.min(2, text.length - i));
+        continue;
+      }
+      if (char === '`') {
+        modeStack.pop();
+        lastToken = 'template';
+        advance();
+        continue;
+      }
+      if (char === '$' && next === '{') {
+        delimiterStack.push({ closer: '}', line, kind: 'template-expr' });
+        modeStack.push({ type: 'code' });
+        lastToken = 'start';
+        advance(2);
+        continue;
+      }
+      advance();
+      continue;
+    }
+
+    if (mode.type === 'regex') {
+      if (char === '\\') {
+        advance(Math.min(2, text.length - i));
+        continue;
+      }
+      if (char === '[') {
+        modeStack.push({ type: 'regex-class', line });
+        advance();
+        continue;
+      }
+      if (char === '/') {
+        advance();
+        while (/[A-Za-z]/.test(text[i] || '')) {
+          advance();
+        }
+        modeStack.pop();
+        lastToken = 'regex';
+        continue;
+      }
+      if (char === '\n') {
+        return { ok: false, message: `unterminated regex literal near line ${line}` };
+      }
+      advance();
+      continue;
+    }
+
+    if (mode.type === 'regex-class') {
+      if (char === '\\') {
+        advance(Math.min(2, text.length - i));
+        continue;
+      }
+      if (char === ']') {
+        modeStack.pop();
+        advance();
+        continue;
+      }
+      if (char === '\n') {
+        return { ok: false, message: `unterminated regex character class near line ${line}` };
+      }
+      advance();
+      continue;
+    }
+
+    if (/\s/.test(char)) {
+      advance();
+      continue;
+    }
+
+    if (char === '/' && next === '/') {
+      modeStack.push({ type: 'line-comment', line });
+      advance(2);
+      continue;
+    }
+
+    if (char === '/' && next === '*') {
+      modeStack.push({ type: 'block-comment', line });
+      advance(2);
+      continue;
+    }
+
+    if (char === '\'') {
+      modeStack.push({ type: 'single-quote', line });
+      advance();
+      continue;
+    }
+
+    if (char === '"') {
+      modeStack.push({ type: 'double-quote', line });
+      advance();
+      continue;
+    }
+
+    if (char === '`') {
+      modeStack.push({ type: 'template', line });
+      advance();
+      continue;
+    }
+
+    if (char === '/' && shouldStartRegex(lastToken)) {
+      modeStack.push({ type: 'regex', line });
+      advance();
+      continue;
+    }
+
+    if (char === '(') {
+      delimiterStack.push({ closer: ')', line, kind: 'code' });
+      lastToken = 'open-paren';
+      advance();
+      continue;
+    }
+
+    if (char === '[') {
+      delimiterStack.push({ closer: ']', line, kind: 'code' });
+      lastToken = 'open-bracket';
+      advance();
+      continue;
+    }
+
+    if (char === '{') {
+      delimiterStack.push({ closer: '}', line, kind: 'code' });
+      lastToken = 'open-brace';
+      advance();
+      continue;
+    }
+
+    if (char === ')' || char === ']' || char === '}') {
+      const expected = delimiterStack.pop();
+      if (!expected || expected.closer !== char) {
+        return { ok: false, message: `unbalanced delimiter '${char}' near line ${line}` };
+      }
+      if (expected.kind === 'template-expr') {
+        modeStack.pop();
+        lastToken = 'template';
+      } else {
+        lastToken = char === ')' ? 'close-paren' : char === ']' ? 'close-bracket' : 'close-brace';
+      }
+      advance();
+      continue;
+    }
+
+    if (char === '+' && next === '+') {
+      lastToken = 'plusplus';
+      advance(2);
+      continue;
+    }
+
+    if (char === '-' && next === '-') {
+      lastToken = 'minusminus';
+      advance(2);
+      continue;
+    }
+
+    if (isIdentifierStart(char)) {
+      const start = i;
+      advance();
+      while (isIdentifierPart(text[i] || '')) {
+        advance();
+      }
+      const word = text.slice(start, i);
+      lastToken = new Set(['await', 'case', 'delete', 'else', 'in', 'instanceof', 'new', 'of', 'return', 'throw', 'typeof', 'void', 'yield']).has(word)
+        ? word
+        : 'word';
+      continue;
+    }
+
+    if (isDigit(char)) {
+      advance();
+      while (/[0-9A-Fa-f_xXobOBn.eE]/.test(text[i] || '')) {
+        advance();
+      }
+      lastToken = 'number';
+      continue;
+    }
+
+    if (char === ',') {
+      lastToken = 'comma';
+      advance();
+      continue;
+    }
+
+    if (char === ';') {
+      lastToken = 'semi';
+      advance();
+      continue;
+    }
+
+    if (char === ':') {
+      lastToken = 'colon';
+      advance();
+      continue;
+    }
+
+    if (char === '?') {
+      lastToken = 'question';
+      advance();
+      continue;
+    }
+
+    lastToken = 'operator';
+    advance();
   }
-  try {
-    // eslint-disable-next-line no-new
-    new vm.Script(prepared, { filename, displayErrors: false });
-    return { ok: true };
-  } catch (err) {
-    return { ok: false, message: err && err.message ? err.message.split('\n')[0] : String(err) };
+
+  while (topMode().type === 'line-comment') {
+    modeStack.pop();
   }
+
+  if (modeStack.length > 1) {
+    const mode = topMode();
+    const labels = {
+      'block-comment': 'block comment',
+      'single-quote': 'single-quoted string',
+      'double-quote': 'double-quoted string',
+      template: 'template literal',
+      regex: 'regex literal',
+      'regex-class': 'regex character class',
+    };
+    return { ok: false, message: `unterminated ${labels[mode.type] || mode.type} near line ${mode.line || line}` };
+  }
+
+  if (delimiterStack.length > 0) {
+    const expected = delimiterStack[delimiterStack.length - 1];
+    return { ok: false, message: `unclosed delimiter '${expected.closer}' opened near line ${expected.line}` };
+  }
+
+  return { ok: true };
 }
 
 // Lightweight Python lexical sanity: balanced triple-quotes and brackets.
@@ -241,17 +525,48 @@ async function check5_ScriptSyntax() {
   for (const f of files) {
     const full = path.join(scriptsDir, f);
     const source = await readText(full);
-    const result = f.endsWith('.py') ? checkPythonLexical(source) : checkJsSyntax(source, f);
+    const result = f.endsWith('.py') ? checkPythonLexical(source) : checkJsLexical(source);
     if (!result.ok) {
       fail(`  ${f}: ${result.message || 'syntax error'}`);
       failed++;
     }
   }
-  if (failed === 0) ok(`${files.length} scripts syntax-checked`);
+  if (failed === 0) ok(`${files.length} scripts passed lexical sanity checks`);
 }
 
-async function check6_NoPlaceholderLeaks() {
-  console.log(`\n${BOLD}[6/9] Shipped HTML placeholder leaks${RESET}`);
+async function check6_ScriptSecurityInvariants() {
+  console.log(`\n${BOLD}[6/9] Script safety invariants${RESET}`);
+  const scriptsDir = path.join(ROOT, 'scripts');
+  if (!existsSync(scriptsDir)) return info('no scripts/ dir — skipped');
+  const files = (await fs.readdir(scriptsDir)).filter((f) => /\.(mjs|cjs|js|py)$/.test(f) && !f.endsWith('.bak'));
+  const findings = [];
+
+  for (const f of files) {
+    const source = await readText(path.join(scriptsDir, f));
+    for (const [label, pattern] of SCRIPT_SECURITY_PATTERNS) {
+      const match = source.match(pattern);
+      if (match && match.index !== undefined) {
+        findings.push({
+          file: f,
+          label,
+          context: clipContext(source, match.index, match.index + match[0].length),
+        });
+      }
+    }
+  }
+
+  if (findings.length === 0) {
+    ok('scripts/ contain no node:vm, child_process, eval, or Function-constructor patterns');
+    return;
+  }
+
+  for (const finding of findings) {
+    fail(`  ${finding.file}: ${finding.label} ← ${finding.context}`);
+  }
+}
+
+async function check7_NoPlaceholderLeaks() {
+  console.log(`\n${BOLD}[7/10] Shipped HTML placeholder leaks${RESET}`);
   const targetRoots = [
     path.join(ROOT, 'demos'),
     path.join(ROOT, 'assets', 'showcases'),
@@ -284,8 +599,8 @@ async function check6_NoPlaceholderLeaks() {
   }
 }
 
-async function check7_IfqDateResolverCoverage() {
-  console.log(`\n${BOLD}[7/9] IFQ date resolver coverage${RESET}`);
+async function check8_IfqDateResolverCoverage() {
+  console.log(`\n${BOLD}[8/10] IFQ date resolver coverage${RESET}`);
   const targetRoots = [
     path.join(ROOT, 'assets', 'templates'),
     path.join(ROOT, 'demos'),
@@ -320,9 +635,8 @@ async function check7_IfqDateResolverCoverage() {
   if (checked > 0 && failures === 0) ok(`${checked} HTML files with data-ifq-* include resolver logic`);
 }
 
-async function check8_PlaceholderGuardBehavior() {
-  console.log(`\n${BOLD}[8/9] Placeholder guard behavior${RESET}`);
-  const { assertNoPlaceholderLeaksInPage } = require(path.join(ROOT, 'scripts', 'placeholder-guard.cjs'));
+async function check9_PlaceholderGuardBehavior() {
+  console.log(`\n${BOLD}[9/10] Placeholder guard behavior${RESET}`);
 
   const fakePage = {
     async evaluate(fn, arg) {
@@ -352,8 +666,8 @@ async function check8_PlaceholderGuardBehavior() {
 
 // Mirrors vercel-labs/skills: parseSkillMd + WellKnownProvider.isValidSkillEntry.
 // Keeps the repo publishable to skills.sh on every commit.
-async function check7_PublishSpec() {
-  console.log(`\n${BOLD}[9/9] skills.sh publish spec${RESET}`);
+async function check10_PublishSpec() {
+  console.log(`\n${BOLD}[10/10] skills.sh publish spec${RESET}`);
   const nameRegex = /^[a-z0-9]([a-z0-9-]{0,62}[a-z0-9])?$/;
 
   // SKILL.md frontmatter
@@ -403,10 +717,11 @@ async function check7_PublishSpec() {
   await check3_IconSprite();
   await check4_References();
   await check5_ScriptSyntax();
-  await check6_NoPlaceholderLeaks();
-  await check7_IfqDateResolverCoverage();
-  await check8_PlaceholderGuardBehavior();
-  await check7_PublishSpec();
+  await check6_ScriptSecurityInvariants();
+  await check7_NoPlaceholderLeaks();
+  await check8_IfqDateResolverCoverage();
+  await check9_PlaceholderGuardBehavior();
+  await check10_PublishSpec();
   console.log('');
   if (failures === 0) {
     console.log(`${GREEN}${BOLD}✓ smoke test passed${RESET}`);
