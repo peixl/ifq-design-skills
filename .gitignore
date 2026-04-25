@@ -9,6 +9,31 @@
 # Personal asset index（个人真实数据，只保留 .example.json 模板）
 assets/personal-asset-index.json
 
+# Secrets / local credentials
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
+*.pem
+*.key
+*.p12
+*.pfx
+*.der
+*.crt
+*.cer
+*.kdbx
+id_rsa
+id_dsa
+id_ecdsa
+id_ed25519
+known_hosts
+authorized_keys
+.npmrc
+.pypirc
+.netrc
+.aws/
+
 # Node / editor / OS
 node_modules/
 *.swp

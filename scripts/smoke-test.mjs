@@ -74,6 +74,41 @@ const SCRIPT_SECURITY_PATTERNS = [
   ['Function constructor', /\bnew Function\s*\(/],
 ];
 
+const SCRIPT_NETWORK_PATTERNS = [
+  ['node:http import', /^\s*import\s+.+\s+from\s+['"](?:node:)?http['"]/m],
+  ['node:https import', /^\s*import\s+.+\s+from\s+['"](?:node:)?https['"]/m],
+  ['node:http require', /\brequire\(\s*['"](?:node:)?http['"]\s*\)/],
+  ['node:https require', /\brequire\(\s*['"](?:node:)?https['"]\s*\)/],
+  ['axios client', /from\s+['"]axios['"]|\brequire\(\s*['"]axios['"]\s*\)/],
+  ['node-fetch client', /from\s+['"]node-fetch['"]|\brequire\(\s*['"]node-fetch['"]\s*\)/],
+  ['undici client', /from\s+['"]undici['"]|\brequire\(\s*['"]undici['"]\s*\)/],
+  ['fetch call', /\bfetch\s*\(/],
+];
+
+const REPO_SCAN_IGNORED_DIRS = new Set(['.git', 'node_modules', '.omx']);
+const REPO_SCAN_IGNORED_DIR_PREFIXES = ['.video-tmp-'];
+const REPO_SCAN_BINARY_EXTENSIONS = new Set([
+  '.png', '.jpg', '.jpeg', '.gif', '.webp', '.ico', '.icns', '.pdf', '.mp3', '.mp4', '.mov', '.wav', '.aiff',
+  '.zip', '.gz', '.tgz', '.woff', '.woff2', '.ttf', '.otf', '.eot', '.p12', '.pfx', '.der', '.crt', '.cer', '.kdbx',
+]);
+
+const REPO_SENSITIVE_FILE_PATTERNS = [
+  ['dotenv file', /(^|\/)\.env(\.[^/]+)?$/],
+  ['personal asset index', /(^|\/)assets\/personal-asset-index\.json$/],
+  ['SSH key material', /(^|\/)(id_rsa|id_dsa|id_ecdsa|id_ed25519|known_hosts|authorized_keys)$/],
+  ['credential dotfile', /(^|\/)(\.npmrc|\.pypirc|\.netrc)$/],
+  ['certificate or private bundle', /\.(pem|key|p12|pfx|der|crt|cer|kdbx)$/i],
+];
+
+const REPO_SECRET_CONTENT_PATTERNS = [
+  ['private key block', /-----BEGIN (?:RSA |DSA |EC |OPENSSH )?PRIVATE KEY-----|-----BEGIN PGP PRIVATE KEY BLOCK-----/],
+  ['aws access key', /\b(?:AKIA|ASIA)[0-9A-Z]{16}\b/],
+  ['github token', /\bghp_[A-Za-z0-9]{36,}\b|\bgithub_pat_[A-Za-z0-9_]{20,}\b/],
+  ['slack token', /\bxox[baprs]-[A-Za-z0-9-]{10,}\b/],
+  ['google api key', /\bAIza[0-9A-Za-z_-]{35}\b/],
+  ['stripe live key', /\bsk_live_[0-9A-Za-z]{16,}\b/],
+];
+
 function findPlaceholderLeaks(text) {
   const findings = [];
   for (const [name, pattern] of SHIPPED_PLACEHOLDER_PATTERNS) {
@@ -108,6 +143,38 @@ async function walkHtmlFiles(rootDir) {
 
   await walk(rootDir);
   return files;
+}
+
+async function walkRepoFiles(rootDir) {
+  const files = [];
+
+  async function walk(currentDir) {
+    const entries = await fs.readdir(currentDir, { withFileTypes: true });
+    for (const entry of entries) {
+      if (entry.isDirectory()) {
+        if (REPO_SCAN_IGNORED_DIRS.has(entry.name) || REPO_SCAN_IGNORED_DIR_PREFIXES.some((prefix) => entry.name.startsWith(prefix))) {
+          continue;
+        }
+        await walk(path.join(currentDir, entry.name));
+        continue;
+      }
+
+      if (entry.isFile()) {
+        files.push(path.join(currentDir, entry.name));
+      }
+    }
+  }
+
+  await walk(rootDir);
+  return files;
+}
+
+function normalizeRelativePath(filePath) {
+  return path.relative(ROOT, filePath).split(path.sep).join('/');
+}
+
+function shouldSkipSecretContentScan(relativePath) {
+  return REPO_SCAN_BINARY_EXTENSIONS.has(path.extname(relativePath).toLowerCase());
 }
 
 function isIdentifierStart(char) {
@@ -540,10 +607,11 @@ async function check6_ScriptSecurityInvariants() {
   if (!existsSync(scriptsDir)) return info('no scripts/ dir — skipped');
   const files = (await fs.readdir(scriptsDir)).filter((f) => /\.(mjs|cjs|js|py)$/.test(f) && !f.endsWith('.bak'));
   const findings = [];
+  const patterns = [...SCRIPT_SECURITY_PATTERNS, ...SCRIPT_NETWORK_PATTERNS];
 
   for (const f of files) {
     const source = await readText(path.join(scriptsDir, f));
-    for (const [label, pattern] of SCRIPT_SECURITY_PATTERNS) {
+    for (const [label, pattern] of patterns) {
       const match = source.match(pattern);
       if (match && match.index !== undefined) {
         findings.push({
@@ -556,7 +624,7 @@ async function check6_ScriptSecurityInvariants() {
   }
 
   if (findings.length === 0) {
-    ok('scripts/ contain no node:vm, child_process, eval, or Function-constructor patterns');
+    ok('scripts/ contain no dynamic-execution, process-spawn, or network-client patterns');
     return;
   }
 
@@ -565,8 +633,65 @@ async function check6_ScriptSecurityInvariants() {
   }
 }
 
-async function check7_NoPlaceholderLeaks() {
-  console.log(`\n${BOLD}[7/10] Shipped HTML placeholder leaks${RESET}`);
+async function check7_RepoSecretHygiene() {
+  console.log(`\n${BOLD}[7/11] Repo secret hygiene${RESET}`);
+  const repoFiles = await walkRepoFiles(ROOT);
+  const findings = [];
+
+  for (const filePath of repoFiles) {
+    const relativePath = normalizeRelativePath(filePath);
+
+    for (const [label, pattern] of REPO_SENSITIVE_FILE_PATTERNS) {
+      if (pattern.test(relativePath)) {
+        findings.push({
+          file: relativePath,
+          label,
+          context: relativePath,
+        });
+        break;
+      }
+    }
+
+    if (shouldSkipSecretContentScan(relativePath)) {
+      continue;
+    }
+
+    let source;
+    try {
+      source = await readText(filePath);
+    } catch {
+      continue;
+    }
+
+    const sourceToScan = relativePath === 'scripts/smoke-test.mjs'
+      ? source.replace(/const REPO_SECRET_CONTENT_PATTERNS = \[[\s\S]*?\];/, '')
+      : source;
+
+    for (const [label, pattern] of REPO_SECRET_CONTENT_PATTERNS) {
+      const match = sourceToScan.match(pattern);
+      if (match && match.index !== undefined) {
+        findings.push({
+          file: relativePath,
+          label,
+          context: clipContext(sourceToScan, match.index, match.index + match[0].length),
+        });
+        break;
+      }
+    }
+  }
+
+  if (findings.length === 0) {
+    ok('repo scan found no secret-like files or high-confidence credential patterns');
+    return;
+  }
+
+  for (const finding of findings) {
+    fail(`  ${finding.file}: ${finding.label} ← ${finding.context}`);
+  }
+}
+
+async function check8_NoPlaceholderLeaks() {
+  console.log(`\n${BOLD}[8/11] Shipped HTML placeholder leaks${RESET}`);
   const targetRoots = [
     path.join(ROOT, 'demos'),
     path.join(ROOT, 'assets', 'showcases'),
@@ -599,8 +724,8 @@ async function check7_NoPlaceholderLeaks() {
   }
 }
 
-async function check8_IfqDateResolverCoverage() {
-  console.log(`\n${BOLD}[8/10] IFQ date resolver coverage${RESET}`);
+async function check9_IfqDateResolverCoverage() {
+  console.log(`\n${BOLD}[9/11] IFQ date resolver coverage${RESET}`);
   const targetRoots = [
     path.join(ROOT, 'assets', 'templates'),
     path.join(ROOT, 'demos'),
@@ -635,8 +760,8 @@ async function check8_IfqDateResolverCoverage() {
   if (checked > 0 && failures === 0) ok(`${checked} HTML files with data-ifq-* include resolver logic`);
 }
 
-async function check9_PlaceholderGuardBehavior() {
-  console.log(`\n${BOLD}[9/10] Placeholder guard behavior${RESET}`);
+async function check10_PlaceholderGuardBehavior() {
+  console.log(`\n${BOLD}[10/11] Placeholder guard behavior${RESET}`);
 
   const fakePage = {
     async evaluate(fn, arg) {
@@ -666,8 +791,8 @@ async function check9_PlaceholderGuardBehavior() {
 
 // Mirrors vercel-labs/skills: parseSkillMd + WellKnownProvider.isValidSkillEntry.
 // Keeps the repo publishable to skills.sh on every commit.
-async function check10_PublishSpec() {
-  console.log(`\n${BOLD}[10/10] skills.sh publish spec${RESET}`);
+async function check11_PublishSpec() {
+  console.log(`\n${BOLD}[11/11] skills.sh publish spec${RESET}`);
   const nameRegex = /^[a-z0-9]([a-z0-9-]{0,62}[a-z0-9])?$/;
 
   // SKILL.md frontmatter
@@ -718,10 +843,11 @@ async function check10_PublishSpec() {
   await check4_References();
   await check5_ScriptSyntax();
   await check6_ScriptSecurityInvariants();
-  await check7_NoPlaceholderLeaks();
-  await check8_IfqDateResolverCoverage();
-  await check9_PlaceholderGuardBehavior();
-  await check10_PublishSpec();
+  await check7_RepoSecretHygiene();
+  await check8_NoPlaceholderLeaks();
+  await check9_IfqDateResolverCoverage();
+  await check10_PlaceholderGuardBehavior();
+  await check11_PublishSpec();
   console.log('');
   if (failures === 0) {
     console.log(`${GREEN}${BOLD}✓ smoke test passed${RESET}`);
