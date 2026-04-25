@@ -1,7 +1,7 @@
 ---
 name: ifq-design-skills
 description: Use this skill when the user asks for a visual design deliverable built from HTML — interactive prototype, slide deck, motion demo, infographic, dashboard, landing, whitepaper, changelog, business card, social cover, or brand system — and wants a single-file HTML plus optional MP4, GIF, editable PPTX, print-ready PDF, or SVG. Also use for design critiques, brand diagnoses, multi-variant exploration, or 3-direction advisory (from 20 master styles plus the IFQ Native recipe). Triggers include prototype, hi-fi mockup, UI mockup, design variants, tweaks, animation demo, mp4/gif export, 60fps, keynote, PPTX, dashboard, whitepaper, A-vs-B, benchmark, changelog, release notes, social cover, business card, invitation, brand from scratch, design critique. Do not use for production web apps, SEO sites, backend-dependent systems, or pure copy edits. Outputs weave the IFQ ambient brand layer (rust ledger, signal spark, mono field note, quiet URL, editorial contrast) into layout rather than stamped logos.
-version: 2.1.0
+version: 2.3.0
 license: See LICENSE
 platforms: [macos, linux, windows]
 entrypoints:
@@ -187,7 +187,7 @@ A design engine for agents. Given a natural-language request, this skill picks o
 <style>/* paste assets/ifq-brand/ifq-tokens.css here */</style>
 <body class="ifq-body-base">
   <h1 class="ifq-display">语气 <em>在这里</em> 被点亮</h1>
-  <p class="ifq-kicker">field note · ifq.ai</p>
+  <p class="ifq-kicker">ifq.ai / 2026 · field note №07</p>
 </body>
 ```
 
@@ -200,6 +200,15 @@ A design engine for agents. Given a natural-language request, this skill picks o
 | `Mono Field Note` | `ifq.ai / 2026` 一类 authored 角标 | footer / closing / dashboard | `.ifq-kicker` 配 `--ifq-muted` |
 | `Quiet URL` | `ifq.ai` 或子域以克制方式出现 | meta / end card / card back | inline mono 行内字 |
 | `Signal Spark` | 8-point sparkle，像 intelligence 被点亮 | hero / motion / stamp | `var(--ifq-spark-path)` 或 `<IfqSpark />` |
+
+> ⚠️ **硬反模式**：上面五个标记名是**内部分类法**，**绝不允许作为可见的页面文案**。不要在 footer / kicker / 角标里写 `// FIELD NOTE`、`SIGNAL SPARK`、`RUST LEDGER`、`QUIET URL`、`EDITORIAL CONTRAST` 这类大写英文分类标签。要写就写**真实内容**：
+>
+> - ❌ `© 2026 IFQ.AI    // FIELD NOTE    SYS.ONLINE`
+> - ✅ `© 2026 ifq.ai · ifq.ai / live system`
+> - ❌ `<p class="ifq-kicker">FIELD NOTE</p>`
+> - ✅ `<p class="ifq-kicker">ifq.ai / 2026 · field note №07</p>`
+>
+> 一句话：**写内容（真年份 / 真 URL / 真编号），不写分类名**。`verify-lite` 会扫描这些 label 字面量并直接 fail。
 
 **显式品牌层级**：
 

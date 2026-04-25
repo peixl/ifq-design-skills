@@ -56,13 +56,22 @@ IFQ 的赤陶线不是“品牌色条”，而是版面秩序本身。
 
 典型形式：
 
-- `ifq.ai / YYYY`
+- `ifq.ai / 2026`
 - `ifq.ai / live system`
 - `ifq.ai / release ledger`
 - `ifq.ai / field note`
 - `ifq.ai / signal`
 
 它是 authored marker，不是水印。
+
+> ⚠️ **反模式（务必避免）**：本节五个标记名（`Signal Spark` / `Rust Ledger` / `Mono Field Note` / `Quiet URL` / `Editorial Contrast`）是**内部分类法**，**永远不可作为可见的页面文案**。绝不要在 footer、kicker、角标里写 `// FIELD NOTE`、`SIGNAL SPARK`、`RUST LEDGER`、`QUIET URL` 这类大写英文标签。
+>
+> - ❌ `© 2026 IFQ.AI    // FIELD NOTE    SYS.ONLINE`
+> - ❌ `<p class="ifq-kicker">FIELD NOTE</p>`
+> - ✅ `© 2026 ifq.ai · ifq.ai / live system`
+> - ✅ `<p class="ifq-kicker">ifq.ai / 2026 · field note №07</p>`
+>
+> 一句话：**写内容（real URL / 真年份 / 真编号），不写分类名**。
 
 ### 4. Quiet URL
 

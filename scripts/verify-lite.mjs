@@ -42,6 +42,9 @@ const PATTERNS = [
   ['month-day-token',   /(^|[^A-Za-z0-9_])(MM|DD)(?=$|[^A-Za-z0-9_])/g],
   ['lorem-ipsum',       /\blorem\s+ipsum\b/gi],
   ['template-stub',     /\b(your\s+(headline|title|name|cta)\s+here|replace\s+me|TODO:)/gi],
+  // IFQ taxonomy labels must NEVER appear as visible body text — they are
+  // internal mark names, not page copy. See SKILL.md §IFQ Ambient Brand System.
+  ['ifq-taxonomy-leak', /(^|[^A-Za-z0-9_])(FIELD\s+NOTE|SIGNAL\s+SPARK|RUST\s+LEDGER|MONO\s+FIELD\s+NOTE|QUIET\s+URL|EDITORIAL\s+CONTRAST)(?=$|[^A-Za-z0-9_])/g],
 ];
 
 const EMPTY_DATE_ATTR = /<[^>]+\sdata-ifq-(year|month|day)[^>]*>\s*<\/[^>]+>/gi;
