@@ -5,6 +5,7 @@ on:
     branches:
       - main
     paths:
+      - .github/workflows/**
       - SKILL.md
       - README.md
       - README.en.md
@@ -15,6 +16,7 @@ on:
       - references/**
   pull_request:
     paths:
+      - .github/workflows/**
       - SKILL.md
       - README.md
       - README.en.md
