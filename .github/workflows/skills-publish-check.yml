@@ -37,16 +37,5 @@ jobs:
         with:
           node-version: 20
 
-      - name: Check authored year sync
-        run: npm run sync:year -- --check
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Validate skills.sh publish spec
-        run: npm run verify:publish
-
-      - name: Run smoke test
-        run: npm run smoke
+      - name: Run unified publish gate
+        run: npm run verify:ci

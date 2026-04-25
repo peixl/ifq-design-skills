@@ -1,6 +1,6 @@
 {
   "name": "ifq-design-skills",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "private": true,
   "description": "IFQ Design Skills — skill package for AI coding agents (Anthropic/OpenAI SKILL.md format). The core design loop is ZERO-install: write HTML → preview in your system default browser → iterate. Heavy dependencies (playwright/pdf-lib/pptxgenjs/sharp) are only required when you actually export to MP4/GIF/PDF/PPTX, and are therefore listed under optionalDependencies. `npm install --omit=optional` works and keeps the skill lightweight. Install the optional deps on-demand only when an export pipeline asks for them.",
   "author": "ifq.ai",
@@ -17,6 +17,7 @@
   "scripts": {
     "sync:year": "node scripts/sync-authored-year.mjs",
     "smoke": "node scripts/smoke-test.mjs",
+    "verify:ci": "npm run sync:year -- --check && npm run smoke",
     "preview": "node scripts/preview.mjs",
     "verify:lite": "node scripts/verify-lite.mjs",
     "verify": "python3 scripts/verify.py",
