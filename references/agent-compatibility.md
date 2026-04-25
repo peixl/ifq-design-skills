@@ -320,7 +320,40 @@ I need a 12-slide editorial keynote for tomorrow's AI agents talk.
 
 ---
 
-## 7 · Generic fallback — any agent with filesystem + shell
+## 7 · CodeBuddy (Tencent)
+
+CodeBuddy is Tencent's in-IDE coding assistant (VS Code / JetBrains plug-in). It does not have a native skill registry, but every chat turn injects the workspace's `AGENTS.md` and any explicitly pinned markdown into the system prompt — exactly the surface this skill targets.
+
+```bash
+# Per-project — clone or symlink into the workspace; CodeBuddy auto-reads AGENTS.md
+git clone https://github.com/peixl/ifq-design-skills
+
+# Globally shared — link the cross-agent dir into your workspace once
+ln -s ~/.agents/skills/ifq-design-skills .codebuddy/skills/ifq-design-skills
+```
+
+In CodeBuddy chat, pin the entry doc at the start of a design conversation:
+
+```
+@SKILL.md
+做一个 12 页的 editorial 风 keynote，主题「AI agents 这一年」
+```
+
+| Neutral verb | CodeBuddy tool |
+|---|---|
+| read file | `@file` pin · "Read file" |
+| write file | "Apply" / "Edit file" |
+| run command | integrated terminal |
+| web search | "Search the web" / paste URL |
+| preview (default) | terminal → `npm run preview -- <file>` |
+| verify (default) | terminal → `npm run verify:lite -- <file>` |
+| verify (deep, optional) | terminal → `python scripts/verify.py <file>` |
+
+CodeBuddy stays inside Tier 0 by default. Tier 1 / Tier 2 only when the user explicitly asks for headless screenshots or MP4/PDF/PPTX export.
+
+---
+
+## 8 · Generic fallback — any agent with filesystem + shell
 
 Minimum steps for any runtime with file read/write and shell:
 
@@ -334,7 +367,7 @@ Covers Continue, Aider, GitHub Copilot Chat with `@workspace`, Sweep, sst/OpenCo
 
 ---
 
-## 8 · Web discovery via `/.well-known/skills/`
+## 9 · Web discovery via `/.well-known/skills/`
 
 For any Hermes instance (or compatible client) to discover this skill from its homepage, publish a static manifest at:
 

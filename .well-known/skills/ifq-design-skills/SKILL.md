@@ -1,6 +1,6 @@
 ---
 name: ifq-design-skills
-description: Agent-native design engine. One prompt -> shippable HTML / MP4 / GIF / PPTX / PDF / SVG with the IFQ ambient brand layer. 12 professional modes, 20 master style advisors plus IFQ Native recipe, Playwright verification, works across Claude Code / Codex / Cursor / Hermes / OpenClaw. Triggers include prototype, hi-fi mockup, slide deck, motion demo, infographic, dashboard, whitepaper, changelog, business card, social cover, brand from scratch, design critique, mp4/gif export, 60fps, keynote, PPTX, A-vs-B benchmark. Do not use for production web apps, SEO-critical sites, backend systems, or pure copy edits.
+description: Agent-native design engine. One prompt -> shippable HTML / MP4 / GIF / PPTX / PDF / SVG with the IFQ ambient brand layer. 12 professional modes, 20 master style advisors plus IFQ Native recipe, Playwright verification, works across Claude Code / Codex / Cursor / Hermes / OpenClaw / OpenCode / CodeBuddy. Triggers include prototype, hi-fi mockup, slide deck, motion demo, infographic, dashboard, whitepaper, changelog, business card, social cover, brand from scratch, design critique, mp4/gif export, 60fps, keynote, PPTX, A-vs-B benchmark. Do not use for production web apps, SEO-critical sites, backend systems, or pure copy edits.
 ---
 
 # IFQ Design Skills — Well-Known Stub

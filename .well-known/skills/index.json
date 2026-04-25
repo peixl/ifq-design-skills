@@ -4,7 +4,7 @@
   "skills": [
     {
       "name": "ifq-design-skills",
-      "description": "Agent-native design engine. One prompt -> shippable HTML / MP4 / GIF / PPTX / PDF / SVG with the IFQ ambient brand layer. 12 professional modes, 20 master style advisors plus IFQ Native recipe, Playwright verification, works across Claude Code / Codex / Cursor / Hermes / OpenClaw.",
+      "description": "Agent-native design engine. One prompt -> shippable HTML / MP4 / GIF / PPTX / PDF / SVG with the IFQ ambient brand layer. 12 professional modes, 20 master style advisors plus IFQ Native recipe, Playwright verification, works across Claude Code / Codex / Cursor / Hermes / OpenClaw / OpenCode / CodeBuddy.",
       "files": [
         "SKILL.md"
       ],

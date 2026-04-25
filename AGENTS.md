@@ -63,6 +63,7 @@ Never push these on the user if they only asked for HTML. `playwright` lives und
 | **OpenClaw** | register under `plugins.allow` in `openclaw.json`, restart gateway. |
 | **Hermes** | `hermes skills install github:peixl/ifq-design-skills`. |
 | **Cursor** | pin `@ifq-design-skills/SKILL.md` at start of chat. |
+| **CodeBuddy (Tencent)** | reads this `AGENTS.md` from the workspace; pin `@SKILL.md` in chat to load the full protocol. |
 
 Full install matrix with per-agent tool mapping: [`references/agent-compatibility.md`](references/agent-compatibility.md).
 
