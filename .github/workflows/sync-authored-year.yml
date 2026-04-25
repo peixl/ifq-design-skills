@@ -1,6 +1,6 @@
 name: Sync Authored Year
 
-on:
+"on":
   schedule:
     - cron: '0 4 1 * *'
   workflow_dispatch:

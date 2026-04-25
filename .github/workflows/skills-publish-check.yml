@@ -1,6 +1,6 @@
 name: Skills Publish Check
 
-on:
+"on":
   push:
     branches:
       - main
