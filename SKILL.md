@@ -102,6 +102,7 @@ The authoritative map is `assets/templates/INDEX.json`; this table is only a mem
 | Junior-designer cadence, variations, placeholders, anti-slop | [references/designer-operating-principles.md](references/designer-operating-principles.md), [references/anti-ai-slop.md](references/anti-ai-slop.md) |
 | Vague prompt -> 3 design directions | [references/design-direction-advisor.md](references/design-direction-advisor.md), [references/design-styles.md](references/design-styles.md), [references/ifq-native-recipes.md](references/ifq-native-recipes.md) |
 | End-to-end task workflow, exceptions, exports | [references/delivery-workflow.md](references/delivery-workflow.md), [references/workflow.md](references/workflow.md), [references/verification.md](references/verification.md) |
+| Skill improvement, eval coverage, contribution rules | [evals/evals.json](evals/evals.json), [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md) |
 | OpenClaw / ClawHub / skills.sh publishing posture | [references/marketplace-quality.md](references/marketplace-quality.md), [references/skill-leaderboard-lessons.md](references/skill-leaderboard-lessons.md), [references/smoke-test.md](references/smoke-test.md) |
 | Runtime install and tool mapping | [references/agent-compatibility.md](references/agent-compatibility.md) |
 | React/Babel single-file rules | [references/react-setup.md](references/react-setup.md) |

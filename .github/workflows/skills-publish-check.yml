@@ -9,8 +9,11 @@ name: Skills Publish Check
       - SKILL.md
       - README.md
       - README.en.md
+      - CONTRIBUTING.md
+      - SECURITY.md
       - package.json
       - .well-known/**
+      - evals/**
       - scripts/**
       - assets/**
       - references/**
@@ -20,8 +23,11 @@ name: Skills Publish Check
       - SKILL.md
       - README.md
       - README.en.md
+      - CONTRIBUTING.md
+      - SECURITY.md
       - package.json
       - .well-known/**
+      - evals/**
       - scripts/**
       - assets/**
       - references/**

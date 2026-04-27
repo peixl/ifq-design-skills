@@ -28,6 +28,8 @@ npm run smoke
 
 退出码：`0` 成功 · `1` 失败（会打印第一条失败详情）。
 
+发布前统一跑 `npm run validate`。它会先执行本页的 14 项 smoke gate，再执行 `npm run evals:validate`，确认 `evals/evals.json` 覆盖 12 种模式、模板路由、must-read 文件、tier policy 和验证命令。
+
 ## 三种任务的最小验证剧本
 
 如果你要验证**整条交付链**而不是只验证文件齐不齐，按下面的最小任务跑一次：

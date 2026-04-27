@@ -57,7 +57,9 @@ npx skills add peixl/ifq-design-skills
 
 **核心链路零依赖**：写 HTML → `npm run preview -- <file>` 打印 `file://` 预览 URL → `npm run verify:lite -- <file>` 扫占位符。**不需要装 Playwright、Chromium、Python、ffmpeg**。只有当用户真的要导出 MP4 / PDF / PPTX 时，才用 `npm run install:export` 按需拉齐。
 
-**Marketplace proof**：`npm run validate` 覆盖 14 项本地闸门（模板索引、references、脚本语法、安全不变量、secret hygiene、不可见 Unicode 控制符、自动安装脚本、默认 HTML 网络策略、well-known 规范）。ClawHub / VirusTotal 发布前按 [references/marketplace-quality.md](references/marketplace-quality.md) 线上复核，不上传私有素材。
+**Marketplace proof**：`npm run validate` 覆盖 smoke 的 14 项本地闸门（模板索引、references、脚本语法、安全不变量、secret hygiene、不可见 Unicode 控制符、自动安装脚本、默认 HTML 网络策略、well-known 规范）以及 12 模式 eval 契约。ClawHub / VirusTotal 发布前按 [references/marketplace-quality.md](references/marketplace-quality.md) 线上复核，不上传私有素材。
+
+**可回归的进化**：`evals/evals.json` 覆盖 12 种模式，每条样例都同时写清 `user_value` 与 `agent_contract`，避免 skill 越改越会写文案、却越来越不会交付。`npm run validate` 会同时跑 smoke 与 eval 校验。
 
 **其他 agent 一键安装**：
 
@@ -380,6 +382,7 @@ ifq-design-skills/
 npm run preview -- path/to/design.html   # 打印 file:// URL，交给浏览器工具或用户打开
 npm run verify:lite -- path/to/design.html   # 纯静态扫占位符残留（YYYY / {…} / lorem / 空 data-ifq-*）
 npm run smoke                              # 一分钟 skill 自检
+npm run evals:validate                     # 12 模式回归契约
 ```
 
 不需要装 Playwright、不需要 Chromium、不需要 Python。跨 macOS / Linux / Windows 即跑。
@@ -392,6 +395,8 @@ python scripts/verify.py path/to/design.html   # headless 多 viewport 截图 + 
 ```
 
 单件作品在需要自动截图/可点击测试/导出 MP4 PDF PPTX 时才走 Deep 档。详见 [references/verification.md](references/verification.md)。
+
+**贡献入口**：改 skill 协议、模板、脚本或文档前先看 [CONTRIBUTING.md](CONTRIBUTING.md)。安全边界与上报流程见 [SECURITY.md](SECURITY.md)。
 
 ---
 

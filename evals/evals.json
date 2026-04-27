@@ -1,0 +1,253 @@
+{
+  "$schema": "./evals.schema.json",
+  "version": "1.0",
+  "purpose": "Regression prompts for IFQ Design Skills. Each scenario protects a mode route, a human-facing outcome, and the agent contract needed to produce a shippable HTML-first artifact.",
+  "quality_principles": [
+    "Make the user more effective in one prompt, not more responsible for prompt engineering.",
+    "Give agents a short route, concrete files to read, a forkable template, and a verification command.",
+    "Prefer visible craft, factual grounding, and export reliability over ornamental novelty.",
+    "Keep Tier 0 zero-install unless the prompt explicitly asks for screenshots or export formats."
+  ],
+  "scenarios": [
+    {
+      "id": "m01-launch-film-hardware-opener",
+      "mode": "M-01",
+      "prompt_zh": "24 秒硬件发布片头，冷静，像 Teenage Engineering，不要发布会预热。",
+      "prompt_en": "A 24-second hardware launch opener. Cool, like Teenage Engineering. Not a pre-announcement hype reel.",
+      "user_value": "The human gets a timed motion concept with a usable keyposter and export path, not just visual mood words.",
+      "agent_value": "The agent has a fixed motion route, timeline references, and a Tier 0 preview before optional export.",
+      "agent_contract": {
+        "route": "M-01",
+        "template_ids": ["T-hero-landing"],
+        "must_read": ["references/animation-pitfalls.md", "references/animations.md", "references/video-export.md", "assets/templates/INDEX.json"],
+        "tier": "Tier 0 for HTML preview; Tier 2 only when MP4/GIF is requested",
+        "verification": ["npm run verify:lite -- <file.html>", "npm run preview -- <file.html>"],
+        "fact_check_required": true
+      },
+      "quality_bar": {
+        "must_include": ["shot timeline", "key visual or product placeholder protocol", "motion phases with readable text dwell time", "IFQ ambient marks woven into framing"],
+        "must_not": ["install export dependencies unless export is requested", "make generic hype gradients", "claim product specs without fact checking"]
+      }
+    },
+    {
+      "id": "m02-portfolio-not-job-hunting",
+      "mode": "M-02",
+      "prompt_zh": "个人站一页，但不要像找工作。",
+      "prompt_en": "One-page personal site, but I do not want it to look like I am job-hunting.",
+      "user_value": "The human gets a personal presence with a point of view instead of a resume template.",
+      "agent_value": "The agent routes to directions first, then forks the landing template with clear content slots.",
+      "agent_contract": {
+        "route": "Design Direction Advisor -> M-02",
+        "template_ids": ["T-hero-landing"],
+        "must_read": ["references/design-direction-advisor.md", "references/design-styles.md", "assets/templates/INDEX.json"],
+        "tier": "Tier 0",
+        "verification": ["npm run verify:lite -- <file.html>", "npm run preview -- <file.html>"],
+        "fact_check_required": false
+      },
+      "quality_bar": {
+        "must_include": ["three differentiated directions when style is vague", "currently/writing/building or equivalent living structure", "quiet colophon", "no fake career bragging"],
+        "must_not": ["default to a hiring profile", "use oversized generic avatar hero", "ask for unnecessary secrets or accounts"]
+      }
+    },
+    {
+      "id": "m03-ai-agent-whitepaper-print",
+      "mode": "M-03",
+      "prompt_zh": "2026 AI agent 白皮书，50 页内，直接印。",
+      "prompt_en": "A 2026 AI-agent whitepaper under 50 pages, ready to print.",
+      "user_value": "The human gets a print-minded document structure with source discipline.",
+      "agent_value": "The agent knows to fact-check claims, build printable HTML first, then export only when asked.",
+      "agent_contract": {
+        "route": "M-03",
+        "template_ids": ["T-infographic-vertical"],
+        "must_read": ["references/fact-and-asset-protocol.md", "references/content-guidelines.md", "references/verification.md", "assets/templates/INDEX.json"],
+        "tier": "Tier 0 for HTML; Tier 2 for PDF export",
+        "verification": ["npm run verify:lite -- <file.html>", "npm run preview -- <file.html>"],
+        "fact_check_required": true
+      },
+      "quality_bar": {
+        "must_include": ["cover/abstract/sections/references/colophon plan", "print-safe spacing", "source notes for factual claims", "page-count discipline"],
+        "must_not": ["invent release dates", "use web-only decorative sections", "promise PDF export without running the export path"]
+      }
+    },
+    {
+      "id": "m04-ai-command-center-density",
+      "mode": "M-04",
+      "prompt_zh": "内部 AI 做一个 command center，像 Bloomberg 终端，不要 BI 套壳。",
+      "prompt_en": "Internal AI command center. Bloomberg-terminal density. Not a BI skin.",
+      "user_value": "The human gets an operational interface that supports repeated scanning and action.",
+      "agent_value": "The agent is anchored to the dashboard template and density rules instead of card-heavy decoration.",
+      "agent_contract": {
+        "route": "M-04",
+        "template_ids": ["T-dashboard"],
+        "must_read": ["references/app-prototype-rules.md", "references/design-context.md", "assets/templates/INDEX.json"],
+        "tier": "Tier 0",
+        "verification": ["npm run verify:lite -- <file.html>", "npm run preview -- <file.html>", "manual scan for responsive density and no overlap"],
+        "fact_check_required": false
+      },
+      "quality_bar": {
+        "must_include": ["dense metric hierarchy", "session or latency state", "clear scan paths", "restrained operational palette"],
+        "must_not": ["marketing hero layout", "decorative nested cards", "cartoon charts or one-note gradients"]
+      }
+    },
+    {
+      "id": "m05-roadshow-compare-no-bragging",
+      "mode": "M-05",
+      "prompt_zh": "路演要一张 A vs B，我们对三家友商，一眼看出为什么选我们，不许吹。",
+      "prompt_en": "A vs B for the roadshow. Us against three competitors. Make it obvious why us. No bragging.",
+      "user_value": "The human gets a defensible comparison that can survive investor scrutiny.",
+      "agent_value": "The agent is forced into evidence-first comparison rather than unchecked persuasion copy.",
+      "agent_contract": {
+        "route": "M-05",
+        "template_ids": ["T-compare-vs"],
+        "must_read": ["references/fact-and-asset-protocol.md", "references/critique-guide.md", "assets/templates/INDEX.json"],
+        "tier": "Tier 0",
+        "verification": ["npm run verify:lite -- <file.html>", "npm run preview -- <file.html>"],
+        "fact_check_required": true
+      },
+      "quality_bar": {
+        "must_include": ["cited criteria", "three-state matrix language", "source footnotes", "measured conclusion"],
+        "must_not": ["uncited superiority claims", "radar chart theater", "explicit rival-name copy unless supplied by the user"]
+      }
+    },
+    {
+      "id": "m06-habit-tracker-ios-overview",
+      "mode": "M-06",
+      "prompt_zh": "做一个 Habit Tracker App 原型。",
+      "prompt_en": "Make a Habit Tracker app prototype.",
+      "user_value": "The human gets multiple concrete screens that expose product depth.",
+      "agent_value": "The agent uses the device frame and overview/flow routing instead of hand-rolling a phone shell.",
+      "agent_contract": {
+        "route": "M-06",
+        "template_ids": ["T-hero-landing"],
+        "must_read": ["references/app-prototype-rules.md", "assets/ios_frame.jsx", "assets/templates/INDEX.json"],
+        "tier": "Tier 0",
+        "verification": ["npm run verify:lite -- <file.html>", "npm run preview -- <file.html>", "manual click pass for tab/detail flow"],
+        "fact_check_required": false
+      },
+      "quality_bar": {
+        "must_include": ["5-7 screens or a justified smaller flow", "completion rate/streak/trend data", "real interaction states", "device frame reuse"],
+        "must_not": ["single pretty splash screen", "fake Dynamic Island drawn from scratch", "low-density placeholder cards"]
+      }
+    },
+    {
+      "id": "m07-release-ledger-weekly",
+      "mode": "M-07",
+      "prompt_zh": "这周 4 个更新，做成纵向 changelog，要像活页笔记，别像公告栏。",
+      "prompt_en": "Four updates shipped this week. Make a vertical changelog that feels like a loose-leaf notebook, not a company bulletin board.",
+      "user_value": "The human gets release communication that feels authored and scannable.",
+      "agent_value": "The agent routes to a timeline template with explicit release-item slots.",
+      "agent_contract": {
+        "route": "M-07",
+        "template_ids": ["T-changelog", "T-infographic-vertical"],
+        "must_read": ["references/content-guidelines.md", "assets/templates/INDEX.json"],
+        "tier": "Tier 0",
+        "verification": ["npm run verify:lite -- <file.html>", "npm run preview -- <file.html>"],
+        "fact_check_required": false
+      },
+      "quality_bar": {
+        "must_include": ["dated entries", "impact notes", "vertical ledger rhythm", "clear release hierarchy"],
+        "must_not": ["announcement-wall density", "emoji as primary illustration", "empty YYYY/MM/DD placeholders"]
+      }
+    },
+    {
+      "id": "m08-salon-ai-agent-deck",
+      "mode": "M-08",
+      "prompt_zh": "明天沙龙讲 AI agent 20 分钟，给我一份 deck，不要像 SaaS keynote，要有书卷气。",
+      "prompt_en": "Tomorrow I am giving a 20-minute salon on AI agents. Give me a deck that does not look like a SaaS keynote and has a bookish voice.",
+      "user_value": "The human gets a talk structure and slide language that can be delivered live.",
+      "agent_value": "The agent starts from deck rules and title-slide template, then varies layouts deliberately.",
+      "agent_contract": {
+        "route": "M-08",
+        "template_ids": ["T-slide-title"],
+        "must_read": ["references/slide-decks.md", "references/editable-pptx.md", "assets/deck_stage.js", "assets/templates/INDEX.json"],
+        "tier": "Tier 0 for HTML; Tier 2 for PPTX/PDF export",
+        "verification": ["npm run verify:lite -- <file.html>", "npm run preview -- <file.html>"],
+        "fact_check_required": true
+      },
+      "quality_bar": {
+        "must_include": ["slide outline", "section dividers", "typographic system", "readable speaker pacing"],
+        "must_not": ["SaaS keynote cliches", "tiny text", "claim editable PPTX without export verification"]
+      }
+    },
+    {
+      "id": "m09-social-launch-card",
+      "mode": "M-09",
+      "prompt_zh": "把这条发布说明做成一张 X/Twitter 分享卡。",
+      "prompt_en": "Turn this release note into an X/Twitter share card.",
+      "user_value": "The human gets a platform-sized graphic with one clear message.",
+      "agent_value": "The agent uses the social card template and platform constraints instead of a generic poster.",
+      "agent_contract": {
+        "route": "M-09",
+        "template_ids": ["T-social-x"],
+        "must_read": ["references/content-guidelines.md", "assets/templates/INDEX.json"],
+        "tier": "Tier 0",
+        "verification": ["npm run verify:lite -- <file.html>", "npm run preview -- <file.html>", "manual scan for crop-safe text"],
+        "fact_check_required": false
+      },
+      "quality_bar": {
+        "must_include": ["platform aspect ratio", "one lead message", "small source/date line", "crop-safe margins"],
+        "must_not": ["multi-message clutter", "tiny legal text", "remote font dependency by default"]
+      }
+    },
+    {
+      "id": "m10-indie-cafe-business-card",
+      "mode": "M-10",
+      "prompt_zh": "朋友独立咖啡店名片，黑白双面，不要花，要有手工感。",
+      "prompt_en": "A friend's indie cafe business card. Two-sided, black-and-white, no flourish, handmade feel.",
+      "user_value": "The human gets a print-aware card concept rather than a screenshot-sized mockup.",
+      "agent_value": "The agent follows print constraints, bleed, and explicit co-brand rules.",
+      "agent_contract": {
+        "route": "M-10",
+        "template_ids": ["T-business-card"],
+        "must_read": ["references/ifq-brand-spec.md", "assets/templates/INDEX.json"],
+        "tier": "Tier 0 for HTML/SVG; Tier 2 for print PDF export",
+        "verification": ["npm run verify:lite -- <file.html>", "npm run preview -- <file.html>"],
+        "fact_check_required": false
+      },
+      "quality_bar": {
+        "must_include": ["front/back plan", "bleed or trim awareness", "contact hierarchy", "third-party brand priority"],
+        "must_not": ["loud IFQ watermark", "ornamental flourishes against request", "claim print-ready PDF without export"]
+      }
+    },
+    {
+      "id": "m11-brand-audit-three-directions",
+      "mode": "M-11",
+      "prompt_zh": "帮这个品牌做一次体检，给 3 个升级方向。",
+      "prompt_en": "Audit this brand and give three upgrade directions.",
+      "user_value": "The human gets diagnosis and choices before implementation.",
+      "agent_value": "The agent separates critique from execution and uses scoring criteria.",
+      "agent_contract": {
+        "route": "M-11",
+        "template_ids": ["T-compare-vs"],
+        "must_read": ["references/critique-guide.md", "references/design-direction-advisor.md", "assets/templates/INDEX.json"],
+        "tier": "Tier 0",
+        "verification": ["npm run verify:lite -- <file.html>", "npm run preview -- <file.html>"],
+        "fact_check_required": false
+      },
+      "quality_bar": {
+        "must_include": ["diagnostic criteria", "three divergent upgrade directions", "risk notes", "what to keep"],
+        "must_not": ["redesign immediately when asked only to audit", "generic taste language", "unsupported competitor claims"]
+      }
+    },
+    {
+      "id": "m12-ai-tool-brand-system",
+      "mode": "M-12",
+      "prompt_zh": "从零建立一个 AI 工具品牌系统，含落地页和社媒物料。",
+      "prompt_en": "Build an AI-tool brand system from scratch, including a landing page and social assets.",
+      "user_value": "The human gets a usable system across applications, not a loose logo idea.",
+      "agent_value": "The agent can stage brand foundations, templates, and follow-up exports without losing the source of truth.",
+      "agent_contract": {
+        "route": "Design Direction Advisor -> M-12",
+        "template_ids": ["T-hero-landing", "T-social-x"],
+        "must_read": ["references/design-direction-advisor.md", "references/ifq-native-recipes.md", "references/ifq-brand-spec.md", "assets/templates/INDEX.json"],
+        "tier": "Tier 0",
+        "verification": ["npm run verify:lite -- <file.html>", "npm run preview -- <file.html>"],
+        "fact_check_required": false
+      },
+      "quality_bar": {
+        "must_include": ["positioning", "type/color/spacing tokens", "landing page", "social application", "usage notes"],
+        "must_not": ["single-logo-only delivery", "brand marks without application", "hidden dependency on remote assets"]
+      }
+    }
+  ]
+}

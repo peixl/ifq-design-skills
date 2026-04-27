@@ -57,7 +57,9 @@ Then just talk to the agent. The skill routes, picks templates, and verifies its
 
 **Zero-install core loop:** HTML authoring + `npm run preview -- <file>` + `npm run verify:lite -- <file>` need only Node. Do not install Playwright, Chromium, Python, or ffmpeg unless the user explicitly asks for MP4 / GIF / PDF / PPTX export or automated screenshots.
 
-**Marketplace proof:** `npm run validate` runs 14 local gates: template index, references, script syntax, script safety invariants, secret hygiene, invisible Unicode controls, automatic install-script posture, default HTML network policy, and well-known metadata. Before ClawHub / VirusTotal publication, use [references/marketplace-quality.md](references/marketplace-quality.md) and submit only the public repo or report URL, not private user assets.
+**Marketplace proof:** `npm run validate` runs smoke's 14 local gates (template index, references, script syntax, script safety invariants, secret hygiene, invisible Unicode controls, automatic install-script posture, default HTML network policy, and well-known metadata) plus the 12-mode eval contract. Before ClawHub / VirusTotal publication, use [references/marketplace-quality.md](references/marketplace-quality.md) and submit only the public repo or report URL, not private user assets.
+
+**Regression-backed evolution:** `evals/evals.json` covers all 12 modes. Each scenario records both `user_value` and the `agent_contract`, so the skill can improve without drifting into prose-only output. `npm run validate` runs both smoke checks and eval validation.
 
 **One-liners for every agent**:
 
@@ -376,6 +378,7 @@ ifq-design-skills/
 npm run preview -- path/to/design.html       # prints a file:// URL for your browser tool or user
 npm run verify:lite -- path/to/design.html   # pure static placeholder scan (YYYY / {…} / lorem / empty data-ifq-*)
 npm run smoke                                # one-minute skill health check
+npm run evals:validate                       # 12-mode regression contract
 ```
 
 No Playwright, no Chromium, no Python. Runs on macOS / Linux / Windows out of the box.
@@ -388,6 +391,8 @@ python scripts/verify.py path/to/design.html       # headless multi-viewport scr
 ```
 
 Escalate to the deep tier only when you actually need automated screenshots, click-tests, or MP4 / PDF / PPTX export. See [references/verification.md](references/verification.md).
+
+**Contributing:** read [CONTRIBUTING.md](CONTRIBUTING.md) before changing protocol, templates, scripts, or docs. Security posture and reporting live in [SECURITY.md](SECURITY.md).
 
 ---
 

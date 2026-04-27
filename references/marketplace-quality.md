@@ -32,7 +32,7 @@
 7. 静态扫描友好：Node/Python 脚本无 `child_process`、无 `eval` / `new Function`、无运行时对外网络请求；shell 导出助手只在显式导出时调用 `ffmpeg` / `ffprobe`。
 8. 不偷偷安装：Playwright、Chromium、ffmpeg、PPTX/PDF 依赖只在用户明确要导出时出现。
 9. 网络弱环境可用：模板 local-first 字体；Google Fonts 与 CDN 都是显式 opt-in。
-10. 每次变更可验证：`npm run validate` 是发布前最低门槛。
+10. 每次变更可验证：`npm run validate` 是发布前最低门槛，并同时覆盖 smoke 闸门与 12 模式 eval 契约。
 
 ## 上游审计管线
 
@@ -65,7 +65,7 @@ npm run validate
 npm run verify:publish
 ```
 
-`validate` 运行 `sync:year -- --check` + `smoke`。`smoke` 覆盖模板索引、12 模式路由、品牌资产、icon sprite、reference 路由、脚本词法、脚本安全不变量、secret/release hygiene、不可见 Unicode 控制符、package 安装姿态、HTML 占位符、IFQ 日期 resolver、shipped HTML remote-runtime 策略、well-known 发布规范。
+`validate` 运行 `sync:year -- --check` + `smoke` + `evals:validate`。`smoke` 覆盖模板索引、12 模式路由、品牌资产、icon sprite、reference 路由、脚本词法、脚本安全不变量、secret/release hygiene、不可见 Unicode 控制符、package 安装姿态、HTML 占位符、IFQ 日期 resolver、shipped HTML remote-runtime 策略、well-known 发布规范。`evals:validate` 覆盖 12 种模式的 human value、agent contract、模板路由、must-read 文件、tier policy 与验证命令。
 
 ## 线上核验记录
 

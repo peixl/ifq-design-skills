@@ -48,7 +48,7 @@ IFQ 已经全部到位。继续约束：
 
 | 平台 | 审计来源 | IFQ 通过路径 |
 |---|---|---|
-| skills.sh | Gen Agent Trust Hub · Socket · Snyk | `npm run validate` 覆盖 zero-spawn / zero-eval / zero-remote-IO / no-secret / no-hidden-Unicode / no-generated-cache 的等价静态闸门 |
+| skills.sh | Gen Agent Trust Hub · Socket · Snyk | `npm run validate` 覆盖 zero-spawn / zero-eval / zero-remote-IO / no-secret / no-hidden-Unicode / no-generated-cache 的等价静态闸门，并校验 12 模式 eval 契约 |
 | ClawHub | VirusTotal + 平台静态分析 + OpenClaw verdict | 公开 GitHub URL + `optionalDependencies` 隔离 + 不打包 minified bundle，让扫描器看到原文件 |
 | Cursor / Claude Code 用户体感 | 安装失败率 + skill 启动失败率 | `verify:publish` + Tier 0 zero-install 已经覆盖 |
 
@@ -130,4 +130,4 @@ Anthropic 推荐 skill 自己也跑 eval：
 3. 把产物保存到 `<skill>-workspace/iteration-N/eval-X/`。
 4. 用 quantitative + qualitative 评估，迭代 description / 主体。
 
-IFQ 当前有 `test-prompts.json`，可以演进成这个 eval workspace 结构（不强求，列在 backlog）。
+IFQ 已落地 `evals/evals.json`，覆盖 M-01 到 M-12 的真实场景，并用 `npm run evals:validate` 校验每条场景的 human value、agent contract、模板路由、must-read 文件、tier policy 与验证命令。下一步若要做更完整的质量闭环，可把每条 eval 的产物保存到 `ifq-design-skills-workspace/iteration-N/eval-X/`，再做 with-skill / baseline 对比。
