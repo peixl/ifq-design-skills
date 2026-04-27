@@ -1,6 +1,16 @@
-# Marketplace Quality · ClawHub / VirusTotal 友好准则
+# Marketplace Quality · skills.sh / ClawHub / VirusTotal 友好准则
 
-本页把 IFQ Design Skills 的发布质量做成可执行清单。若 agent 的网络策略允许访问 ClawHub 或 VirusTotal，可以再做线上核验；若网络被策略阻断，不要编造排行或扫描结论，先跑本地 smoke 与静态闸门。
+本页把 IFQ Design Skills 的发布质量做成可执行清单。若 agent 的网络策略允许访问 skills.sh / ClawHub / VirusTotal，可以再做线上核验；若网络被策略阻断，不要编造排行或扫描结论，先跑本地 smoke 与静态闸门。
+
+## 上游审计管线
+
+| Marketplace | 审计来源 | IFQ 的等价闸门 |
+|---|---|---|
+| skills.sh / vercel-labs `skills-cli` | **Gen Agent Trust Hub** · **Socket** · **Snyk** | `npm run smoke` 12 项检查（zero-spawn/eval/network、no-secret、模板网络策略） |
+| ClawHub / OpenClaw | **VirusTotal**（URL + 发布包） | 公开 GitHub URL + 不上传打包二进制 + 内置模板 local-first，扫描器看到的全是原文件 |
+| Cursor / Claude Code 用户体感 | 安装失败率、skill 启动失败率 | Tier 0 zero-install + `npm run verify:publish` |
+
+skills.sh audits 页对每个 skill 的目标都是 “Safe / 0 alerts”。IFQ Design Skills 当前 `npm run smoke` 静态等价于这三家扫描器关心的项。
 
 ## 顶级 skill 的共同特征
 
@@ -41,6 +51,7 @@ npm run verify:publish
 
 如果能访问外部服务，再补充人工结果：
 
-- ClawHub：记录 skill 页面 URL、分类、标签、更新时间、是否通过平台静态扫描。
-- VirusTotal：只上传发布包或公开仓库 URL，不上传用户私有素材；记录检测时间与结果摘要。
+- skills.sh：访问 `https://skills.sh/audits` 找到本 skill 行，记录 Gen / Socket / Snyk 三栏结果。
+- ClawHub：在 `https://clawhub.ai` skill 详情页核对 category / tags / install 命令、记录是否通过平台静态扫描。
+- VirusTotal：上传公开仓库 URL（不要上传用户私有素材），记录检测时间与结果摘要。
 - 如果访问被企业/IDE 网络策略阻断，在交付说明里明确写出“未能线上核验，已完成本地等价静态闸门”。

@@ -1,8 +1,9 @@
 ---
 name: ifq-design-skills
 description: Use this skill when the user asks for a visual design deliverable built from HTML — interactive prototype, slide deck, motion demo, infographic, dashboard, landing, whitepaper, changelog, business card, social cover, or brand system — and wants a single-file HTML plus optional MP4, GIF, editable PPTX, print-ready PDF, or SVG. Also use for design critiques, brand diagnoses, multi-variant exploration, or 3-direction advisory (from 20 master styles plus the IFQ Native recipe). Triggers include prototype, hi-fi mockup, UI mockup, design variants, tweaks, animation demo, mp4/gif export, 60fps, keynote, PPTX, dashboard, whitepaper, A-vs-B, benchmark, changelog, release notes, social cover, business card, invitation, brand from scratch, design critique. Do not use for production web apps, SEO sites, backend-dependent systems, or pure copy edits. Outputs weave the IFQ ambient brand layer (rust ledger, signal spark, mono field note, quiet URL, editorial contrast) into layout rather than stamped logos.
-version: 2.3.5
+version: 2.3.6
 license: See LICENSE
+argument-hint: "<task description, e.g. 'landing for moxt' / 'critique my dashboard' / 'export this deck to pptx'>"
 platforms: [macos, linux, windows]
 entrypoints:
   # Agents: open these three files in order before touching anything else.
@@ -55,6 +56,10 @@ compatibility:
   codebuddy:  native      # @SKILL.md pin in workspace; AGENTS.md auto-loaded
   generic:    native      # any agent with fs + shell
 metadata:
+  # skills.sh / vercel-labs CLI idiomatic top-level fields (flat keys preferred by skills-cli).
+  author: ifq.ai
+  version: "2.3.6"
+  homepage: "https://github.com/peixl/ifq-design-skills"
   hermes:
     category: creative
     tags: [design, html, prototype, slides, motion, infographic, dashboard, brand, pptx, pdf, svg, mp4, gif, ifq]
@@ -106,6 +111,8 @@ metadata:
 - The skill never writes outside `${workspace}`. It does not touch `~/.ssh`, global npm, system paths, or install anything silently.
 
 **Font loading (China-safe by default):** built-in templates and `ifq-tokens.css` use local-first stacks (`PingFang SC` / `Microsoft YaHei` / `Source Han` / `Songti SC` / system mono). Do **not** add Google Fonts by default. If a user or brand explicitly needs web fonts and the target audience can reach them, use the opt-in recipe in [`references/font-loading.md`](references/font-loading.md) and keep the local fallback stack intact.
+
+**Anti-AI-slop tripwires (run before delivery):** no side-stripe borders, no gradient text, no default glassmorphism, no hero-metric template, no identical-card grids, no modal-as-first-thought, no `Inter`/`Roboto`/`Arial` as a display voice, no animated layout properties. Full checklist with positive recipes lives in [`references/anti-ai-slop.md`](references/anti-ai-slop.md).
 
 **First-read order for any agent (universal):** Cheat Sheet (this block) → Fast Path below → `references/modes.md` → `assets/templates/INDEX.json` → only then the task-specific reference files.
 
@@ -984,8 +991,10 @@ Screen 组件接 callback props（`onEnter`、`onClose`、`onTabChange`、`onOpe
 |------|-----|
 | 开工前问问题、定方向 | `references/workflow.md` |
 | 反AI slop、内容规范、scale | `references/content-guidelines.md` |
+| **AI 默认味自检清单**（gradient text、hero-metric、九宫格、layout 动画...）| `references/anti-ai-slop.md` |
 | 字体加载、中国可用、Google Fonts opt-in | `references/font-loading.md` |
-| ClawHub / VirusTotal 友好的发布与静态扫描 | `references/marketplace-quality.md` |
+| skills.sh / ClawHub / VirusTotal 友好发布与静态扫描 | `references/marketplace-quality.md` |
+| **Top skill leaderboard 蒸馏**（frontmatter 三档、长度纪律、audit 管线、差异化定位）| `references/skill-leaderboard-lessons.md` |
 | React+Babel项目setup | `references/react-setup.md` |
 | 做幻灯片 | `references/slide-decks.md` + `assets/deck_stage.js` |
 | 导出可编辑 PPTX（html2pptx 4 条硬约束） | `references/editable-pptx.md` + `scripts/html2pptx.js` |
