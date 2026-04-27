@@ -23,12 +23,12 @@
 
 这些是面向 skill marketplace 的硬指标，IFQ 默认遵守：
 
-1. 30 秒内能读懂：`SKILL.md` 顶部有 Cheat Sheet、三步 loop、依赖分层。
+1. 30 秒内能读懂：`SKILL.md` 是短路由入口，保留触发边界、三步 loop、依赖分层、验证硬闸。
 2. 一行安装：`npx skills add peixl/ifq-design-skills`、`openclaw skills install peixl/ifq-design-skills` 都要清晰可复制。
 3. 零安装核心链路：只要 Node 就能 `verify:lite` + `preview`；重依赖全部 opt-in。
 4. 明确 entrypoints：`SKILL.md`、`references/modes.md`、`assets/templates/INDEX.json`。
 5. 产物可 fork：内置模板覆盖主要场景，agent 不从白纸开始。
-6. 安全声明可机读：frontmatter 包含 `capabilities` / `permissions` / `security`。
+6. 安全声明可机读：frontmatter 使用单行 JSON `metadata`，包含 `openclaw.requires`、ClawHub capability signals、security signals。
 7. 静态扫描友好：Node/Python 脚本无 `child_process`、无 `eval` / `new Function`、无运行时对外网络请求；shell 导出助手只在显式导出时调用 `ffmpeg` / `ffprobe`。
 8. 不偷偷安装：Playwright、Chromium、ffmpeg、PPTX/PDF 依赖只在用户明确要导出时出现。
 9. 网络弱环境可用：模板 local-first 字体；Google Fonts 与 CDN 都是显式 opt-in。
@@ -38,7 +38,7 @@
 
 | Marketplace | 审计来源 | IFQ 的等价闸门 |
 |---|---|---|
-| skills.sh / vercel-labs `skills-cli` | Gen Agent Trust Hub · Socket · Snyk | `npm run smoke` 14 项检查（modeRoutes、zero-spawn/eval/remote-IO、no-secret、无生成缓存、无隐藏 Unicode、模板 remote-runtime 策略） |
+| skills.sh / vercel-labs `skills-cli` | Gen Agent Trust Hub · Socket · Snyk | `npm run smoke` 14 项检查（modeRoutes、`SKILL.md <= 500`、单行 metadata JSON、zero-spawn/eval/remote-IO、no-secret、无生成缓存、无隐藏 Unicode、模板 remote-runtime 策略） |
 | ClawHub / OpenClaw | VirusTotal + 平台静态分析 + OpenClaw verdict | `npm run validate` + 人工打开 ClawHub Security Scan，确认无 suspicious banner 和无静态命中 |
 | Cursor / Claude Code 用户体感 | 安装失败率、skill 启动失败率 | Tier 0 zero-install + `npm run verify:publish` |
 
@@ -56,7 +56,7 @@ skills.sh audits 页对每个 skill 的目标是 “Safe / 0 alerts”。ClawHub
 - 不必要的转码库包装器；视频最终转码交给用户显式运行的 `ffmpeg` 命令
 - marketplace 调研快照、浏览器日志、测试截图目录（例如 `.playwright-mcp/`）
 
-2026-04-27 线上观察：ClawHub v2.3.6 页面显示 `Static analysis: 1 pattern detected`，命中 `scripts/smoke-test.mjs:22`，原因是 “File read combined with network send (possible exfiltration)”。v2.3.8 的修复方向：保留本地扫描能力，移除 smoke 脚本中的高风险 remote-send 字面特征，拦截 Python bytecode / cache 生成物，并把 `.playwright-mcp/` 排除出仓库和 secret scan。
+2026-04-27 线上观察：ClawHub v2.3.6 页面显示 `Static analysis: 1 pattern detected`，命中 `scripts/smoke-test.mjs:22`，原因是 “File read combined with network send (possible exfiltration)”。v2.3.9 的修复方向：保留本地扫描能力，移除 smoke 脚本中的高风险 remote-send 字面特征，拦截 Python bytecode / cache 生成物，并把 `.playwright-mcp/` 排除出仓库和 secret scan。
 
 ## 本地发布闸门
 

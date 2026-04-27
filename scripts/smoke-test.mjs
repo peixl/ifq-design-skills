@@ -1003,6 +1003,7 @@ async function check13_TemplateRuntimePolicy() {
 async function check14_PublishSpec() {
   console.log(`\n${BOLD}[14/14] skills.sh publish spec${RESET}`);
   const nameRegex = /^[a-z0-9]([a-z0-9-]{0,62}[a-z0-9])?$/;
+  const pkg = await readJson(path.join(ROOT, 'package.json'));
 
   // SKILL.md frontmatter
   const skillMd = path.join(ROOT, 'SKILL.md');
@@ -1013,10 +1014,42 @@ async function check14_PublishSpec() {
   const fm = m[1];
   const nameMatch = fm.match(/^name:\s*(.+)$/m);
   const descMatch = fm.match(/^description:\s*(.+)$/m);
+  const versionMatch = fm.match(/^version:\s*["']?([^"'\n]+)["']?$/m);
+  const metadataMatch = fm.match(/^metadata:\s*(\{.*\})$/m);
   const name = nameMatch ? nameMatch[1].trim() : '';
   const desc = descMatch ? descMatch[1].trim() : '';
+  const version = versionMatch ? versionMatch[1].trim() : '';
+  const lineCount = raw.split(/\r?\n/).length;
+  let metadata = null;
   if (!name || !nameRegex.test(name)) fail(`  SKILL.md name invalid: ${JSON.stringify(name)}`);
   if (!desc) fail('  SKILL.md description missing');
+  if (version !== pkg.version) fail(`  SKILL.md version ${JSON.stringify(version)} != package.json ${pkg.version}`);
+  if (lineCount > 500) fail(`  SKILL.md is ${lineCount} lines; ClawHub guidance target is <= 500`);
+  if (!metadataMatch) {
+    fail('  SKILL.md metadata must be a single-line JSON object for OpenClaw gating');
+  } else {
+    try { metadata = JSON.parse(metadataMatch[1]); }
+    catch (err) { fail(`  SKILL.md metadata JSON invalid: ${err.message}`); }
+  }
+  if (metadata) {
+    const openclaw = metadata.openclaw;
+    const clawhub = metadata.clawhub;
+    const security = metadata.security || {};
+    if (metadata.version !== pkg.version) fail(`  metadata.version ${JSON.stringify(metadata.version)} != package.json ${pkg.version}`);
+    if (!openclaw || !openclaw.requires || !Array.isArray(openclaw.requires.bins) || !openclaw.requires.bins.includes('node')) {
+      fail('  metadata.openclaw.requires.bins must include node');
+    }
+    if (!openclaw || !openclaw.requires || !Array.isArray(openclaw.requires.env) || openclaw.requires.env.length !== 0) {
+      fail('  metadata.openclaw.requires.env must be an empty array');
+    }
+    const signals = clawhub && clawhub.capability_signals;
+    for (const key of ['crypto', 'can_make_purchases', 'requires_sensitive_credentials']) {
+      if (!signals || signals[key] !== false) fail(`  metadata.clawhub.capability_signals.${key} must be false`);
+    }
+    for (const key of ['node_python_process_control', 'dynamic_eval', 'script_network', 'secrets_in_repo']) {
+      if (security[key] !== false) fail(`  metadata.security.${key} must be false`);
+    }
+  }
 
   // Well-known indices
   for (const rel of ['.well-known/agent-skills/index.json', '.well-known/skills/index.json']) {
@@ -1031,6 +1064,13 @@ async function check14_PublishSpec() {
       if (typeof e.name !== 'string' || !e.name) errs.push('name');
       else if (e.name.length > 1 && !nameRegex.test(e.name)) errs.push('name-regex');
       if (typeof e.description !== 'string' || !e.description) errs.push('description');
+      if (!e.metadata || e.metadata.version !== pkg.version) errs.push('metadata.version');
+      if (!e.metadata || !e.metadata.requires || !Array.isArray(e.metadata.requires.bins) || !e.metadata.requires.bins.includes('node')) errs.push('requires.bins.node');
+      if (!e.metadata || !e.metadata.requires || !Array.isArray(e.metadata.requires.env) || e.metadata.requires.env.length !== 0) errs.push('requires.env-empty');
+      const signals = e.metadata && e.metadata.capability_signals;
+      for (const key of ['crypto', 'can_make_purchases', 'requires_sensitive_credentials']) {
+        if (!signals || signals[key] !== false) errs.push(`capability_signals.${key}`);
+      }
       if (!Array.isArray(e.files) || e.files.length === 0) errs.push('files[]');
       else {
         if (!e.files.some((f) => typeof f === 'string' && f.toLowerCase() === 'skill.md')) errs.push('files-must-include-SKILL.md');

@@ -7,7 +7,7 @@
 > pitfalls 是「**不要这样做**」，两者正交，都要读。
 >
 > **约束声明**：本文件只收录**运动逻辑和表达风格**，**不引入任何品牌色具体色值**。
-> 色彩决策走 §1.a 核心资产协议（从品牌 spec 抽取）或「设计方向顾问」
+> 色彩决策走 `references/fact-and-asset-protocol.md` 的核心资产协议（从品牌 spec 抽取）或 `references/design-direction-advisor.md`
 > （20 种哲学各自的配色方案）。本 reference 讨论的是「**怎么动**」，不是「**什么色**」。
 
 ---
@@ -164,7 +164,7 @@ Easing.spring(t)
 Anthropic 三支片子没有一支用 `#FFFFFF` 或 `#000000` 做主底色。**带色温的中性色**
 （或暖或冷）有"纸张 / 画布 / 桌面"的物质感，削弱机器感。
 
-**具体色值决策**走 §1.a 核心资产协议（从品牌 spec 抽取）或「设计方向顾问」
+**具体色值决策**走 `references/fact-and-asset-protocol.md` 的核心资产协议（从品牌 spec 抽取）或 `references/design-direction-advisor.md`
 （20 种哲学各自的底色方案）。本 reference 不给具体色值——那是**品牌决策**，不是运动规则。
 
 ### 3.2 Easing 绝不是 linear
@@ -490,7 +490,7 @@ stage.style.transform = `
 | **本文件** | 正向运动设计语法 | 「**应该这样做**」 |
 
 **调用顺序**：
-1. 先看 SKILL.md 工作流程 Step 3 的位置四问（决定叙事角色和视觉温度）
+1. 先看 `references/delivery-workflow.md` 工作流程 Step 3 的位置四问（决定叙事角色和视觉温度）
 2. 选定方向后读本文件确定**运动语言**（配方 A/B/C）
 3. 写代码时参考 `animations.md` 和 `animation-pitfalls.md`
 4. 导出视频时走 `audio-design-rules.md` + `sfx-library.md`
@@ -503,4 +503,4 @@ stage.style.transform = `
 - Anthropic 音频拆解：同目录 `AUDIO-BEST-PRACTICES.md`
 - 3 支参考视频：`ref-{1,2,3}.mp4` + 对应 `gemini-ref-*.md` / `audio-ref-*.md`
 - **严格过滤**：本 reference 不收录任何具体品牌色值、字体名、产品名。
-  色彩/字体决策走 §1.a 核心资产协议或 20 种设计哲学。
+  色彩/字体决策走 `references/fact-and-asset-protocol.md` 的核心资产协议或 20 种设计哲学。

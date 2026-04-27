@@ -82,13 +82,13 @@ git clone https://github.com/peixl/ifq-design-skills ~/.agents/skills/ifq-design
 
 ## For AI agents (30-second onboarding)
 
-This repo is shaped for agents. The root [`AGENTS.md`](AGENTS.md) and the top of [`SKILL.md`](SKILL.md) both carry an "Agent Cheat Sheet" — whichever your runtime reads first (Claude Code · Codex · OpenCode · OpenClaw · Hermes · Cursor), the three moves are the same:
+This repo is shaped for agents. The root [`AGENTS.md`](AGENTS.md) points at [`SKILL.md`](SKILL.md), and `SKILL.md` is now the short router entrypoint — whichever your runtime reads first (Claude Code · Codex · OpenCode · OpenClaw · Hermes · Cursor), the three moves are the same:
 
-1. **Read** [SKILL.md](SKILL.md) through the cheat sheet + Fast Path (~first 150 lines). Capabilities, permissions, tier policy, three-move loop — all there.
+1. **Read** [SKILL.md](SKILL.md) through the 30-second entrypoint (~100 lines). Trigger boundaries, tier policy, routing, and verification are all there.
 2. **Route** via [references/modes.md](references/modes.md) → pick one of 12 modes → fork the template listed in [assets/templates/INDEX.json](assets/templates/INDEX.json). **Never start from blank HTML.**
 3. **Verify** (default Tier 0 · zero install): `npm run verify:lite -- <file>` for the placeholder scan, then `npm run preview -- <file>` for a `file://` URL your browser tool (or the user) can open.
 
-**Declarative capability / permission / security blocks** live in `SKILL.md` frontmatter so OpenClaw and Hermes can grant scopes without parsing prose:
+**Declarative capability / permission / security data** lives in `SKILL.md` as single-line JSON `metadata`, so OpenClaw / ClawHub / Hermes can read `metadata.openclaw.requires` and security signals without parsing prose:
 
 - Reads the skill root; writes only under the user's workspace.
 - Shell allowlist: `npm run preview | verify:lite | smoke | install:export`, plus `ffmpeg` if the user asks for MP4/GIF.
@@ -349,7 +349,7 @@ It reads as IFQ not because of color, but because six layers move together.
 | Layer | Role | Key file |
 |-------|------|----------|
 | **01 · Context Engine** | Grow the design from existing context. Never from blank | [design-context.md](references/design-context.md) |
-| **02 · Asset Protocol** | Capture facts, logo, product shots, UI before pixels move | [SKILL.md](SKILL.md) · [workflow.md](references/workflow.md) |
+| **02 · Asset Protocol** | Capture facts, logo, product shots, UI before pixels move | [fact-and-asset-protocol.md](references/fact-and-asset-protocol.md) · [workflow.md](references/workflow.md) |
 | **03 · House Marks** | Weave the five ambient marks into the layout | [ifq-brand-spec.md](references/ifq-brand-spec.md) · [assets/ifq-brand/](assets/ifq-brand/) |
 | **04 · Style Recipes** | Style as recipes + scene templates. Not mystique | [design-styles.md](references/design-styles.md) · [ifq-native-recipes.md](references/ifq-native-recipes.md) |
 | **05 · Output Compiler** | One export chain: HTML → MP4 / GIF / PPTX / PDF | [scripts/](scripts/) |
@@ -357,7 +357,7 @@ It reads as IFQ not because of color, but because six layers move together.
 
 ```text
 ifq-design-skills/
-├── SKILL.md                 # main protocol: fast path · role · principles
+├── SKILL.md                 # short router: triggers · tiers · modes · safety · verification
 ├── assets/
 │   ├── ifq-brand/           # logo · sparkle · tokens · BRAND-DNA
 │   └── templates/           # forkable templates with ambient marks pre-woven

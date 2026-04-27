@@ -85,13 +85,13 @@ git clone https://github.com/peixl/ifq-design-skills ~/.agents/skills/ifq-design
 
 ## 给 AI agent（30 秒上手）
 
-本仓库根有 `AGENTS.md`，`SKILL.md` 最顶部有「🤖 Agent Cheat Sheet」，两处都是为 agent 写的。落地后任何 runtime（Claude Code / Codex / OpenCode / OpenClaw / Hermes / Cursor）的动作都一样：
+本仓库根有 `AGENTS.md`，`SKILL.md` 是短路由入口，两处都是为 agent 写的。落地后任何 runtime（Claude Code / Codex / OpenCode / OpenClaw / Hermes / Cursor）的动作都一样：
 
-1. **读** [SKILL.md](SKILL.md) 的 Cheat Sheet + Fast Path（约前 150 行）→ 能力、权限、三步环路一眼看完。
+1. **读** [SKILL.md](SKILL.md) 的 30 秒入口（约 100 行）→ 触发边界、依赖分层、路由、验证一眼看完。
 2. **路由** [references/modes.md](references/modes.md) → 选 12 模式之一 → 在 [assets/templates/INDEX.json](assets/templates/INDEX.json) 找模板 fork，**不要从白纸开始**。
 3. **验证**（默认 Tier 0 · 零安装）：`npm run verify:lite -- <file>` 扫占位符 → `npm run preview -- <file>` 拿到 `file://` URL 自己用浏览器工具打开。
 
-**能力与权限**（SKILL.md frontmatter 里有机读 `capabilities:` / `permissions:` / `security:` 块，OpenClaw / Hermes 可直接按块授权）：
+**能力与权限**（SKILL.md frontmatter 里有单行 JSON `metadata`，OpenClaw / ClawHub / Hermes 可按 `metadata.openclaw.requires` 与 security signals 授权）：
 
 - 读：skill 根目录下所有文件
 - 写：用户当前 workspace（不会写到 workspace 之外）
@@ -353,7 +353,7 @@ Ambient Brand 由五个环境级标记组成。每份交付物默认至少融合
 | 层 | 做什么 | 关键文件 |
 |----|--------|----------|
 | **01 · Context Engine** | 从上下文长设计，不从白纸瞎猜 | [design-context.md](references/design-context.md) |
-| **02 · Asset Protocol** | 动视觉前先抓事实 / logo / 产品图 / UI | [SKILL.md](SKILL.md) · [workflow.md](references/workflow.md) |
+| **02 · Asset Protocol** | 动视觉前先抓事实 / logo / 产品图 / UI | [fact-and-asset-protocol.md](references/fact-and-asset-protocol.md) · [workflow.md](references/workflow.md) |
 | **03 · House Marks** | 把 5 个 ambient 标记写进版面 | [ifq-brand-spec.md](references/ifq-brand-spec.md) · [assets/ifq-brand/](assets/ifq-brand/) |
 | **04 · Style Recipes** | 风格靠配方和 scene template 组织 | [design-styles.md](references/design-styles.md) · [ifq-native-recipes.md](references/ifq-native-recipes.md) |
 | **05 · Output Compiler** | HTML → MP4 / GIF / PPTX / PDF 一条导出链 | [scripts/](scripts/) |
@@ -361,7 +361,7 @@ Ambient Brand 由五个环境级标记组成。每份交付物默认至少融合
 
 ```text
 ifq-design-skills/
-├── SKILL.md                 # 主协议：fast path · 角色 · 原则
+├── SKILL.md                 # 短路由：触发 · 依赖 · 模式 · 安全 · 验证
 ├── assets/
 │   ├── ifq-brand/           # logo · sparkle · tokens · BRAND-DNA
 │   └── templates/           # 已内嵌 ambient marks 的可 fork 模板

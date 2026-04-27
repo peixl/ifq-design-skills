@@ -375,6 +375,6 @@ bash convert-formats.sh input.mp4 --minterpolate
 - [ ] 结尾 Sprite 的 `fadeOut` 设为 0（视频末尾停清晰帧）？
 - [ ] 60fps MP4 默认用帧复制模式（兼容性），高质量插帧才加 `--minterpolate`？
 - [ ] 导出后抽第 0 帧 + 末帧验证是动画初始/最终状态？
-- [ ] 涉及具体品牌（Stripe/Anthropic/Lovart/...）：走完了「品牌资产协议」（SKILL.md §1.a 五步）？有没有写 `brand-spec.md`？
+- [ ] 涉及具体品牌（Stripe/Anthropic/Lovart/...）：走完了 `references/fact-and-asset-protocol.md` 的核心资产协议？有没有写 `brand-spec.md`？
 - [ ] 单文件交付的 HTML：`animations.jsx` 是内联的，不是 `src="..."`？（file:// 下 external .jsx 会 CORS 黑屏）
 - [ ] 跨 scene 出现的元素（chapter 标签/水印/scene 编号）没有硬编码颜色？在每个 scene 底色下都可见？

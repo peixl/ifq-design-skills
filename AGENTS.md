@@ -6,7 +6,7 @@
 
 When you land in this repo with a design-ish user request:
 
-1. **Read** [`SKILL.md`](SKILL.md) top to the end of the "🤖 Agent Cheat Sheet" block (≈ first 120 lines). That alone tells you capabilities, permissions, tier policy, and the three-move loop.
+1. **Read** [`SKILL.md`](SKILL.md) as the short root router (≈ first 120 lines). That alone tells you trigger boundaries, capabilities, permissions, tier policy, and the three-move loop.
 2. **Route** via [`references/modes.md`](references/modes.md) → pick one of the 12 modes → read [`assets/templates/INDEX.json`](assets/templates/INDEX.json) → fork the template into the user's working directory. **Never start from a blank HTML.**
 3. **Verify lite** with `npm run verify:lite -- <file>` then `npm run preview -- <file>` (both zero-install · Tier 0).
 4. Only escalate to Tier 1 (`python scripts/verify.py`) or Tier 2 (`npm run install:export` + ffmpeg) when the user explicitly asks for headless screenshots, MP4/GIF, PDF, or PPTX.
@@ -52,7 +52,7 @@ Never push these on the user if they only asked for HTML. `playwright` lives und
 - No outbound network calls from any script at runtime.
 - Built-in templates use local-first fonts and do not load Google Fonts unless the user explicitly opts in.
 - The skill never writes outside the user's workspace; it never installs anything silently.
-- Full capability / permission declaration lives in `SKILL.md` frontmatter (`capabilities:`, `permissions:`, `security:` blocks) — permission-aware runtimes (OpenClaw, Hermes) can grant scopes from there.
+- Full capability / permission declaration lives in `SKILL.md` frontmatter as single-line JSON `metadata` (`metadata.openclaw.requires`, capability signals, and security signals) — permission-aware runtimes (OpenClaw, Hermes) can grant scopes from there.
 
 ## Agent runtime pointers
 
@@ -64,7 +64,7 @@ Never push these on the user if they only asked for HTML. `playwright` lives und
 | **OpenClaw** | register under `plugins.allow` in `openclaw.json`, restart gateway. |
 | **Hermes** | `hermes skills install github:peixl/ifq-design-skills`. |
 | **Cursor** | pin `@ifq-design-skills/SKILL.md` at start of chat. |
-| **CodeBuddy (Tencent)** | reads this `AGENTS.md` from the workspace; pin `@SKILL.md` in chat to load the full protocol. |
+| **CodeBuddy (Tencent)** | reads this `AGENTS.md` from the workspace; pin `@SKILL.md` in chat to load the root router, then follow its reference map. |
 
 Full install matrix with per-agent tool mapping: [`references/agent-compatibility.md`](references/agent-compatibility.md).
 

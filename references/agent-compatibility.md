@@ -102,7 +102,7 @@ hermes skills install clawhub:peixl/ifq-design-skills
 Hermes loads this skill in three levels, matching the agentskills.io standard:
 
 - **Level 0** — `skills_list()` returns `{name, description, category}` (~3 k tokens total)
-- **Level 1** — `skill_view("ifq-design-skills")` returns the full `SKILL.md`
+- **Level 1** — `skill_view("ifq-design-skills")` returns the short root `SKILL.md` router, then task-specific references are loaded on demand
 - **Level 2** — `skill_view("ifq-design-skills", "references/modes.md")` pulls one reference on demand
 
 ### Tool mapping

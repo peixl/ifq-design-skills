@@ -2,7 +2,7 @@
 
 > 超越 Junior Designer / 设计方向顾问的**扩展模式**。每一种模式都是一条"开箱即用"的流水线，根据用户的请求自动路由。
 >
-> 模式路由规则见 SKILL.md `## 模式路由`。本文件是每种模式的操作手册。
+> 模式路由规则见根 `SKILL.md` 的 Routing Contract，以及 `assets/templates/INDEX.json` 的 `modeRoutes`。本文件是每种模式的操作手册。
 
 ---
 
@@ -30,8 +30,8 @@
 **触发**：用户提到具体产品（实体/数字）要做"发布会"、"launch film"、"产品宣传片"、"产品物料"。
 
 **前置硬门**：
-1. 必先走 SKILL.md `#0 事实验证先于假设` — 产品必须已确认存在、版本、规格
-2. 必先走 SKILL.md `#1.a 核心资产协议` — logo / 产品渲染图 / UI 截图必须到位
+1. 必先走 `references/fact-and-asset-protocol.md` 的事实验证 — 产品必须已确认存在、版本、规格
+2. 必先走 `references/fact-and-asset-protocol.md` 的核心资产协议 — logo / 产品渲染图 / UI 截图必须到位
 3. 素材未到 8/10 → **停下问用户**，不凑合
 
 **交付件清单**（并行产出）：
@@ -103,7 +103,7 @@ Stage 时长：
 
 **触发**：「Dashboard」「看板」「KPI 面板」「monitoring UI」。
 
-**硬要求**（来自 SKILL.md 信息密度·高密度型）：
+**硬要求**（来自 `references/app-prototype-rules.md` 的信息密度·高密度型）：
 - 每屏 ≥ 3 处产品差异化信息（非装饰性数据）
 - tabular-nums，mono font 数字列对齐
 - sparklines 用真数据，不画假波形
@@ -220,14 +220,14 @@ IFQ 签名：正面一枚微缩 spark（3mm）+ 反面 `IfqLogo` 14mm 高。
 **触发**：「从零建立品牌」「brand from scratch」「给新公司做品牌」。
 
 **完整交付**：
-1. `brand-spec.md` · 按 SKILL.md 模板填充
+1. `brand-spec.md` · 按 `references/fact-and-asset-protocol.md` 模板填充
 2. `logo.svg` · 主版 + 反色版 + 方版 + 横版
 3. `palette.html` · 色板可视化（带 oklch 值 + WCAG 对比度）
 4. `type-system.html` · 字体阶梯（H1–H6 + body + mono）
 5. **6 个应用示例**：名片 / 网站 hero / App icon / 社媒头图 / 邀请函 / 产品包装
 6. 打包 zip
 
-**强流程**：必须走 SKILL.md `设计方向顾问` 先让用户选流派，不能凭空给 logo。
+**强流程**：必须走 `references/design-direction-advisor.md` 先让用户选流派，不能凭空给 logo。
 
 ---
 

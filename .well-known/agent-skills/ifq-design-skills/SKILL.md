@@ -6,7 +6,7 @@ description: Agent-native design engine. One prompt -> shippable HTML / MP4 / GI
 # IFQ Design Skills — Well-Known Stub
 
 This stub exists so hosts serving this repository as a static site expose a
-spec-compliant `.well-known/agent-skills/` endpoint. The full skill body, all
+spec-compliant `.well-known/agent-skills/` endpoint. The short root router,
 templates, references, and scripts live in the root of the repository at
 <https://github.com/peixl/ifq-design-skills>.
 
@@ -21,4 +21,4 @@ git clone https://github.com/peixl/ifq-design-skills ~/.agents/skills/ifq-design
 ```
 
 After installing, read the root [SKILL.md](https://github.com/peixl/ifq-design-skills/blob/main/SKILL.md)
-for the full protocol.
+for routing, then load the task-specific files under `references/`.

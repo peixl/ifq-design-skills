@@ -19,15 +19,51 @@ if (!frontmatter) {
   const nameMatch = frontmatter.match(/^name:\s*(.+)$/m);
   const descMatch = frontmatter.match(/^description:\s*(.+)$/m);
   const versionMatch = frontmatter.match(/^version:\s*["']?([^"'\n]+)["']?$/m);
+  const metadataMatch = frontmatter.match(/^metadata:\s*(\{.*\})$/m);
   const name = nameMatch ? nameMatch[1].trim() : null;
   const desc = descMatch ? descMatch[1].trim() : null;
   const version = versionMatch ? versionMatch[1].trim() : null;
+  const lineCount = content.split(/\r?\n/).length;
+  let metadata = null;
   console.log('SKILL.md name:', JSON.stringify(name), nameRegex.test(name || '') ? 'OK' : 'FAIL');
   console.log('SKILL.md description length:', desc ? desc.length : 0, (desc && desc.length > 0) ? 'OK' : 'FAIL');
   console.log('SKILL.md version:', JSON.stringify(version), version === pkg.version ? 'OK' : 'FAIL expected ' + pkg.version);
+  console.log('SKILL.md line count:', lineCount, lineCount <= 500 ? 'OK' : 'FAIL expected <= 500');
   if (!name || !nameRegex.test(name)) failed++;
   if (!desc) failed++;
   if (version !== pkg.version) failed++;
+  if (lineCount > 500) failed++;
+  if (!metadataMatch) {
+    console.log('SKILL.md metadata:', 'FAIL expected single-line JSON');
+    failed++;
+  } else {
+    try {
+      metadata = JSON.parse(metadataMatch[1]);
+      console.log('SKILL.md metadata JSON:', 'OK');
+    } catch (e) {
+      console.log('SKILL.md metadata JSON:', 'FAIL ' + e.message);
+      failed++;
+    }
+  }
+  if (metadata) {
+    const openclaw = metadata.openclaw;
+    const clawhub = metadata.clawhub;
+    const security = metadata.security || {};
+    const checks = [];
+    checks.push(['metadata.version', metadata.version === pkg.version]);
+    checks.push(['metadata.openclaw.requires.bins.node', !!(openclaw && openclaw.requires && Array.isArray(openclaw.requires.bins) && openclaw.requires.bins.includes('node'))]);
+    checks.push(['metadata.openclaw.requires.env.empty', !!(openclaw && openclaw.requires && Array.isArray(openclaw.requires.env) && openclaw.requires.env.length === 0)]);
+    for (const key of ['crypto', 'can_make_purchases', 'requires_sensitive_credentials']) {
+      checks.push([`metadata.clawhub.capability_signals.${key}`, !!(clawhub && clawhub.capability_signals && clawhub.capability_signals[key] === false)]);
+    }
+    for (const key of ['node_python_process_control', 'dynamic_eval', 'script_network', 'secrets_in_repo']) {
+      checks.push([`metadata.security.${key}`, security[key] === false]);
+    }
+    for (const [label, ok] of checks) {
+      console.log(label + ':', ok ? 'OK' : 'FAIL');
+      if (!ok) failed++;
+    }
+  }
 }
 
 for (const p of ['.well-known/agent-skills/index.json', '.well-known/skills/index.json']) {

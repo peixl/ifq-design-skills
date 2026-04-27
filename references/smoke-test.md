@@ -24,7 +24,7 @@ npm run smoke
 11. **IFQ 日期 resolver** — 使用 `data-ifq-*` 的 HTML 必须有自动填充逻辑
 12. **placeholder guard 行为** — 确认运行时 guard 能拦空日期 token
 13. **内置模板 remote-runtime 策略** — `assets/templates/*.html` 默认不加载远程 CSS/JS 或 Google Fonts
-14. **skills.sh 发布规范** — `SKILL.md` frontmatter、版本号与 `.well-known/*/index.json` 可发布
+14. **skills.sh / OpenClaw 发布规范** — `SKILL.md` frontmatter、版本号、单行 JSON `metadata`、`SKILL.md <= 500` 行、`.well-known/*/index.json` 可发布
 
 退出码：`0` 成功 · `1` 失败（会打印第一条失败详情）。
 

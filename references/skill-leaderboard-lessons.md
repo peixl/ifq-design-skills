@@ -9,7 +9,7 @@ skills.sh CLI、Claude Code、ClawHub 都按这个三档读：
 1. **Anthropic minimal**：只 `name` + `description`（+ 可选 `license`）。`anthropics/skills/template/SKILL.md`、`frontend-design`、`pdf`、`pptx` 走这个。
 2. **Vercel metadata**：在前面基础上加 `metadata.author` / `metadata.version` / `metadata.argument-hint`。`vercel-labs/agent-skills/web-design-guidelines`、`react-best-practices` 走这个。
 3. **Impeccable extended**：再加 `argument-hint`、`user-invocable`、`allowed-tools`。`pbakaus/impeccable` 走这个。
-4. **IFQ extended**：在 1+2+3 基础上加 `capabilities` / `permissions` / `security` / `compatibility` / `metadata.{hermes,clawhub,agentskills}` 这些 OpenClaw / Hermes 友好的字段。**新增字段不影响向后兼容性**，因为它们都是 namespaced 的可选 YAML key。
+4. **IFQ / OpenClaw extended**：保持 top-level 简短，把 OpenClaw / ClawHub / Hermes / security 数据放进单行 JSON `metadata`。这样更贴近 OpenClaw gating 解析，也避免长 YAML frontmatter 被不同 runtime 误读。
 
 IFQ 选择超集是对的，但要确保 1 + 2 的字段先满足，CLI 解析才不会 fallback 到默认。
 
@@ -26,7 +26,7 @@ IFQ 当前 description 已经覆盖到这个浓度，但要持续维护：每加
 
 - Anthropic 推荐 < 500 行。
 - 真正读得起的 skill：frontend-design ≈ 50 行、web-design-guidelines ≈ 30 行、impeccable ≈ 200 行 + references。
-- IFQ 当前 SKILL.md 比这些都长，因为它要做 12 modes 的 router。**对策不是删长**，而是把每个 mode / workflow 拆成 `references/`，让 SKILL.md 主体只承担 router 角色。每次升级评估：能不能把这一段挪到 reference？
+- IFQ 的策略：`SKILL.md` 只做 router，长协议进入 `references/`。`npm run smoke` 会阻断 `SKILL.md > 500` 行，防止入口重新膨胀。
 
 ## 四、references / scripts / assets 三仓制
 
