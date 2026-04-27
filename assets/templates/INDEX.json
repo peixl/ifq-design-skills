@@ -3,6 +3,107 @@
   "version": "2.0",
   "author": "ifq-design-skills",
   "description": "IFQ Design Skills · built-in HTML templates with ambient IFQ cues already woven into layout rhythm, metadata, local-first typography, and colophon logic. Agents should Read the template before generating, then fork-and-fill with subject matter instead of blank-starting.",
+  "modeRoutes": [
+    {
+      "mode": "M-01",
+      "templateId": "T-hero-landing",
+      "triggers": ["launch film", "发布会动画", "产品片头", "motion demo"],
+      "required_assets": ["logo", "product_image_or_key_visual", "timeline"],
+      "verify_command": "npm run verify:lite -- <file.html>",
+      "example_prompt": "24 秒硬件发布片头，冷静，像 Teenage Engineering，不要发布会预热。",
+      "fallback_note": "Use as keyposter/first-frame scaffold, then read references/animations.md and assets/animations.jsx for timeline implementation."
+    },
+    {
+      "mode": "M-02",
+      "templateId": "T-hero-landing",
+      "triggers": ["个人站", "portfolio", "about me", "personal site"],
+      "required_assets": ["name", "positioning", "current_work"],
+      "verify_command": "npm run verify:lite -- <file.html>",
+      "example_prompt": "个人站一页，但不要像找工作。"
+    },
+    {
+      "mode": "M-03",
+      "templateId": "T-infographic-vertical",
+      "triggers": ["白皮书", "report", "PDF 报告", "annual report"],
+      "required_assets": ["outline", "sections", "source_notes"],
+      "verify_command": "npm run verify:lite -- <file.html>",
+      "example_prompt": "把这份研究整理成一页可打印白皮书。"
+    },
+    {
+      "mode": "M-04",
+      "templateId": "T-dashboard",
+      "triggers": ["dashboard", "command center", "KPI", "看板"],
+      "required_assets": ["metrics", "entities", "states"],
+      "verify_command": "npm run verify:lite -- <file.html>",
+      "example_prompt": "内部 AI 做一个 command center，像 Bloomberg 终端，不要 BI 套壳。"
+    },
+    {
+      "mode": "M-05",
+      "templateId": "T-compare-vs",
+      "triggers": ["A vs B", "benchmark", "横评", "对比评测"],
+      "required_assets": ["subjects", "criteria", "evidence"],
+      "verify_command": "npm run verify:lite -- <file.html>",
+      "example_prompt": "把这两个产品做成一页对比评测。"
+    },
+    {
+      "mode": "M-06",
+      "templateId": "T-hero-landing",
+      "triggers": ["onboarding", "新手引导", "flow demo", "可交互流程"],
+      "required_assets": ["screen_list", "primary_flow", "interaction_points"],
+      "verify_command": "npm run verify:lite -- <file.html>",
+      "example_prompt": "做一个 5 屏 onboarding flow demo。",
+      "fallback_note": "Use as flow cover/overview scaffold, then read App/iOS rules and inline the appropriate device frame."
+    },
+    {
+      "mode": "M-07",
+      "templateId": "T-changelog",
+      "triggers": ["changelog", "release notes", "发布日记", "更新记录"],
+      "required_assets": ["release_items", "dates", "impact_notes"],
+      "verify_command": "npm run verify:lite -- <file.html>",
+      "example_prompt": "这周 4 个更新，做成纵向 changelog，要像活页笔记，别像公告栏。"
+    },
+    {
+      "mode": "M-08",
+      "templateId": "T-slide-title",
+      "triggers": ["keynote", "PPT", "slide deck", "演讲"],
+      "required_assets": ["talk_title", "audience", "section_outline"],
+      "verify_command": "npm run verify:lite -- <file.html>",
+      "example_prompt": "明天沙龙讲 AI agent 20 分钟，给我一份 deck，不要像 SaaS keynote。"
+    },
+    {
+      "mode": "M-09",
+      "templateId": "T-social-x",
+      "triggers": ["社媒物料", "social cover", "小红书", "X card"],
+      "required_assets": ["message", "audience", "platform_size"],
+      "verify_command": "npm run verify:lite -- <file.html>",
+      "example_prompt": "把这条发布说明做成一张 X/Twitter 分享卡。"
+    },
+    {
+      "mode": "M-10",
+      "templateId": "T-business-card",
+      "triggers": ["名片", "business card", "邀请函", "VIP card"],
+      "required_assets": ["name_or_title", "contact", "print_constraints"],
+      "verify_command": "npm run verify:lite -- <file.html>",
+      "example_prompt": "朋友独立咖啡店名片，黑白双面，不要花，要有手工感。"
+    },
+    {
+      "mode": "M-11",
+      "templateId": "T-compare-vs",
+      "triggers": ["品牌诊断", "brand audit", "品牌体检", "upgrade direction"],
+      "required_assets": ["current_brand", "competitors", "diagnosis_criteria"],
+      "verify_command": "npm run verify:lite -- <file.html>",
+      "example_prompt": "帮这个品牌做一次体检，给 3 个升级方向。",
+      "fallback_note": "Use comparison matrix as audit board; expand with references/critique-guide.md for scoring."
+    },
+    {
+      "mode": "M-12",
+      "templateId": "T-hero-landing",
+      "triggers": ["brand from scratch", "从零建立品牌", "brand system", "全栈品牌系统"],
+      "required_assets": ["positioning", "name", "applications"],
+      "verify_command": "npm run verify:lite -- <file.html>",
+      "example_prompt": "从零建立一个 AI 工具品牌系统，含落地页和社媒物料。"
+    }
+  ],
   "templates": [
     {
       "id": "T-hero-landing",

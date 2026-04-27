@@ -22,6 +22,8 @@
 [![ambient brand](https://img.shields.io/badge/ambient_brand-embedded-A83518?style=flat-square&labelColor=111111)](references/ifq-brand-spec.md)
 [![proof first](https://img.shields.io/badge/proof--first-on-111111?style=flat-square)](references/verification.md)
 [![modes](https://img.shields.io/badge/modes-12-D4532B?style=flat-square&labelColor=111111)](references/modes.md)
+[![marketplace ready](https://img.shields.io/badge/marketplace-ready-111111?style=flat-square)](references/marketplace-quality.md)
+[![zero install core](https://img.shields.io/badge/core-zero_install-D4532B?style=flat-square&labelColor=111111)](references/smoke-test.md)
 
 <br>
 
@@ -46,12 +48,16 @@ The ifq.ai signature lives inside that craft. First you see the content. **Only 
 ## Install
 
 ```bash
-npx skills add peixl/ifq-design-skills -g -y
+npx skills add peixl/ifq-design-skills
 ```
 
 > `peixl/ifq-design-skills` is the GitHub shorthand → <https://github.com/peixl/ifq-design-skills>
 
 Then just talk to the agent. The skill routes, picks templates, and verifies itself.
+
+**Zero-install core loop:** HTML authoring + `npm run preview -- <file>` + `npm run verify:lite -- <file>` need only Node. Do not install Playwright, Chromium, Python, or ffmpeg unless the user explicitly asks for MP4 / GIF / PDF / PPTX export or automated screenshots.
+
+**Marketplace proof:** `npm run validate` runs 14 local gates: template index, references, script syntax, script safety invariants, secret hygiene, invisible Unicode controls, automatic install-script posture, default HTML network policy, and well-known metadata. Before ClawHub / VirusTotal publication, use [references/marketplace-quality.md](references/marketplace-quality.md) and submit only the public repo or report URL, not private user assets.
 
 **One-liners for every agent**:
 
@@ -59,8 +65,14 @@ Then just talk to the agent. The skill routes, picks templates, and verifies its
 # Hermes (Nous Research)
 hermes skills install github:peixl/ifq-design-skills
 
+# OpenClaw / ClawHub
+openclaw skills install peixl/ifq-design-skills
+
 # Claude Code (personal)
 git clone https://github.com/peixl/ifq-design-skills ~/.claude/skills/ifq-design-skills
+
+# Codex CLI / OpenCode / any AGENTS.md-aware runtime
+git clone https://github.com/peixl/ifq-design-skills
 
 # Share across every agent (recommended)
 git clone https://github.com/peixl/ifq-design-skills ~/.agents/skills/ifq-design-skills
@@ -81,7 +93,7 @@ This repo is shaped for agents. The root [`AGENTS.md`](AGENTS.md) and the top of
 - Reads the skill root; writes only under the user's workspace.
 - Shell allowlist: `npm run preview | verify:lite | smoke | install:export`, plus `ffmpeg` if the user asks for MP4/GIF.
 - Network: `WebSearch` (for the #0 fact-verification rule). Produced HTML is local-first by default and does not load Google Fonts; Google Fonts / unpkg / jsDelivr are explicit opt-ins only when a task needs them.
-- **`scripts/` is 100% `child_process`-free, `eval`-free, and makes zero outbound network calls.** Built-in templates load no remote runtime CSS/JS by default, keeping static security scanners (ClawHub etc.) cleaner.
+- **Node/Python scripts are `child_process`-free, `eval`-free, and make zero outbound network calls.** The few shell export helpers call `ffmpeg` / `ffprobe` only when the user explicitly asks for MP4/GIF/audio export. Built-in templates load no remote runtime CSS/JS by default, keeping static security scanners (ClawHub etc.) cleaner.
 
 Stay in Tier 0 unless the user actually asks for an export. Only then run `npm run install:export` (Tier 2, pulls Playwright + Chromium + friends) or `pip install playwright` (Tier 1, for headless multi-viewport screenshots).
 

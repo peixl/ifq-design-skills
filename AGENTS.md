@@ -47,7 +47,7 @@ Never push these on the user if they only asked for HTML. `playwright` lives und
 
 ## Safety posture (scanner-clean)
 
-- Zero `child_process` / `spawn` / `exec` in any `scripts/**` file.
+- Zero Node/Python `child_process` / `spawn` / `exec` APIs in `scripts/**`; shell export helpers may call `ffmpeg` / `ffprobe` only when explicitly invoked for export.
 - Zero `eval` / `new Function` anywhere.
 - No outbound network calls from any script at runtime.
 - Built-in templates use local-first fonts and do not load Google Fonts unless the user explicitly opts in.
@@ -97,4 +97,3 @@ From SKILL.md core principle #0: **Before making any factual claim about a speci
 ---
 
 `compiled by ifq.ai · 2026`
-

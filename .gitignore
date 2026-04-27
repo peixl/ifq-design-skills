@@ -36,6 +36,8 @@ authorized_keys
 
 # Node / editor / OS
 node_modules/
+__pycache__/
+*.py[cod]
 *.swp
 .idea/
 .vscode/

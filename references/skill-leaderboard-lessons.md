@@ -26,7 +26,7 @@ IFQ 当前 description 已经覆盖到这个浓度，但要持续维护：每加
 
 - Anthropic 推荐 < 500 行。
 - 真正读得起的 skill：frontend-design ≈ 50 行、web-design-guidelines ≈ 30 行、impeccable ≈ 200 行 + references。
-- IFQ 当前 SKILL.md 比这些都长，因为它要做 13 modes 的 router。**对策不是删长**，而是把每个 mode / workflow 拆成 `references/`，让 SKILL.md 主体只承担 router 角色。每次升级评估：能不能把这一段挪到 reference？
+- IFQ 当前 SKILL.md 比这些都长，因为它要做 12 modes 的 router。**对策不是删长**，而是把每个 mode / workflow 拆成 `references/`，让 SKILL.md 主体只承担 router 角色。每次升级评估：能不能把这一段挪到 reference？
 
 ## 四、references / scripts / assets 三仓制
 
@@ -41,14 +41,14 @@ skill-name/
 IFQ 已经全部到位。继续约束：
 
 - references 里若 > 300 行，加目录块。
-- scripts 不允许 `child_process` / `eval` / outbound network — 跟 skills.sh 的 Socket / Snyk 静态扫描完全对齐。
+- Node/Python scripts 不允许 `child_process` / `eval` / outbound remote IO；shell 导出助手只在显式导出时调用 `ffmpeg` / `ffprobe`。
 - assets 不放二进制大文件；字体走用户 self-host。
 
 ## 五、Audit pipeline 对齐
 
 | 平台 | 审计来源 | IFQ 通过路径 |
 |---|---|---|
-| skills.sh | Gen Agent Trust Hub · Socket · Snyk | `npm run validate` 覆盖 zero-spawn / zero-eval / zero-network / no-secret 的等价静态闸门 |
+| skills.sh | Gen Agent Trust Hub · Socket · Snyk | `npm run validate` 覆盖 zero-spawn / zero-eval / zero-remote-IO / no-secret / no-hidden-Unicode / no-generated-cache 的等价静态闸门 |
 | ClawHub | VirusTotal + 平台静态分析 + OpenClaw verdict | 公开 GitHub URL + `optionalDependencies` 隔离 + 不打包 minified bundle，让扫描器看到原文件 |
 | Cursor / Claude Code 用户体感 | 安装失败率 + skill 启动失败率 | `verify:publish` + Tier 0 zero-install 已经覆盖 |
 
@@ -68,17 +68,17 @@ skills.sh 的标准命令是 `npx skills add <owner/repo>`。IFQ 必须保留这
 - **官方一行**：`npx skills add peixl/ifq-design-skills`
 - **Claude Code**：`git clone ... ~/.claude/skills/ifq-design-skills`
 - **OpenCode / Codex CLI**：仓库根 `AGENTS.md` 自动被发现
-- **OpenClaw / Hermes**：用 `.well-known/agent-skills/index.json`
+- **OpenClaw / Hermes**：用 `.well-known/agent-skills/index.json` 暴露 `openclaw` / `hermes` install 命令
 
 ## 七、2026-04-27 leaderboard 样本
 
-MCP Chrome 实测三处目录，取排名/下载/审计可见信息，不从记忆推断。
+2026-04-27 live 调研三处目录，取页面/API 可见信息，不从记忆推断；ClawHub 主列表为客户端动态加载，排行用可验证 API 样本记录。
 
 | 来源 | Top 样本 | IFQ 吸收点 |
 |---|---|---|
-| skills.sh all-time / audits | find-skills · vercel-react-best-practices · frontend-design · soultrace · web-design-guidelines · remotion-best-practices · microsoft-foundry · azure-ai · azure-deploy · azure-prepare | 安装命令、Summary、完整 SKILL.md、安全审计都在首屏；顶级 skill 的 README 不绕 |
-| ClawHub downloads | self-improving-agent · self-improving · ontology · Polymarket · Multi Search Engine · AdMapix · Agent Browser · PollyReach · Nano Banana Pro · Obsidian | ClawHub 头部偏 agent infrastructure；设计 skill 要靠 category/tags、短摘要、安装体验和安全状态赢信任 |
-| clawskills.sh curated | Agent Browser · gog · auto-updater · api-gateway · baidu-search · automation-workflows · free-ride · freeride · freeride-ai · elite-longterm-memory | 独立精选索引会过滤 spam、重复、低质量、高风险金融交易、malicious；IFQ 发布面必须去噪 |
+| skills.sh all-time / visible samples | find-skills · vercel-react-best-practices · frontend-design · soultrace · web-design-guidelines · remotion-best-practices · microsoft-foundry · agent-browser · skill-creator · pdf / pptx / docx | 安装命令、Summary、完整 SKILL.md、安全审计都在首屏；顶级 skill 的 README 不绕 |
+| ClawHub downloads API | self-improving-agent · Skill Vetter · Self-Improving + Proactive Agent · ontology · Github · Gog · Proactive Agent · Weather · Polymarket · Multi Search Engine | ClawHub 头部偏 agent infrastructure；设计 skill 要靠 category/tags、短摘要、安装体验和安全状态赢信任 |
+| clawskills.sh curated | cad-agent · bluente-translate（当前首页可见样本）+ 5,147 curated / 7,060 filtered-out 信号 | 独立精选索引会过滤 spam、重复、低质量、高风险金融交易、malicious；IFQ 发布面必须去噪 |
 
 ## 八、设计 / 文档 / 工作流 skill 的关键词样本
 

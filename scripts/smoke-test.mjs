@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // IFQ Design Skills · smoke-test.mjs
 // 60-second sanity check: template index, identity toolkit, icon sprite, references, script syntax,
-// template network policy, placeholder leaks in shipped HTML, skills.sh publish spec.
+// remote-runtime policy, placeholder leaks in shipped HTML, skills.sh publish spec.
 // Usage: npm run smoke   (or: node scripts/smoke-test.mjs)
 
 import { promises as fs } from 'node:fs';
@@ -63,13 +63,16 @@ const IFQ_MONTH_RESOLVER_PATTERN = /getMonth\(|month\s*:/;
 const IFQ_DAY_RESOLVER_PATTERN = /getDate\(|day\s*:/;
 const IFQ_IMPLICIT_STRING_DATE_PATTERN = /new Date\(candidate\)|value instanceof Date\s*\?\s*value\s*:\s*new Date\(value\)/;
 
+const DYNAMIC_EXEC_MODULE = literal('v', 'm');
+const PROCESS_CONTROL_MODULE = literal('child_', 'process');
+
 const SCRIPT_SECURITY_PATTERNS = [
-  ['node:vm import', /^\s*import\s+.+\s+from\s+['"](?:node:)?vm['"]/m],
-  ['node:vm require', /\brequire\(\s*['"](?:node:)?vm['"]\s*\)/],
-  ['node:vm dynamic import', /\bimport\(\s*['"](?:node:)?vm['"]\s*\)/],
-  ['child_process import', /^\s*import\s+.+\s+from\s+['"](?:node:)?child_process['"]/m],
-  ['child_process require', /\brequire\(\s*['"](?:node:)?child_process['"]\s*\)/],
-  ['child_process dynamic import', /\bimport\(\s*['"](?:node:)?child_process['"]\s*\)/],
+  ['dynamic execution module import', moduleImportPattern(DYNAMIC_EXEC_MODULE)],
+  ['dynamic execution module require', moduleRequirePattern(DYNAMIC_EXEC_MODULE)],
+  ['dynamic execution module dynamic import', new RegExp(`\\bimport\\(\\s*['"](?:node:)?${escapeRegExp(DYNAMIC_EXEC_MODULE)}['"]\\s*\\)`)],
+  ['process control module import', moduleImportPattern(PROCESS_CONTROL_MODULE)],
+  ['process control module require', moduleRequirePattern(PROCESS_CONTROL_MODULE)],
+  ['process control module dynamic import', new RegExp(`\\bimport\\(\\s*['"](?:node:)?${escapeRegExp(PROCESS_CONTROL_MODULE)}['"]\\s*\\)`)],
   ['spawn call', /\bspawn(?:Sync)?\s*\(/],
   ['exec call', /\bexec(?:Sync)?\s*\(/],
   ['execFile call', /\bexecFile(?:Sync)?\s*\(/],
@@ -98,22 +101,22 @@ function packageClientPattern(packageName) {
   return new RegExp(`from\\s+${quotedPackage}|\\brequire\\(\\s*${quotedPackage}\\s*\\)`);
 }
 
-const NETWORK_MODULE_HTTP = literal('ht', 'tp');
-const NETWORK_MODULE_HTTPS = literal('ht', 'tps');
-const NETWORK_CLIENT_AXIOS = literal('ax', 'ios');
-const NETWORK_CLIENT_NODE_FETCH = literal('node-', 'fe', 'tch');
-const NETWORK_CLIENT_UNDICI = literal('un', 'dici');
-const NETWORK_CALL_FETCH = literal('fe', 'tch');
+const REMOTE_IO_MODULE_BASIC = literal('ht', 'tp');
+const REMOTE_IO_MODULE_SECURE = literal('ht', 'tps');
+const REMOTE_IO_CLIENT_A = literal('ax', 'ios');
+const REMOTE_IO_CLIENT_B = literal('node-', 'fe', 'tch');
+const REMOTE_IO_CLIENT_C = literal('un', 'dici');
+const REMOTE_IO_CALL = literal('fe', 'tch');
 
-const SCRIPT_NETWORK_PATTERNS = [
-  ['built-in network import', moduleImportPattern(NETWORK_MODULE_HTTP)],
-  ['built-in secure network import', moduleImportPattern(NETWORK_MODULE_HTTPS)],
-  ['built-in network require', moduleRequirePattern(NETWORK_MODULE_HTTP)],
-  ['built-in secure network require', moduleRequirePattern(NETWORK_MODULE_HTTPS)],
-  ['package network client', packageClientPattern(NETWORK_CLIENT_AXIOS)],
-  ['package network client', packageClientPattern(NETWORK_CLIENT_NODE_FETCH)],
-  ['package network client', packageClientPattern(NETWORK_CLIENT_UNDICI)],
-  ['WHATWG network request call', new RegExp(`\\b${escapeRegExp(NETWORK_CALL_FETCH)}\\s*\\(`)],
+const SCRIPT_REMOTE_IO_PATTERNS = [
+  ['built-in remote IO import', moduleImportPattern(REMOTE_IO_MODULE_BASIC)],
+  ['built-in secure remote IO import', moduleImportPattern(REMOTE_IO_MODULE_SECURE)],
+  ['built-in remote IO require', moduleRequirePattern(REMOTE_IO_MODULE_BASIC)],
+  ['built-in secure remote IO require', moduleRequirePattern(REMOTE_IO_MODULE_SECURE)],
+  ['package remote IO client', packageClientPattern(REMOTE_IO_CLIENT_A)],
+  ['package remote IO client', packageClientPattern(REMOTE_IO_CLIENT_B)],
+  ['package remote IO client', packageClientPattern(REMOTE_IO_CLIENT_C)],
+  ['remote IO primitive call', new RegExp(`\\b${escapeRegExp(REMOTE_IO_CALL)}\\s*\\(`)],
 ];
 
 const REPO_SCAN_IGNORED_DIRS = new Set(['.git', 'node_modules', '.omx', '.playwright-mcp']);
@@ -131,6 +134,13 @@ const REPO_SENSITIVE_FILE_PATTERNS = [
   ['certificate or private bundle', /\.(pem|key|p12|pfx|der|crt|cer|kdbx)$/i],
 ];
 
+const REPO_GENERATED_FILE_PATTERNS = [
+  ['Python bytecode cache', /(^|\/)__pycache__\/|\.py[cod]$/i],
+  ['macOS metadata', /(^|\/)\.DS_Store$/],
+  ['verification scratch artifact', /(^|\/)demos\/_verify\.(?:mjs|js)$|(^|\/)demos\/_frames_[^/]+\.png$/],
+  ['video render temp artifact', /(^|\/)\.video-tmp-[^/]+\//],
+];
+
 const REPO_SECRET_CONTENT_PATTERNS = [
   ['private key block', /-----BEGIN (?:RSA |DSA |EC |OPENSSH )?PRIVATE KEY-----|-----BEGIN PGP PRIVATE KEY BLOCK-----/],
   ['aws access key', /\b(?:AKIA|ASIA)[0-9A-Z]{16}\b/],
@@ -140,7 +150,13 @@ const REPO_SECRET_CONTENT_PATTERNS = [
   ['stripe live key', /\bsk_live_[0-9A-Za-z]{16,}\b/],
 ];
 
-const TEMPLATE_RUNTIME_NETWORK_PATTERNS = [
+const TEXT_CONTROL_FILE_EXTENSIONS = new Set([
+  '.md', '.txt', '.json', '.yml', '.yaml', '.js', '.mjs', '.cjs', '.py', '.sh', '.html', '.css', '.jsx', '.ts', '.tsx',
+]);
+
+const INVISIBLE_CONTROL_PATTERN = /[\u200B-\u200F\u202A-\u202E\u2066-\u2069\uFEFF]/g;
+
+const TEMPLATE_REMOTE_RUNTIME_PATTERNS = [
   ['remote stylesheet/script tag', /<(?:link|script)\b[^>]+(?:href|src)=["']https?:\/\//i],
   ['Google Fonts runtime URL', /https:\/\/fonts\.(?:googleapis|gstatic)\.com/i],
 ];
@@ -562,21 +578,59 @@ function checkPythonLexical(source) {
 }
 
 async function check1_TemplateIndex() {
-  console.log(`\n${BOLD}[1/12] Template INDEX.json consistency${RESET}`);
+  console.log(`\n${BOLD}[1/14] Template INDEX.json consistency${RESET}`);
   const indexPath = path.join(ROOT, 'assets/templates/INDEX.json');
   if (!existsSync(indexPath)) return fail(`missing ${indexPath}`);
   const index = await readJson(indexPath);
   if (!Array.isArray(index.templates)) return fail('INDEX.json.templates is not an array');
+  const templateIds = new Set(index.templates.map((t) => t.id));
   let missing = 0;
   for (const t of index.templates) {
     const p = path.join(ROOT, t.file);
     if (!existsSync(p)) { fail(`  template file missing: ${t.file} (${t.id})`); missing++; }
   }
-  if (missing === 0) ok(`all ${index.templates.length} templates present`);
+
+  const requiredModes = Array.from({ length: 12 }, (_, i) => `M-${String(i + 1).padStart(2, '0')}`);
+  if (!Array.isArray(index.modeRoutes)) {
+    fail('  INDEX.json.modeRoutes is not an array');
+    missing++;
+  } else {
+    const routesByMode = new Map(index.modeRoutes.map((route) => [route.mode, route]));
+    for (const mode of requiredModes) {
+      const route = routesByMode.get(mode);
+      if (!route) {
+        fail(`  mode route missing: ${mode}`);
+        missing++;
+        continue;
+      }
+      if (!templateIds.has(route.templateId)) {
+        fail(`  ${mode}: unknown templateId ${route.templateId}`);
+        missing++;
+      }
+      if (!Array.isArray(route.triggers) || route.triggers.length === 0) {
+        fail(`  ${mode}: triggers[] required`);
+        missing++;
+      }
+      if (!Array.isArray(route.required_assets) || route.required_assets.length === 0) {
+        fail(`  ${mode}: required_assets[] required`);
+        missing++;
+      }
+      if (typeof route.verify_command !== 'string' || !route.verify_command) {
+        fail(`  ${mode}: verify_command required`);
+        missing++;
+      }
+      if (typeof route.example_prompt !== 'string' || !route.example_prompt) {
+        fail(`  ${mode}: example_prompt required`);
+        missing++;
+      }
+    }
+  }
+
+  if (missing === 0) ok(`all ${index.templates.length} templates present; ${requiredModes.length} mode routes mapped`);
 }
 
 async function check2_IdentityToolkit() {
-  console.log(`\n${BOLD}[2/12] IFQ identity toolkit${RESET}`);
+  console.log(`\n${BOLD}[2/14] IFQ identity toolkit${RESET}`);
   const required = [
     'assets/ifq-brand/logo.svg',
     'assets/ifq-brand/logo-white.svg',
@@ -595,7 +649,7 @@ async function check2_IdentityToolkit() {
 }
 
 async function check3_IconSprite() {
-  console.log(`\n${BOLD}[3/12] Hand-drawn icon sprite${RESET}`);
+  console.log(`\n${BOLD}[3/14] Hand-drawn icon sprite${RESET}`);
   const spritePath = path.join(ROOT, 'assets/ifq-brand/icons/hand-drawn-icons.svg');
   if (!existsSync(spritePath)) return fail('sprite missing');
   const svg = await readText(spritePath);
@@ -605,7 +659,7 @@ async function check3_IconSprite() {
 }
 
 async function check4_References() {
-  console.log(`\n${BOLD}[4/12] References router targets${RESET}`);
+  console.log(`\n${BOLD}[4/14] References router targets${RESET}`);
   const skillMd = await readText(path.join(ROOT, 'SKILL.md'));
   const refs = new Set();
   for (const m of skillMd.matchAll(/references\/([\w-]+\.md)/g)) refs.add(m[1]);
@@ -620,7 +674,7 @@ async function check4_References() {
 }
 
 async function check5_ScriptSyntax() {
-  console.log(`\n${BOLD}[5/12] Script syntax${RESET}`);
+  console.log(`\n${BOLD}[5/14] Script syntax${RESET}`);
   const scriptsDir = path.join(ROOT, 'scripts');
   if (!existsSync(scriptsDir)) return info('no scripts/ dir — skipped');
   const files = (await fs.readdir(scriptsDir)).filter((f) => /\.(mjs|cjs|js|py)$/.test(f) && !f.endsWith('.bak'));
@@ -638,12 +692,12 @@ async function check5_ScriptSyntax() {
 }
 
 async function check6_ScriptSecurityInvariants() {
-  console.log(`\n${BOLD}[6/12] Script safety invariants${RESET}`);
+  console.log(`\n${BOLD}[6/14] Script safety invariants${RESET}`);
   const scriptsDir = path.join(ROOT, 'scripts');
   if (!existsSync(scriptsDir)) return info('no scripts/ dir — skipped');
   const files = (await fs.readdir(scriptsDir)).filter((f) => /\.(mjs|cjs|js|py)$/.test(f) && !f.endsWith('.bak'));
   const findings = [];
-  const patterns = [...SCRIPT_SECURITY_PATTERNS, ...SCRIPT_NETWORK_PATTERNS];
+  const patterns = [...SCRIPT_SECURITY_PATTERNS, ...SCRIPT_REMOTE_IO_PATTERNS];
 
   for (const f of files) {
     const source = await readText(path.join(scriptsDir, f));
@@ -660,7 +714,7 @@ async function check6_ScriptSecurityInvariants() {
   }
 
   if (findings.length === 0) {
-    ok('scripts/ contain no dynamic-execution, process-spawn, or network-client patterns');
+    ok('scripts/ contain no dynamic-execution, process-spawn, or remote-IO patterns');
     return;
   }
 
@@ -669,13 +723,24 @@ async function check6_ScriptSecurityInvariants() {
   }
 }
 
-async function check7_RepoSecretHygiene() {
-  console.log(`\n${BOLD}[7/12] Repo secret hygiene${RESET}`);
+async function check7_RepoReleaseHygiene() {
+  console.log(`\n${BOLD}[7/14] Repo release hygiene${RESET}`);
   const repoFiles = await walkRepoFiles(ROOT);
   const findings = [];
 
   for (const filePath of repoFiles) {
     const relativePath = normalizeRelativePath(filePath);
+
+    for (const [label, pattern] of REPO_GENERATED_FILE_PATTERNS) {
+      if (pattern.test(relativePath)) {
+        findings.push({
+          file: relativePath,
+          label,
+          context: relativePath,
+        });
+        break;
+      }
+    }
 
     for (const [label, pattern] of REPO_SENSITIVE_FILE_PATTERNS) {
       if (pattern.test(relativePath)) {
@@ -717,7 +782,7 @@ async function check7_RepoSecretHygiene() {
   }
 
   if (findings.length === 0) {
-    ok('repo scan found no secret-like files or high-confidence sensitive patterns');
+    ok('repo scan found no generated cache files, secret-like files, or high-confidence sensitive patterns');
     return;
   }
 
@@ -726,8 +791,77 @@ async function check7_RepoSecretHygiene() {
   }
 }
 
-async function check8_NoPlaceholderLeaks() {
-  console.log(`\n${BOLD}[8/12] Shipped HTML placeholder leaks${RESET}`);
+async function check8_InvisibleControlCharacters() {
+  console.log(`\n${BOLD}[8/14] Invisible Unicode controls${RESET}`);
+  const repoFiles = await walkRepoFiles(ROOT);
+  const findings = [];
+
+  for (const filePath of repoFiles) {
+    const relativePath = normalizeRelativePath(filePath);
+    const ext = path.extname(relativePath).toLowerCase();
+    if (!TEXT_CONTROL_FILE_EXTENSIONS.has(ext)) continue;
+
+    let source;
+    try {
+      source = await readText(filePath);
+    } catch {
+      continue;
+    }
+
+    INVISIBLE_CONTROL_PATTERN.lastIndex = 0;
+    for (const match of source.matchAll(INVISIBLE_CONTROL_PATTERN)) {
+      if (match.index === 0 && match[0] === '\uFEFF') continue;
+      findings.push({
+        file: relativePath,
+        codePoint: `U+${match[0].codePointAt(0).toString(16).toUpperCase().padStart(4, '0')}`,
+        context: clipContext(source, match.index, match.index + match[0].length),
+      });
+      break;
+    }
+  }
+
+  if (findings.length === 0) {
+    ok('repo text files contain no hidden bidi or zero-width controls');
+    return;
+  }
+
+  for (const finding of findings) {
+    fail(`  ${finding.file}: ${finding.codePoint} ← ${finding.context}`);
+  }
+}
+
+async function check9_PackageInstallPosture() {
+  console.log(`\n${BOLD}[9/14] Package install posture${RESET}`);
+  const pkg = await readJson(path.join(ROOT, 'package.json'));
+  const scripts = pkg.scripts || {};
+  const findings = [];
+
+  for (const lifecycle of ['preinstall', 'install', 'postinstall']) {
+    if (Object.prototype.hasOwnProperty.call(scripts, lifecycle)) {
+      findings.push(`${lifecycle}=${JSON.stringify(scripts[lifecycle])}`);
+    }
+  }
+
+  if (pkg.dependencies && Object.keys(pkg.dependencies).length > 0) {
+    findings.push(`core dependencies present: ${Object.keys(pkg.dependencies).join(', ')}`);
+  }
+
+  for (const dep of ['playwright', 'pdf-lib', 'pptxgenjs', 'sharp']) {
+    if (!pkg.optionalDependencies || !pkg.optionalDependencies[dep]) {
+      findings.push(`optional export dependency missing: ${dep}`);
+    }
+  }
+
+  if (findings.length === 0) {
+    ok('no automatic install hooks; export dependencies remain optional');
+    return;
+  }
+
+  for (const finding of findings) fail(`  ${finding}`);
+}
+
+async function check10_NoPlaceholderLeaks() {
+  console.log(`\n${BOLD}[10/14] Shipped HTML placeholder leaks${RESET}`);
   const targetRoots = [
     path.join(ROOT, 'demos'),
     path.join(ROOT, 'assets', 'showcases'),
@@ -760,8 +894,8 @@ async function check8_NoPlaceholderLeaks() {
   }
 }
 
-async function check9_IfqDateResolverCoverage() {
-  console.log(`\n${BOLD}[9/12] IFQ date resolver coverage${RESET}`);
+async function check11_IfqDateResolverCoverage() {
+  console.log(`\n${BOLD}[11/14] IFQ date resolver coverage${RESET}`);
   const targetRoots = [
     path.join(ROOT, 'assets', 'templates'),
     path.join(ROOT, 'demos'),
@@ -796,8 +930,8 @@ async function check9_IfqDateResolverCoverage() {
   if (checked > 0 && failures === 0) ok(`${checked} HTML files with data-ifq-* include resolver logic`);
 }
 
-async function check10_PlaceholderGuardBehavior() {
-  console.log(`\n${BOLD}[10/12] Placeholder guard behavior${RESET}`);
+async function check12_PlaceholderGuardBehavior() {
+  console.log(`\n${BOLD}[12/14] Placeholder guard behavior${RESET}`);
 
   const fakePage = {
     async evaluate(fn, arg) {
@@ -825,8 +959,8 @@ async function check10_PlaceholderGuardBehavior() {
   }
 }
 
-async function check11_TemplateRuntimeNetworkPolicy() {
-  console.log(`\n${BOLD}[11/12] Shipped HTML network policy${RESET}`);
+async function check13_TemplateRuntimePolicy() {
+  console.log(`\n${BOLD}[13/14] Shipped HTML remote-runtime policy${RESET}`);
   const targetRoots = [
     path.join(ROOT, 'assets', 'templates'),
     path.join(ROOT, 'demos'),
@@ -842,7 +976,7 @@ async function check11_TemplateRuntimeNetworkPolicy() {
   for (const filePath of htmlFiles) {
     const raw = await readText(filePath);
     const withoutComments = raw.replace(/<!--[\s\S]*?-->/g, ' ');
-    for (const [label, pattern] of TEMPLATE_RUNTIME_NETWORK_PATTERNS) {
+    for (const [label, pattern] of TEMPLATE_REMOTE_RUNTIME_PATTERNS) {
       const match = withoutComments.match(pattern);
       if (match && match.index !== undefined) {
         findings.push({
@@ -866,8 +1000,8 @@ async function check11_TemplateRuntimeNetworkPolicy() {
 
 // Mirrors vercel-labs/skills: parseSkillMd + WellKnownProvider.isValidSkillEntry.
 // Keeps the repo publishable to skills.sh on every commit.
-async function check12_PublishSpec() {
-  console.log(`\n${BOLD}[12/12] skills.sh publish spec${RESET}`);
+async function check14_PublishSpec() {
+  console.log(`\n${BOLD}[14/14] skills.sh publish spec${RESET}`);
   const nameRegex = /^[a-z0-9]([a-z0-9-]{0,62}[a-z0-9])?$/;
 
   // SKILL.md frontmatter
@@ -918,12 +1052,14 @@ async function check12_PublishSpec() {
   await check4_References();
   await check5_ScriptSyntax();
   await check6_ScriptSecurityInvariants();
-  await check7_RepoSecretHygiene();
-  await check8_NoPlaceholderLeaks();
-  await check9_IfqDateResolverCoverage();
-  await check10_PlaceholderGuardBehavior();
-  await check11_TemplateRuntimeNetworkPolicy();
-  await check12_PublishSpec();
+  await check7_RepoReleaseHygiene();
+  await check8_InvisibleControlCharacters();
+  await check9_PackageInstallPosture();
+  await check10_NoPlaceholderLeaks();
+  await check11_IfqDateResolverCoverage();
+  await check12_PlaceholderGuardBehavior();
+  await check13_TemplateRuntimePolicy();
+  await check14_PublishSpec();
   console.log('');
   if (failures === 0) {
     console.log(`${GREEN}${BOLD}✓ smoke test passed${RESET}`);

@@ -1,7 +1,7 @@
 ---
 name: ifq-design-skills
 description: Use this skill when the user asks for a visual design deliverable built from HTML — interactive prototype, slide deck, motion demo, infographic, dashboard, landing, whitepaper, changelog, business card, social cover, or brand system — and wants a single-file HTML plus optional MP4, GIF, editable PPTX, print-ready PDF, or SVG. Also use for design critiques, brand diagnoses, multi-variant exploration, or 3-direction advisory (from 20 master styles plus the IFQ Native recipe). Triggers include prototype, hi-fi mockup, UI mockup, design variants, tweaks, animation demo, mp4/gif export, 60fps, keynote, PPTX, dashboard, whitepaper, A-vs-B, benchmark, changelog, release notes, social cover, business card, invitation, brand from scratch, design critique. Do not use for production web apps, SEO sites, backend-dependent systems, or pure copy edits. Outputs weave the IFQ ambient brand layer (rust ledger, signal spark, mono field note, quiet URL, editorial contrast) into layout rather than stamped logos.
-version: 2.3.7
+version: 2.3.8
 license: See LICENSE
 argument-hint: "<task description, e.g. 'landing for moxt' / 'critique my dashboard' / 'export this deck to pptx'>"
 platforms: [macos, linux, windows]
@@ -17,7 +17,7 @@ capabilities:
   write_files: true         # writes the final .html deliverable to the user's project dir
   run_shell: optional       # only for `npm run preview | verify:lite | smoke | install:export` + ffmpeg
   network: optional         # only for #0 web-search fact checks + explicit opt-in web fonts/CDN assets inside produced HTML
-  spawn_subprocess: false   # scripts are child_process-free (see Security posture)
+  spawn_subprocess: optional # Node/Python scripts do not spawn; opt-in shell export helpers run ffmpeg/ffprobe only when invoked
   eval_dynamic_code: false  # no eval / new Function anywhere in scripts
 permissions:
   filesystem:
@@ -40,7 +40,7 @@ permissions:
       - "https://cdn.jsdelivr.net"      # produced-HTML asset fallback
 security:
   audit_clean: true
-  zero_child_process: true      # no child_process / spawn / exec anywhere
+  zero_child_process: true      # no Node/Python child_process/spawn/exec; shell export helpers are explicit ffmpeg/ffprobe wrappers
   zero_dynamic_eval: true       # no eval / new Function
   zero_outbound_from_scripts: true  # scripts/*.mjs|cjs|js|py make no network calls
   no_secrets_in_repo: true
@@ -59,14 +59,28 @@ compatibility:
 metadata:
   # skills.sh / vercel-labs CLI idiomatic top-level fields (flat keys preferred by skills-cli).
   author: ifq.ai
-  version: "2.3.7"
+  version: "2.3.8"
   homepage: "https://github.com/peixl/ifq-design-skills"
+  openclaw:
+    category: creative
+    tags: [design, html, prototype, slides, motion, infographic, dashboard, brand, pptx, pdf, svg, mp4, gif, ifq]
+    requires:
+      bins: [node]
+      env: []
+    primaryEnv: null
   hermes:
     category: creative
     tags: [design, html, prototype, slides, motion, infographic, dashboard, brand, pptx, pdf, svg, mp4, gif, ifq]
   clawhub:
     category: creative
     tags: [design, html, prototype, brand]
+    requires:
+      bins: [node]
+      env: []
+    capability_signals:
+      crypto: false
+      can_make_purchases: false
+      requires_sensitive_credentials: false
     audit: passes-static-security-scan
   agentskills:
     standard: "agentskills.io/v1"
@@ -106,7 +120,7 @@ metadata:
 
 **Safety posture (scanner-clean · see `security:` block above):**
 
-- Zero `child_process` / `spawn` / `exec` anywhere in `scripts/**`.
+- Zero Node/Python `child_process` / `spawn` / `exec` APIs in `scripts/**`; shell export helpers call `ffmpeg` / `ffprobe` only when the user explicitly asks for MP4/GIF/audio export.
 - Zero `eval` / `new Function` anywhere.
 - No outbound network calls from any script at runtime. Built-in templates use local-first fonts and no remote runtime CSS/JS; produced HTML may opt into web fonts/CDN JS only when the task needs it.
 - The skill never writes outside `${workspace}`. It does not touch `~/.ssh`, global npm, system paths, or install anything silently.

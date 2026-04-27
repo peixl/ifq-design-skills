@@ -10,6 +10,7 @@ function parseFrontmatter(raw) {
 const nameRegex = /^[a-z0-9]([a-z0-9-]{0,62}[a-z0-9])?$/;
 let failed = 0;
 
+const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 const content = fs.readFileSync('SKILL.md', 'utf8');
 const { frontmatter } = parseFrontmatter(content);
 if (!frontmatter) {
@@ -17,12 +18,16 @@ if (!frontmatter) {
 } else {
   const nameMatch = frontmatter.match(/^name:\s*(.+)$/m);
   const descMatch = frontmatter.match(/^description:\s*(.+)$/m);
+  const versionMatch = frontmatter.match(/^version:\s*["']?([^"'\n]+)["']?$/m);
   const name = nameMatch ? nameMatch[1].trim() : null;
   const desc = descMatch ? descMatch[1].trim() : null;
+  const version = versionMatch ? versionMatch[1].trim() : null;
   console.log('SKILL.md name:', JSON.stringify(name), nameRegex.test(name || '') ? 'OK' : 'FAIL');
   console.log('SKILL.md description length:', desc ? desc.length : 0, (desc && desc.length > 0) ? 'OK' : 'FAIL');
+  console.log('SKILL.md version:', JSON.stringify(version), version === pkg.version ? 'OK' : 'FAIL expected ' + pkg.version);
   if (!name || !nameRegex.test(name)) failed++;
   if (!desc) failed++;
+  if (version !== pkg.version) failed++;
 }
 
 for (const p of ['.well-known/agent-skills/index.json', '.well-known/skills/index.json']) {
@@ -45,6 +50,18 @@ for (const p of ['.well-known/agent-skills/index.json', '.well-known/skills/inde
       }
     }
     if (e.name && !nameRegex.test(e.name) && e.name.length > 1) errs.push('name-regex');
+    if (!e.metadata || e.metadata.version !== pkg.version) errs.push('metadata.version');
+    const requires = e.metadata && e.metadata.requires;
+    if (!requires || !Array.isArray(requires.bins) || !requires.bins.includes('node')) errs.push('requires.bins.node');
+    if (!requires || !Array.isArray(requires.env) || requires.env.length !== 0) errs.push('requires.env-empty');
+    const signals = e.metadata && e.metadata.capability_signals;
+    for (const key of ['crypto', 'can_make_purchases', 'requires_sensitive_credentials']) {
+      if (!signals || signals[key] !== false) errs.push('capability_signals.' + key);
+    }
+    const install = e.metadata && e.metadata.install;
+    for (const key of ['skills-cli', 'openclaw', 'hermes']) {
+      if (!install || typeof install[key] !== 'string' || !install[key]) errs.push('install.' + key);
+    }
     if (errs.length) { console.log('FAIL ' + e.name + ': ' + errs.join(', ')); failed++; }
     else console.log('OK ' + e.name + ' files=' + JSON.stringify(e.files));
   }

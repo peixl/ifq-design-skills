@@ -9,7 +9,7 @@
         "SKILL.md"
       ],
       "metadata": {
-        "version": "2.3.7",
+        "version": "2.3.8",
         "category": "creative",
         "tags": [
           "design",
@@ -36,9 +36,21 @@
           "repo": "peixl/ifq-design-skills",
           "branch": "main"
         },
+        "requires": {
+          "bins": ["node"],
+          "env": []
+        },
+        "capability_signals": {
+          "crypto": false,
+          "can_make_purchases": false,
+          "requires_sensitive_credentials": false
+        },
         "install": {
           "skills-cli": "npx skills add peixl/ifq-design-skills",
-          "claude-code": "git clone https://github.com/peixl/ifq-design-skills ~/.claude/skills/ifq-design-skills"
+          "openclaw": "openclaw skills install peixl/ifq-design-skills",
+          "hermes": "hermes skills install github:peixl/ifq-design-skills",
+          "claude-code": "git clone https://github.com/peixl/ifq-design-skills ~/.claude/skills/ifq-design-skills",
+          "shared-agents": "git clone https://github.com/peixl/ifq-design-skills ~/.agents/skills/ifq-design-skills"
         }
       }
     }
