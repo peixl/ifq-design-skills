@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // IFQ Design Skills · smoke-test.mjs
 // 60-second sanity check: template index, identity toolkit, icon sprite, references, script syntax,
-// placeholder leaks in shipped HTML, skills.sh publish spec.
+// template network policy, placeholder leaks in shipped HTML, skills.sh publish spec.
 // Usage: npm run smoke   (or: node scripts/smoke-test.mjs)
 
 import { promises as fs } from 'node:fs';
@@ -70,6 +70,9 @@ const SCRIPT_SECURITY_PATTERNS = [
   ['child_process import', /^\s*import\s+.+\s+from\s+['"](?:node:)?child_process['"]/m],
   ['child_process require', /\brequire\(\s*['"](?:node:)?child_process['"]\s*\)/],
   ['child_process dynamic import', /\bimport\(\s*['"](?:node:)?child_process['"]\s*\)/],
+  ['spawn call', /\bspawn(?:Sync)?\s*\(/],
+  ['exec call', /\bexec(?:Sync)?\s*\(/],
+  ['execFile call', /\bexecFile(?:Sync)?\s*\(/],
   ['eval call', /\beval\s*\(/],
   ['Function constructor', /\bnew Function\s*\(/],
 ];
@@ -107,6 +110,11 @@ const REPO_SECRET_CONTENT_PATTERNS = [
   ['slack token', /\bxox[baprs]-[A-Za-z0-9-]{10,}\b/],
   ['google api key', /\bAIza[0-9A-Za-z_-]{35}\b/],
   ['stripe live key', /\bsk_live_[0-9A-Za-z]{16,}\b/],
+];
+
+const TEMPLATE_RUNTIME_NETWORK_PATTERNS = [
+  ['remote stylesheet/script tag', /<(?:link|script)\b[^>]+(?:href|src)=["']https?:\/\//i],
+  ['Google Fonts runtime URL', /https:\/\/fonts\.(?:googleapis|gstatic)\.com/i],
 ];
 
 function findPlaceholderLeaks(text) {
@@ -526,7 +534,7 @@ function checkPythonLexical(source) {
 }
 
 async function check1_TemplateIndex() {
-  console.log(`\n${BOLD}[1/6] Template INDEX.json consistency${RESET}`);
+  console.log(`\n${BOLD}[1/12] Template INDEX.json consistency${RESET}`);
   const indexPath = path.join(ROOT, 'assets/templates/INDEX.json');
   if (!existsSync(indexPath)) return fail(`missing ${indexPath}`);
   const index = await readJson(indexPath);
@@ -540,7 +548,7 @@ async function check1_TemplateIndex() {
 }
 
 async function check2_IdentityToolkit() {
-  console.log(`\n${BOLD}[2/6] IFQ identity toolkit${RESET}`);
+  console.log(`\n${BOLD}[2/12] IFQ identity toolkit${RESET}`);
   const required = [
     'assets/ifq-brand/logo.svg',
     'assets/ifq-brand/logo-white.svg',
@@ -559,7 +567,7 @@ async function check2_IdentityToolkit() {
 }
 
 async function check3_IconSprite() {
-  console.log(`\n${BOLD}[3/6] Hand-drawn icon sprite${RESET}`);
+  console.log(`\n${BOLD}[3/12] Hand-drawn icon sprite${RESET}`);
   const spritePath = path.join(ROOT, 'assets/ifq-brand/icons/hand-drawn-icons.svg');
   if (!existsSync(spritePath)) return fail('sprite missing');
   const svg = await readText(spritePath);
@@ -569,7 +577,7 @@ async function check3_IconSprite() {
 }
 
 async function check4_References() {
-  console.log(`\n${BOLD}[4/6] References router targets${RESET}`);
+  console.log(`\n${BOLD}[4/12] References router targets${RESET}`);
   const skillMd = await readText(path.join(ROOT, 'SKILL.md'));
   const refs = new Set();
   for (const m of skillMd.matchAll(/references\/([\w-]+\.md)/g)) refs.add(m[1]);
@@ -584,7 +592,7 @@ async function check4_References() {
 }
 
 async function check5_ScriptSyntax() {
-  console.log(`\n${BOLD}[5/6] Script syntax${RESET}`);
+  console.log(`\n${BOLD}[5/12] Script syntax${RESET}`);
   const scriptsDir = path.join(ROOT, 'scripts');
   if (!existsSync(scriptsDir)) return info('no scripts/ dir — skipped');
   const files = (await fs.readdir(scriptsDir)).filter((f) => /\.(mjs|cjs|js|py)$/.test(f) && !f.endsWith('.bak'));
@@ -602,7 +610,7 @@ async function check5_ScriptSyntax() {
 }
 
 async function check6_ScriptSecurityInvariants() {
-  console.log(`\n${BOLD}[6/9] Script safety invariants${RESET}`);
+  console.log(`\n${BOLD}[6/12] Script safety invariants${RESET}`);
   const scriptsDir = path.join(ROOT, 'scripts');
   if (!existsSync(scriptsDir)) return info('no scripts/ dir — skipped');
   const files = (await fs.readdir(scriptsDir)).filter((f) => /\.(mjs|cjs|js|py)$/.test(f) && !f.endsWith('.bak'));
@@ -634,7 +642,7 @@ async function check6_ScriptSecurityInvariants() {
 }
 
 async function check7_RepoSecretHygiene() {
-  console.log(`\n${BOLD}[7/11] Repo secret hygiene${RESET}`);
+  console.log(`\n${BOLD}[7/12] Repo secret hygiene${RESET}`);
   const repoFiles = await walkRepoFiles(ROOT);
   const findings = [];
 
@@ -691,7 +699,7 @@ async function check7_RepoSecretHygiene() {
 }
 
 async function check8_NoPlaceholderLeaks() {
-  console.log(`\n${BOLD}[8/11] Shipped HTML placeholder leaks${RESET}`);
+  console.log(`\n${BOLD}[8/12] Shipped HTML placeholder leaks${RESET}`);
   const targetRoots = [
     path.join(ROOT, 'demos'),
     path.join(ROOT, 'assets', 'showcases'),
@@ -725,7 +733,7 @@ async function check8_NoPlaceholderLeaks() {
 }
 
 async function check9_IfqDateResolverCoverage() {
-  console.log(`\n${BOLD}[9/11] IFQ date resolver coverage${RESET}`);
+  console.log(`\n${BOLD}[9/12] IFQ date resolver coverage${RESET}`);
   const targetRoots = [
     path.join(ROOT, 'assets', 'templates'),
     path.join(ROOT, 'demos'),
@@ -761,7 +769,7 @@ async function check9_IfqDateResolverCoverage() {
 }
 
 async function check10_PlaceholderGuardBehavior() {
-  console.log(`\n${BOLD}[10/11] Placeholder guard behavior${RESET}`);
+  console.log(`\n${BOLD}[10/12] Placeholder guard behavior${RESET}`);
 
   const fakePage = {
     async evaluate(fn, arg) {
@@ -789,10 +797,49 @@ async function check10_PlaceholderGuardBehavior() {
   }
 }
 
+async function check11_TemplateRuntimeNetworkPolicy() {
+  console.log(`\n${BOLD}[11/12] Shipped HTML network policy${RESET}`);
+  const targetRoots = [
+    path.join(ROOT, 'assets', 'templates'),
+    path.join(ROOT, 'demos'),
+    path.join(ROOT, 'assets', 'showcases'),
+  ];
+  const htmlFiles = [];
+  for (const targetRoot of targetRoots) {
+    if (!existsSync(targetRoot)) continue;
+    htmlFiles.push(...await walkHtmlFiles(targetRoot));
+  }
+  const findings = [];
+
+  for (const filePath of htmlFiles) {
+    const raw = await readText(filePath);
+    const withoutComments = raw.replace(/<!--[\s\S]*?-->/g, ' ');
+    for (const [label, pattern] of TEMPLATE_RUNTIME_NETWORK_PATTERNS) {
+      const match = withoutComments.match(pattern);
+      if (match && match.index !== undefined) {
+        findings.push({
+          file: normalizeRelativePath(filePath),
+          label,
+          context: clipContext(withoutComments, match.index, match.index + match[0].length),
+        });
+      }
+    }
+  }
+
+  if (findings.length === 0) {
+    ok(`${htmlFiles.length} shipped HTML files are local-first and do not load remote runtime CSS/JS`);
+    return;
+  }
+
+  for (const finding of findings) {
+    fail(`  ${finding.file}: ${finding.label} ← ${finding.context}`);
+  }
+}
+
 // Mirrors vercel-labs/skills: parseSkillMd + WellKnownProvider.isValidSkillEntry.
 // Keeps the repo publishable to skills.sh on every commit.
-async function check11_PublishSpec() {
-  console.log(`\n${BOLD}[11/11] skills.sh publish spec${RESET}`);
+async function check12_PublishSpec() {
+  console.log(`\n${BOLD}[12/12] skills.sh publish spec${RESET}`);
   const nameRegex = /^[a-z0-9]([a-z0-9-]{0,62}[a-z0-9])?$/;
 
   // SKILL.md frontmatter
@@ -847,7 +894,8 @@ async function check11_PublishSpec() {
   await check8_NoPlaceholderLeaks();
   await check9_IfqDateResolverCoverage();
   await check10_PlaceholderGuardBehavior();
-  await check11_PublishSpec();
+  await check11_TemplateRuntimeNetworkPolicy();
+  await check12_PublishSpec();
   console.log('');
   if (failures === 0) {
     console.log(`${GREEN}${BOLD}✓ smoke test passed${RESET}`);

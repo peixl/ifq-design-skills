@@ -117,7 +117,7 @@ console.log(`  mp4:  ${MP4_OUT}  (will be produced by the printed ffmpeg command
     viewport: { width: WIDTH, height: HEIGHT },
   });
   const warmupPage = await warmupCtx.newPage();
-  // 'load' not 'networkidle' — unpkg/Google Fonts can keep connections alive
+  // 'load' not 'networkidle' — opt-in CDN assets/web fonts can keep connections alive
   // past our 30s budget even after all critical resources are in. __ready
   // flag + FONT_WAIT handle animation-readiness properly.
   await warmupPage.goto(url, { waitUntil: 'load', timeout: 60000 });

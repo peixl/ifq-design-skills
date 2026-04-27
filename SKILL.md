@@ -1,7 +1,7 @@
 ---
 name: ifq-design-skills
 description: Use this skill when the user asks for a visual design deliverable built from HTML — interactive prototype, slide deck, motion demo, infographic, dashboard, landing, whitepaper, changelog, business card, social cover, or brand system — and wants a single-file HTML plus optional MP4, GIF, editable PPTX, print-ready PDF, or SVG. Also use for design critiques, brand diagnoses, multi-variant exploration, or 3-direction advisory (from 20 master styles plus the IFQ Native recipe). Triggers include prototype, hi-fi mockup, UI mockup, design variants, tweaks, animation demo, mp4/gif export, 60fps, keynote, PPTX, dashboard, whitepaper, A-vs-B, benchmark, changelog, release notes, social cover, business card, invitation, brand from scratch, design critique. Do not use for production web apps, SEO sites, backend-dependent systems, or pure copy edits. Outputs weave the IFQ ambient brand layer (rust ledger, signal spark, mono field note, quiet URL, editorial contrast) into layout rather than stamped logos.
-version: 2.3.1
+version: 2.3.5
 license: See LICENSE
 platforms: [macos, linux, windows]
 entrypoints:
@@ -15,7 +15,7 @@ capabilities:
   read_files: true          # reads templates, references, assets under the skill root
   write_files: true         # writes the final .html deliverable to the user's project dir
   run_shell: optional       # only for `npm run preview | verify:lite | smoke | install:export` + ffmpeg
-  network: optional         # only for core-principle #0 web-search fact checks + Google Fonts / CDN asset fetches inside the produced HTML
+  network: optional         # only for #0 web-search fact checks + explicit opt-in web fonts/CDN assets inside produced HTML
   spawn_subprocess: false   # scripts are child_process-free (see Security posture)
   eval_dynamic_code: false  # no eval / new Function anywhere in scripts
 permissions:
@@ -32,8 +32,8 @@ permissions:
   network:
     allowlist:
       - "web_search"               # for #0 fact verification (any search provider)
-      - "https://fonts.googleapis.com"  # Google Fonts inside produced HTML
-      - "https://fonts.gstatic.com"
+      - "https://fonts.googleapis.com"  # opt-in Google Fonts only; built-in templates are local-first
+      - "https://fonts.gstatic.com"      # opt-in Google Fonts only
       - "https://unpkg.com"             # React + Babel standalone (produced HTML only)
       - "https://cdn.jsdelivr.net"      # produced-HTML asset fallback
 security:
@@ -102,8 +102,10 @@ metadata:
 
 - Zero `child_process` / `spawn` / `exec` anywhere in `scripts/**`.
 - Zero `eval` / `new Function` anywhere.
-- No outbound network calls from any script at runtime (produced HTML may load fonts/CDN JS; that's opt-in content, not skill behavior).
+- No outbound network calls from any script at runtime. Built-in templates use local-first fonts and no remote runtime CSS/JS; produced HTML may opt into web fonts/CDN JS only when the task needs it.
 - The skill never writes outside `${workspace}`. It does not touch `~/.ssh`, global npm, system paths, or install anything silently.
+
+**Font loading (China-safe by default):** built-in templates and `ifq-tokens.css` use local-first stacks (`PingFang SC` / `Microsoft YaHei` / `Source Han` / `Songti SC` / system mono). Do **not** add Google Fonts by default. If a user or brand explicitly needs web fonts and the target audience can reach them, use the opt-in recipe in [`references/font-loading.md`](references/font-loading.md) and keep the local fallback stack intact.
 
 **First-read order for any agent (universal):** Cheat Sheet (this block) → Fast Path below → `references/modes.md` → `assets/templates/INDEX.json` → only then the task-specific reference files.
 
@@ -149,7 +151,7 @@ A design engine for agents. Given a natural-language request, this skill picks o
 
 - **Required inputs**：`task_type` · `subject` · `deliverable_format`（html / mp4 / gif / pdf / pptx）· `viewport`（未给时按模式默认：deck 1920×1080 / landing 1440×900 / 小红书 1242×3200）。
 - **Optional inputs**：`user_brand_assets`（logo / 色值 / 字体 / 产品图，走「核心资产协议」，优先于凭感觉配色）· `style_direction`（未给则走 Fallback 顾问推 3 方向）· `reference`（参考图/参考站：先分析再融合，别照抄）。
-- **Default outputs**：单个自包含 HTML（React+Babel inline · 字体 Google Fonts CDN · 图从合法 CDN · 顶部内联 [`assets/ifq-brand/ifq-tokens.css`](assets/ifq-brand/ifq-tokens.css)）+ 可选 mp4 / gif / pdf / pptx + 可选 3 方向变体画布。
+- **Default outputs**：单个自包含 HTML（React+Babel inline · 字体 local-first，Google Fonts 仅显式 opt-in · 图从合法来源或用户资产 · 顶部内联 [`assets/ifq-brand/ifq-tokens.css`](assets/ifq-brand/ifq-tokens.css)）+ 可选 mp4 / gif / pdf / pptx + 可选 3 方向变体画布。
 - **IFQ Ambient System（默认开启）**：把 IFQ 写进页面结构，不是右下角贴 logo。每个交付物**至少融合 3 个 IFQ 标记**：`Signal Spark` / `Rust Ledger` / `Mono Field Note` / `Quiet URL` / `Editorial Contrast`。规范见 [`references/ifq-brand-spec.md`](references/ifq-brand-spec.md) 与 [`assets/ifq-brand/BRAND-DNA.md`](assets/ifq-brand/BRAND-DNA.md)。
 - **共品牌规则**：用户品牌为主角，但 IFQ authored layer 默认仍在场——把 IFQ 放进 colophon、motion cue、quiet URL、field-note stamp、layout rhythm，**不与用户 logo 争主位**。
 - **Style 表达**：用「风格配方 / scene template / protocol」组织，不要再靠 “DNA 神话” 来包装方法论。
@@ -371,7 +373,7 @@ A design engine for agents. Given a natural-language request, this skill picks o
 | **产品图/渲染图** | `<brand>.com/<product>` 产品详情页 hero image + gallery · 官方 YouTube launch film 截帧 · 官方新闻稿附图 |
 | **UI 截图** | App Store / Google Play 产品页截图 · 官网 screenshots section · 产品官方演示视频截帧 |
 | **色值** | 官网 inline CSS / Tailwind config / brand guidelines PDF |
-| **字体** | 官网 `<link rel="stylesheet">` 引用 · Google Fonts 追踪 · brand guidelines |
+| **字体** | 用户提供字体文件 · 官网品牌指南 · 可访问时才查看 webfont 引用 / Google Fonts 作为线索 |
 
 `WebSearch` 兜底关键词：
 - Logo 找不到 → `<brand> logo download SVG`、`<brand> press kit`
@@ -884,7 +886,7 @@ Screen 组件接 callback props（`onEnter`、`onClose`、`onTabChange`、`onOpe
 5. **Junior pass**：HTML里写assumptions+placeholders+reasoning comments。
    🛑 **检查点3：尽早show给用户（哪怕只是灰色方块+标签），等反馈再写组件**。
 6. **Full pass**：填placeholder，做variations，加Tweaks。做到一半再show一次，不要等全做完。
-7. **验证**：默认走 lite 档——`npm run verify:lite -- <file>` 扫占位符残留，再 `npm run preview -- <file>` 在系统默认浏览器里肉眼复核。动画 / 多 viewport regress 再升级到 `scripts/verify.py`（见 `references/verification.md`）。
+7. **验证**：默认走 lite 档——`npm run verify:lite -- <file>` 扫占位符残留，再 `npm run preview -- <file>` 拿到 `file://` URL，用浏览器肉眼复核。动画 / 多 viewport regress 再升级到 `scripts/verify.py`（见 `references/verification.md`）。
    🛑 **检查点4：交付前自己肉眼过一遍浏览器**。AI写的代码经常有interaction bug。
 8. **总结**：极简，只说caveats和next steps。
 9. **（默认）导出视频 · 必带 SFX + BGM**：动画 HTML 的**默认交付形态是带音频的 MP4**，不是纯画面。无声版本等于半成品——用户潜意识感知「画在动但没声音响应」，廉价感的根源就在这里。流水线：
@@ -982,6 +984,8 @@ Screen 组件接 callback props（`onEnter`、`onClose`、`onTabChange`、`onOpe
 |------|-----|
 | 开工前问问题、定方向 | `references/workflow.md` |
 | 反AI slop、内容规范、scale | `references/content-guidelines.md` |
+| 字体加载、中国可用、Google Fonts opt-in | `references/font-loading.md` |
+| ClawHub / VirusTotal 友好的发布与静态扫描 | `references/marketplace-quality.md` |
 | React+Babel项目setup | `references/react-setup.md` |
 | 做幻灯片 | `references/slide-decks.md` + `assets/deck_stage.js` |
 | 导出可编辑 PPTX（html2pptx 4 条硬约束） | `references/editable-pptx.md` + `scripts/html2pptx.js` |
@@ -1020,7 +1024,7 @@ Skill 路径引用均采用**相对本 skill 根目录**的形式（`references/
 - 避免>1000行的大文件，拆成多个JSX文件import进主文件
 - 幻灯片、动画等固定尺寸内容，**播放位置**存localStorage——刷新不丢
 - HTML放项目目录，不要散落到`~/Downloads`
-- 最终产出用**系统默认浏览器**打开检查（`npm run preview -- <file>` / `open` / `xdg-open` / `start`）；只有真正需要自动化截图或 CI regress 时才升级到 Playwright
+- 最终产出用浏览器打开检查（`npm run preview -- <file>` 打印 `file://` URL；或手动 `open` / `xdg-open` / `start`）；只有真正需要自动化截图或 CI regress 时才升级到 Playwright
 
 ## Skill 推广水印（仅动画产出）
 

@@ -73,7 +73,7 @@ AI 设计最危险的地方，不是“做不出来”，而是**很快做出一
 - Variable font做hero的粗细动画
 
 字体资源：
-- Google Fonts的冷门好选项（Instrument Serif、Cormorant、Bricolage Grotesque、JetBrains Mono）
+- 字体优先 local-first 或用户授权；Google Fonts 的冷门好选项（Instrument Serif、Cormorant、Bricolage Grotesque、JetBrains Mono）只作为可访问环境的 opt-in 线索
 - 开源字体站（Fraunces的兄弟字体、Adobe Fonts）
 - 不要凭空发明字体名
 

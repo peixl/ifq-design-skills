@@ -76,17 +76,22 @@ IFQ Native editorial intelligence style:
 
 ## 字体体系
 
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400;1,6..72,500&family=JetBrains+Mono:wght@300;400;500&family=Noto+Serif+SC:wght@300;400;500&display=swap" rel="stylesheet">
+默认走 local-first，不依赖 Google Fonts。需要 webfont 时再按 `references/font-loading.md` 显式 opt-in。
+
+```css
+:root {
+	--ifq-font-display: "Newsreader", "Noto Serif SC", "Source Han Serif SC", "Songti SC", STSong, Georgia, serif;
+	--ifq-font-body: "Noto Serif SC", "Source Han Serif SC", "Songti SC", STSong, Georgia, "Times New Roman", serif;
+	--ifq-font-mono: "JetBrains Mono", "SF Mono", "Cascadia Mono", "Microsoft YaHei Mono", ui-monospace, Menlo, Consolas, monospace;
+}
 ```
 
 | 用途 | 字体 | 权重 |
 |---|---|---|
-| 英文 display / italic slogan | `Newsreader` | 400 / 500 italic |
-| 元数据 / URL / 序号 / label | `JetBrains Mono` | 300 / 400 |
-| 中文正文 | `Noto Serif SC` | 300 / 400 |
-| 中文强调 | `Noto Serif SC` | 500（克制使用） |
+| 英文 display / italic slogan | `Newsreader` → Georgia fallback | 400 / 500 italic |
+| 元数据 / URL / 序号 / label | `JetBrains Mono` → system mono fallback | 300 / 400 |
+| 中文正文 | `Noto Serif SC` → `Source Han Serif SC` / `Songti SC` / STSong | 300 / 400 |
+| 中文强调 | 同上 | 500（克制使用） |
 
 **禁用**：Inter / Geist / SF Pro Display 这类 SaaS 默认字体作为主字体（可作极小 meta 备选，但不做 display）。
 

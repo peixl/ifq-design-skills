@@ -25,7 +25,7 @@
  * 输出特点：
  *   - 文字保留矢量（可复制、可搜索）
  *   - 视觉 1:1 保真
- *   - 字体必须能被 Chromium 加载（本地字体或 Google Fonts）
+ *   - 字体必须能被 Chromium 加载（默认本地字体；Google Fonts 仅作为显式 opt-in）
  */
 
 import { chromium } from 'playwright';
@@ -78,7 +78,7 @@ async function main() {
   const page = await ctx.newPage();
 
   await page.goto('file://' + htmlAbs, { waitUntil: 'networkidle' });
-  await page.waitForTimeout(2500);  // 等 Google Fonts + deck-stage init
+  await page.waitForTimeout(900);  // local-first fonts + deck-stage init
   await assertNoPlaceholderLeaksInPage(page, {
     label: path.basename(htmlAbs),
     allowPlaceholders,

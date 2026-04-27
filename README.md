@@ -53,7 +53,7 @@ npx skills add peixl/ifq-design-skills -g -y
 
 装完直接对 agent 说话。skill 自己判断任务、自己路由模式、自己挑模板、自己跑验证。
 
-**核心链路零依赖**：写 HTML → `npm run preview -- <file>` 在系统默认浏览器里看 → `npm run verify:lite -- <file>` 扫占位符。**不需要装 Playwright、Chromium、Python、ffmpeg**。只有当用户真的要导出 MP4 / PDF / PPTX 时，才用 `npm run install:export` 按需拉齐。
+**核心链路零依赖**：写 HTML → `npm run preview -- <file>` 打印 `file://` 预览 URL → `npm run verify:lite -- <file>` 扫占位符。**不需要装 Playwright、Chromium、Python、ffmpeg**。只有当用户真的要导出 MP4 / PDF / PPTX 时，才用 `npm run install:export` 按需拉齐。
 
 **其他 agent 一键安装**：
 
@@ -92,8 +92,8 @@ git clone https://github.com/peixl/ifq-design-skills ~/.agents/skills/ifq-design
 - 读：skill 根目录下所有文件
 - 写：用户当前 workspace（不会写到 workspace 之外）
 - 运行：仅 `npm run preview | verify:lite | smoke | install:export` + 可选 `ffmpeg`
-- 网络：#0 事实校验用 WebSearch；产出的 HTML 会走 Google Fonts / unpkg / jsDelivr
-- **scripts/ 目录零 `child_process`、零 `eval`、零对外网络请求**——静态安全扫描（ClawHub 等）直接通过
+- 网络：#0 事实校验用 WebSearch；产出的 HTML 默认 local-first 字体、不加载 Google Fonts，只有用户明确需要时才 opt-in Google Fonts / unpkg / jsDelivr
+- **scripts/ 目录零 `child_process`、零 `eval`、零对外网络请求**；内置模板默认不加载远程 CSS/JS——静态安全扫描（ClawHub 等）更干净
 
 只想要 HTML 的任务永远停在 Tier 0。只有用户明确要 MP4 / GIF / PDF / PPTX 时才 `npm run install:export` 拉 Tier 2 依赖；只有要自动化多 viewport 截图时才 `pip install playwright` 拉 Tier 1。
 
@@ -373,7 +373,7 @@ ifq-design-skills/
 **Lite 档（默认，零依赖）**：
 
 ```bash
-npm run preview -- path/to/design.html   # 在你的系统默认浏览器里打开
+npm run preview -- path/to/design.html   # 打印 file:// URL，交给浏览器工具或用户打开
 npm run verify:lite -- path/to/design.html   # 纯静态扫占位符残留（YYYY / {…} / lorem / 空 data-ifq-*）
 npm run smoke                              # 一分钟 skill 自检
 ```

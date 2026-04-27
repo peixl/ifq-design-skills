@@ -107,7 +107,7 @@
   });
   ```
 - 额外的 `requestAnimationFrame` 给浏览器一帧时间提交 layout
-- 如果用 Google Fonts CDN，`<link rel="preconnect">` 加速首次加载
+- 默认 local-first；只有明确 opt-in Google Fonts CDN 时，才用 `<link rel="preconnect">` 加速首次加载
 
 ## 7. 录制准备 —— 为视频导出预留抓手
 

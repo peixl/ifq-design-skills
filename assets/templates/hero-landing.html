@@ -10,18 +10,17 @@
 <meta name="viewport" content="width=1440"/>
 <meta name="ifq:created-at" content="{ CREATED_AT · optional ISO-8601, defaults to now }"/>
 <title>{ HEADLINE } · ifq.ai</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&family=Noto+Serif+SC:wght@700;900&display=swap" rel="stylesheet"/>
+<!-- China-safe default: no remote font request. See references/font-loading.md to opt into Google Fonts. -->
 <style>
   :root {
     --ifq-accent:#D4532B; --ifq-accent-deep:#A83518; --ifq-accent-soft:#FFB27A;
     --ifq-ink:#111; --ifq-ink-soft:#3A3532; --ifq-paper:#FAF7F2; --ifq-cream:#F1EBE0;
-    --ifq-display:'Newsreader','Noto Serif SC',Georgia,serif;
-    --ifq-mono:'JetBrains Mono',ui-monospace,monospace;
+    --ifq-display:'Newsreader','Noto Serif SC','Source Han Serif SC','Songti SC',STSong,Georgia,serif;
+    --ifq-sans:-apple-system,BlinkMacSystemFont,'SF Pro Text','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Source Han Sans SC',Arial,sans-serif;
+    --ifq-mono:'JetBrains Mono','SF Mono','Cascadia Mono','Microsoft YaHei Mono',ui-monospace,Menlo,Consolas,monospace;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { background: var(--ifq-paper); color: var(--ifq-ink); font-family: -apple-system, BlinkMacSystemFont, Inter, sans-serif; }
+  html, body { background: var(--ifq-paper); color: var(--ifq-ink); font-family: var(--ifq-sans); }
   .page { max-width: 1440px; margin: 0 auto; min-height: 900px; padding: 40px 80px 80px; position: relative; }
 
   /* Editorial vertical rule */

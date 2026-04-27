@@ -9,7 +9,7 @@
         "SKILL.md"
       ],
       "metadata": {
-        "version": "2.3.1",
+        "version": "2.3.5",
         "category": "creative",
         "tags": [
           "design",
@@ -27,7 +27,7 @@
           "gif",
           "ifq"
         ],
-        "platforms": ["macos", "linux"],
+        "platforms": ["macos", "linux", "windows"],
         "license": "See LICENSE",
         "author": "ifq.ai",
         "homepage": "https://github.com/peixl/ifq-design-skills",

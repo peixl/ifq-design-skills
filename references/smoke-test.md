@@ -15,7 +15,14 @@ npm run smoke
 2. **品牌资产齐备** — `assets/ifq-brand/logo.svg`、`logo-white.svg`、`mark.svg`、`icons/hand-drawn-icons.svg`、`ifq_brand.jsx` 全在
 3. **手绘图标 sprite 可解析** — `hand-drawn-icons.svg` 的 `<symbol id="...">` 至少 24 条
 4. **References 路由目标存在** — SKILL.md 里每个 `references/*.md` 指向都真实存在
-5. **关键脚本语法** — `scripts/verify.py`（python -c）与 `scripts/*.mjs / *.js`（node --check）全部通过
+5. **关键脚本词法** — JS / Python 轻量词法检查，不调用 `node --check` 或 `python -c`，保持 zero-spawn
+6. **脚本安全不变量** — 阻断 `child_process` / `spawn` / `exec` / `eval` / `node:vm` / 脚本网络客户端
+7. **仓库 secret hygiene** — 阻断私钥、token、`.env`、`.npmrc`、证书包、个人资产索引
+8. **HTML 占位符** — demos/showcases 不泄漏 `YYYY` / `{ placeholder }` 一类可见占位符
+9. **IFQ 日期 resolver** — 使用 `data-ifq-*` 的 HTML 必须有自动填充逻辑
+10. **placeholder guard 行为** — 确认运行时 guard 能拦空日期 token
+11. **内置模板网络策略** — `assets/templates/*.html` 默认不加载远程 CSS/JS 或 Google Fonts
+12. **skills.sh 发布规范** — `SKILL.md` frontmatter 与 `.well-known/*/index.json` 可发布
 
 退出码：`0` 成功 · `1` 失败（会打印第一条失败详情）。
 
@@ -57,7 +64,7 @@ npm run smoke
 - PPTX 在 Keynote / PowerPoint 打开文字仍可编辑
 ```
 
-预期耗时 4–8 分钟；失败通常意味着：`pptxgenjs` 或 `pdf-lib` 没装 / chromium 没装 / 字体加载失败。
+预期耗时 4–8 分钟；失败通常意味着：`pptxgenjs` 或 `pdf-lib` 没装 / chromium 没装 / 授权 webfont 未 self-host 或未显式 opt-in。
 
 ## 依赖矩阵速查
 
@@ -72,8 +79,8 @@ npm run smoke
 
 > **装一次就好**：
 > ```
-> npm install            # Node deps
-> npx playwright install chromium
+> npm install --omit=optional   # Tier 0 核心链路
+> npm run install:export        # 仅当要 PDF/PPTX/MP4/GIF 导出时再运行
 > pip install -r requirements.txt   # 仅当你要跑 verify.py
 > brew install ffmpeg    # macOS；Debian/Ubuntu 用 apt install ffmpeg
 > ```

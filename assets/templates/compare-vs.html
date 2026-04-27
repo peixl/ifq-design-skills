@@ -10,11 +10,11 @@
 <meta name="viewport" content="width=1440"/>
 <meta name="ifq:created-at" content="{ CREATED_AT · optional ISO-8601, defaults to now }"/>
 <title>{ A_NAME } vs { B_NAME } · ifq.ai</title>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&family=Noto+Serif+SC:wght@700;900&display=swap" rel="stylesheet"/>
+<!-- China-safe default: no remote font request. See references/font-loading.md to opt into Google Fonts. -->
 <style>
-  :root{--accent:#D4532B;--accent-deep:#A83518;--accent-soft:#FFB27A;--ink:#111;--ink-soft:#3A3532;--paper:#FAF7F2;--cream:#F1EBE0;--display:'Newsreader','Noto Serif SC',Georgia,serif;--mono:'JetBrains Mono',ui-monospace,monospace}
+  :root{--accent:#D4532B;--accent-deep:#A83518;--accent-soft:#FFB27A;--ink:#111;--ink-soft:#3A3532;--paper:#FAF7F2;--cream:#F1EBE0;--display:'Newsreader','Noto Serif SC','Source Han Serif SC','Songti SC',STSong,Georgia,serif;--sans:-apple-system,BlinkMacSystemFont,'SF Pro Text','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Source Han Sans SC',Arial,sans-serif;--mono:'JetBrains Mono','SF Mono','Cascadia Mono','Microsoft YaHei Mono',ui-monospace,Menlo,Consolas,monospace}
   *{box-sizing:border-box;margin:0;padding:0}
-  html,body{background:var(--paper);color:var(--ink);font-family:-apple-system,Inter,sans-serif;-webkit-font-smoothing:antialiased}
+  html,body{background:var(--paper);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
   .page{width:1440px;min-height:900px;margin:0 auto;padding:48px 72px 72px;position:relative}
 
   header{display:flex;justify-content:space-between;align-items:flex-end;padding-bottom:32px;border-bottom:2px solid var(--ink)}

@@ -4,8 +4,8 @@
  *
  * Token set for IFQ-authored editorial work. These tokens are the
  * quiet infrastructure of IFQ pages: rust ledger, warm paper, mono
- * field notes, and controlled motion. See assets/ifq-brand/BRAND-DNA.md
- * and references/ifq-brand-spec.md.
+ * field notes, controlled motion, and China-safe local-first typography.
+ * See assets/ifq-brand/BRAND-DNA.md and references/ifq-brand-spec.md.
  * ================================================================ */
 
 :root {
@@ -21,10 +21,11 @@
   --ifq-cream:        #F1EBE0;
   --ifq-hairline:     #E6DFD3;
 
-  /* §2 — Typography · three-family system */
-  --ifq-font-display: "Newsreader", "Noto Serif SC", "Songti SC", Georgia, serif;
-  --ifq-font-body:    "Noto Serif SC", "Songti SC", Georgia, "Newsreader", serif;
-  --ifq-font-mono:    "JetBrains Mono", "SF Mono", ui-monospace, Menlo, monospace;
+  /* §2 — Typography · local-first, web-font optional */
+  --ifq-font-display: "Newsreader", "Noto Serif SC", "Source Han Serif SC", "Songti SC", STSong, Georgia, serif;
+  --ifq-font-body:    "Noto Serif SC", "Source Han Serif SC", "Songti SC", STSong, Georgia, "Times New Roman", serif;
+  --ifq-font-sans:    -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", Arial, sans-serif;
+  --ifq-font-mono:    "JetBrains Mono", "SF Mono", "Cascadia Mono", "Microsoft YaHei Mono", ui-monospace, Menlo, Consolas, monospace;
 
   --ifq-text-xs:   11px;
   --ifq-text-sm:   13px;

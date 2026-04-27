@@ -11,16 +11,17 @@
 <meta name="viewport" content="width=1242"/>
 <meta name="ifq:created-at" content="{ CREATED_AT · optional ISO-8601, defaults to now }"/>
 <title>{ TITLE } · ifq.ai</title>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,700;1,400&family=Noto+Serif+SC:wght@700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<!-- China-safe default: no remote font request. See references/font-loading.md to opt into Google Fonts. -->
 <style>
   :root {
     --ifq-accent:#D4532B; --ifq-accent-deep:#A83518; --ifq-accent-soft:#FFB27A;
     --ifq-ink:#111; --ifq-ink-soft:#3A3532; --ifq-paper:#FAF7F2; --ifq-cream:#F1EBE0;
-    --display:'Newsreader','Noto Serif SC',Georgia,serif;
-    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --display:'Newsreader','Noto Serif SC','Source Han Serif SC','Songti SC',STSong,Georgia,serif;
+    --sans:-apple-system,BlinkMacSystemFont,'SF Pro Text','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Source Han Sans SC',Arial,sans-serif;
+    --mono:'JetBrains Mono','SF Mono','Cascadia Mono','Microsoft YaHei Mono',ui-monospace,Menlo,Consolas,monospace;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html,body{background:var(--ifq-paper);color:var(--ifq-ink);font-family:-apple-system,BlinkMacSystemFont,Inter,sans-serif;-webkit-font-smoothing:antialiased}
+  html,body{background:var(--ifq-paper);color:var(--ifq-ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
   .page{width:1242px;margin:0 auto;padding:96px 80px;position:relative}
   .rule{position:absolute;top:96px;bottom:96px;left:56px;width:3px;background:var(--ifq-accent)}
   .kicker{font-family:var(--mono);font-size:16px;letter-spacing:.22em;text-transform:uppercase;color:var(--ifq-accent-deep);margin-bottom:32px}

@@ -80,8 +80,8 @@ This repo is shaped for agents. The root [`AGENTS.md`](AGENTS.md) and the top of
 
 - Reads the skill root; writes only under the user's workspace.
 - Shell allowlist: `npm run preview | verify:lite | smoke | install:export`, plus `ffmpeg` if the user asks for MP4/GIF.
-- Network: `WebSearch` (for the #0 fact-verification rule) and the Google Fonts / unpkg / jsDelivr endpoints the produced HTML loads at runtime.
-- **`scripts/` is 100% `child_process`-free, `eval`-free, and makes zero outbound network calls.** Static security scanners (ClawHub etc.) pass clean.
+- Network: `WebSearch` (for the #0 fact-verification rule). Produced HTML is local-first by default and does not load Google Fonts; Google Fonts / unpkg / jsDelivr are explicit opt-ins only when a task needs them.
+- **`scripts/` is 100% `child_process`-free, `eval`-free, and makes zero outbound network calls.** Built-in templates load no remote runtime CSS/JS by default, keeping static security scanners (ClawHub etc.) cleaner.
 
 Stay in Tier 0 unless the user actually asks for an export. Only then run `npm run install:export` (Tier 2, pulls Playwright + Chromium + friends) or `pip install playwright` (Tier 1, for headless multi-viewport screenshots).
 
@@ -361,7 +361,7 @@ ifq-design-skills/
 **Lite tier (default, zero-dependency):**
 
 ```bash
-npm run preview -- path/to/design.html       # opens in your system default browser
+npm run preview -- path/to/design.html       # prints a file:// URL for your browser tool or user
 npm run verify:lite -- path/to/design.html   # pure static placeholder scan (YYYY / {…} / lorem / empty data-ifq-*)
 npm run smoke                                # one-minute skill health check
 ```

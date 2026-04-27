@@ -2,7 +2,7 @@
   "$schema": "./templates.schema.json",
   "version": "2.0",
   "author": "ifq-design-skills",
-  "description": "IFQ Design Skills · built-in HTML templates with ambient IFQ cues already woven into layout rhythm, metadata, and colophon logic. Agents should Read the template before generating, then fork-and-fill with subject matter instead of blank-starting.",
+  "description": "IFQ Design Skills · built-in HTML templates with ambient IFQ cues already woven into layout rhythm, metadata, local-first typography, and colophon logic. Agents should Read the template before generating, then fork-and-fill with subject matter instead of blank-starting.",
   "templates": [
     {
       "id": "T-hero-landing",

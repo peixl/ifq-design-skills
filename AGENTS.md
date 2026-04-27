@@ -50,6 +50,7 @@ Never push these on the user if they only asked for HTML. `playwright` lives und
 - Zero `child_process` / `spawn` / `exec` in any `scripts/**` file.
 - Zero `eval` / `new Function` anywhere.
 - No outbound network calls from any script at runtime.
+- Built-in templates use local-first fonts and do not load Google Fonts unless the user explicitly opts in.
 - The skill never writes outside the user's workspace; it never installs anything silently.
 - Full capability / permission declaration lives in `SKILL.md` frontmatter (`capabilities:`, `permissions:`, `security:` blocks) — permission-aware runtimes (OpenClaw, Hermes) can grant scopes from there.
 

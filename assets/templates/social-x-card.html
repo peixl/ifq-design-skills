@@ -10,11 +10,11 @@
 <meta name="viewport" content="width=1200"/>
 <meta name="ifq:created-at" content="{ CREATED_AT · optional ISO-8601, defaults to now }"/>
 <title>{ HEADLINE } · ifq.ai</title>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,700;1,700&family=JetBrains+Mono:wght@400;600&family=Noto+Serif+SC:wght@700;900&display=swap" rel="stylesheet"/>
+<!-- China-safe default: no remote font request. See references/font-loading.md to opt into Google Fonts. -->
 <style>
-  :root{--accent:#D4532B;--accent-deep:#A83518;--ink:#111;--paper:#FAF7F2;--cream:#F1EBE0;--display:'Newsreader','Noto Serif SC',Georgia,serif;--mono:'JetBrains Mono',ui-monospace,monospace}
+  :root{--accent:#D4532B;--accent-deep:#A83518;--ink:#111;--paper:#FAF7F2;--cream:#F1EBE0;--display:'Newsreader','Noto Serif SC','Source Han Serif SC','Songti SC',STSong,Georgia,serif;--sans:-apple-system,BlinkMacSystemFont,'SF Pro Text','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Source Han Sans SC',Arial,sans-serif;--mono:'JetBrains Mono','SF Mono','Cascadia Mono','Microsoft YaHei Mono',ui-monospace,Menlo,Consolas,monospace}
   *{box-sizing:border-box;margin:0;padding:0}
-  html,body{background:#1C1A17;color:var(--paper);font-family:-apple-system,Inter,sans-serif}
+  html,body{background:#1C1A17;color:var(--paper);font-family:var(--sans)}
   .card{width:1200px;height:675px;margin:0 auto;position:relative;overflow:hidden;background:linear-gradient(135deg,#1C1A17 0%,#2A2623 100%)}
   .card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 20%,rgba(212,83,43,.22),transparent 55%)}
   .card .rule{position:absolute;top:56px;bottom:56px;left:72px;width:3px;background:var(--accent)}

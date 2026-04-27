@@ -9,14 +9,15 @@
 <meta charset="utf-8"/>
 <meta name="ifq:created-at" content="{ CREATED_AT · optional ISO-8601, defaults to now }"/>
 <title>{ TALK TITLE } · ifq.ai keynote</title>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&family=Noto+Serif+SC:wght@700;900&display=swap" rel="stylesheet"/>
+<!-- China-safe default: no remote font request. See references/font-loading.md to opt into Google Fonts. -->
 <style>
   :root {
     --ifq-accent:#D4532B; --ifq-ink:#111; --ifq-paper:#FAF7F2; --ifq-cream:#F1EBE0;
-    --ifq-display:'Newsreader','Noto Serif SC',Georgia,serif;
-    --ifq-mono:'JetBrains Mono',monospace;
+    --ifq-display:'Newsreader','Noto Serif SC','Source Han Serif SC','Songti SC',STSong,Georgia,serif;
+    --ifq-sans:-apple-system,BlinkMacSystemFont,'SF Pro Text','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Source Han Sans SC',Arial,sans-serif;
+    --ifq-mono:'JetBrains Mono','SF Mono','Cascadia Mono','Microsoft YaHei Mono',ui-monospace,Menlo,Consolas,monospace;
   }
-  html, body { margin: 0; padding: 0; background:#222; font-family: -apple-system, Inter, sans-serif; }
+  html, body { margin: 0; padding: 0; background:#222; font-family: var(--ifq-sans); }
   .slide { width: 1920px; height: 1080px; background: var(--ifq-paper); color: var(--ifq-ink); position: relative; padding: 96px 128px; display: flex; flex-direction: column; justify-content: space-between; }
   .rule { position: absolute; top: 96px; bottom: 96px; left: 96px; width: 4px; background: var(--ifq-accent); }
 

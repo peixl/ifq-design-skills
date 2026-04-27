@@ -8,15 +8,18 @@
 <head>
 <meta charset="utf-8"/>
 <title>Command Center · ifq.ai</title>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
+<!-- China-safe default: no remote font request. See references/font-loading.md to opt into Google Fonts. -->
 <style>
   :root {
     --ifq-accent:#D4532B; --ifq-accent-soft:#FFB27A; --ifq-ink:#0F0F0F; --ifq-paper:#FAF7F2;
-    --ifq-surface:#FFFFFF; --ifq-line:rgba(17,17,17,0.08); --ifq-mono:'JetBrains Mono',monospace;
-    --ifq-display:'Newsreader',Georgia,serif; --ok:#2E7D5B; --warn:#C89B2A; --err:#B1422A;
+    --ifq-surface:#FFFFFF; --ifq-line:rgba(17,17,17,0.08);
+    --ifq-display:'Newsreader','Noto Serif SC','Source Han Serif SC','Songti SC',STSong,Georgia,serif;
+    --ifq-sans:-apple-system,BlinkMacSystemFont,'SF Pro Text','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Source Han Sans SC',Arial,sans-serif;
+    --ifq-mono:'JetBrains Mono','SF Mono','Cascadia Mono','Microsoft YaHei Mono',ui-monospace,Menlo,Consolas,monospace;
+    --ok:#2E7D5B; --warn:#C89B2A; --err:#B1422A;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--ifq-paper); color: var(--ifq-ink); font-family: -apple-system, Inter, sans-serif; font-feature-settings: 'tnum'; }
+  body { background: var(--ifq-paper); color: var(--ifq-ink); font-family: var(--ifq-sans); font-feature-settings: 'tnum'; }
   .shell { display: grid; grid-template-columns: 220px 1fr; width: 1440px; height: 900px; }
 
   /* Left nav */

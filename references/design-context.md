@@ -159,7 +159,7 @@ npx playwright screenshot https://example.com screenshot.png --viewport-size=192
 
 ### 3. 选有特点的字体配对
 
-不要用Inter/Roboto。建议组合（从Google Fonts白嫖）：
+不要用Inter/Roboto。优先用 local-first 或用户已授权字体；Google Fonts 只在目标用户可访问且用户接受外网依赖时 opt-in。建议组合：
 - Instrument Serif + Geist Sans
 - Cormorant Garamond + Inter Tight
 - Bricolage Grotesque + Söhne（付费）
