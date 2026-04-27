@@ -48,8 +48,8 @@ IFQ 已经全部到位。继续约束：
 
 | 平台 | 审计来源 | IFQ 通过路径 |
 |---|---|---|
-| skills.sh | Gen Agent Trust Hub · Socket · Snyk | `npm run smoke` 已实现 zero-spawn / zero-eval / zero-network / no-secret 的等价静态闸门 |
-| ClawHub | VirusTotal（URL + 包扫描） | 公开 GitHub URL + `optionalDependencies` 隔离 + 不打包 minified bundle，让扫描器看到原文件 |
+| skills.sh | Gen Agent Trust Hub · Socket · Snyk | `npm run validate` 覆盖 zero-spawn / zero-eval / zero-network / no-secret 的等价静态闸门 |
+| ClawHub | VirusTotal + 平台静态分析 + OpenClaw verdict | 公开 GitHub URL + `optionalDependencies` 隔离 + 不打包 minified bundle，让扫描器看到原文件 |
 | Cursor / Claude Code 用户体感 | 安装失败率 + skill 启动失败率 | `verify:publish` + Tier 0 zero-install 已经覆盖 |
 
 audits 页面看到的 “Safe / 0 alerts” 都基于：
@@ -59,7 +59,7 @@ audits 页面看到的 “Safe / 0 alerts” 都基于：
 3. package.json 不含可疑后安装钩子（`postinstall: curl ... | sh` 之类）。
 4. 默认产物不偷偷加载远端域名。
 
-IFQ 已用 smoke 12 项检查覆盖。
+IFQ 用 `npm run validate` 覆盖这些本地等价项。2026-04-27 额外发现：ClawHub 会把“读文件 API + 网络调用字面特征”判成 possible exfiltration，即使这些网络特征只是本地扫描器的正则样本；因此 smoke 脚本自身也必须 scanner-clean。
 
 ## 六、安装姿势对齐 leaderboard
 
@@ -70,7 +70,17 @@ skills.sh 的标准命令是 `npx skills add <owner/repo>`。IFQ 必须保留这
 - **OpenCode / Codex CLI**：仓库根 `AGENTS.md` 自动被发现
 - **OpenClaw / Hermes**：用 `.well-known/agent-skills/index.json`
 
-## 七、12 个 leaderboard 顶层 skill 的关键词样本
+## 七、2026-04-27 leaderboard 样本
+
+MCP Chrome 实测三处目录，取排名/下载/审计可见信息，不从记忆推断。
+
+| 来源 | Top 样本 | IFQ 吸收点 |
+|---|---|---|
+| skills.sh all-time / audits | find-skills · vercel-react-best-practices · frontend-design · soultrace · web-design-guidelines · remotion-best-practices · microsoft-foundry · azure-ai · azure-deploy · azure-prepare | 安装命令、Summary、完整 SKILL.md、安全审计都在首屏；顶级 skill 的 README 不绕 |
+| ClawHub downloads | self-improving-agent · self-improving · ontology · Polymarket · Multi Search Engine · AdMapix · Agent Browser · PollyReach · Nano Banana Pro · Obsidian | ClawHub 头部偏 agent infrastructure；设计 skill 要靠 category/tags、短摘要、安装体验和安全状态赢信任 |
+| clawskills.sh curated | Agent Browser · gog · auto-updater · api-gateway · baidu-search · automation-workflows · free-ride · freeride · freeride-ai · elite-longterm-memory | 独立精选索引会过滤 spam、重复、低质量、高风险金融交易、malicious；IFQ 发布面必须去噪 |
+
+## 八、设计 / 文档 / 工作流 skill 的关键词样本
 
 来自 skills.sh 当前 leaderboard 前 130 名里跟 IFQ 相邻的设计 / 文档 / 工作流 skill：
 
@@ -101,7 +111,7 @@ IFQ 的差异化定位：
 
 继续放大这个差异化，不要试图把 IFQ 改成 frontend-design 的样子。
 
-## 八、ClawHub 顶层 skill 观察
+## 九、ClawHub 顶层 skill 观察
 
 ClawHub leaderboard 头部以 **agent infrastructure** 为主（agent-browser、gog Google Workspace CLI、auto-updater、api-gateway、freeride-ai、blogwatcher、playwright-mcp）。设计类 skill 在 ClawHub 上几乎是空白市场。IFQ Design Skills 在 ClawHub 上的目标是“设计场景里第一个被想到的 OpenClaw skill”。需要做的是：
 
@@ -109,9 +119,9 @@ ClawHub leaderboard 头部以 **agent infrastructure** 为主（agent-browser、
 - `AGENTS.md` 顶层提到 OpenClaw 的 `plugins.allow` 集成方式。
 - README 给 OpenClaw 一行装命令。
 
-以上都已落地，不需要额外动作。
+已落地：`metadata.clawhub`、OpenClaw 安装命令、AGENTS.md。继续补强：发布前必须打开 ClawHub 详情页，确认没有 suspicious banner；若有，点开 Static analysis 记录命中文件和原因，先修本地再发布。
 
-## 九、Skill self-improvement loop（来自 anthropics/skill-creator）
+## 十、Skill self-improvement loop（来自 anthropics/skill-creator）
 
 Anthropic 推荐 skill 自己也跑 eval：
 

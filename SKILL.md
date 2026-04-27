@@ -1,7 +1,7 @@
 ---
 name: ifq-design-skills
 description: Use this skill when the user asks for a visual design deliverable built from HTML — interactive prototype, slide deck, motion demo, infographic, dashboard, landing, whitepaper, changelog, business card, social cover, or brand system — and wants a single-file HTML plus optional MP4, GIF, editable PPTX, print-ready PDF, or SVG. Also use for design critiques, brand diagnoses, multi-variant exploration, or 3-direction advisory (from 20 master styles plus the IFQ Native recipe). Triggers include prototype, hi-fi mockup, UI mockup, design variants, tweaks, animation demo, mp4/gif export, 60fps, keynote, PPTX, dashboard, whitepaper, A-vs-B, benchmark, changelog, release notes, social cover, business card, invitation, brand from scratch, design critique. Do not use for production web apps, SEO sites, backend-dependent systems, or pure copy edits. Outputs weave the IFQ ambient brand layer (rust ledger, signal spark, mono field note, quiet URL, editorial contrast) into layout rather than stamped logos.
-version: 2.3.6
+version: 2.3.7
 license: See LICENSE
 argument-hint: "<task description, e.g. 'landing for moxt' / 'critique my dashboard' / 'export this deck to pptx'>"
 platforms: [macos, linux, windows]
@@ -28,6 +28,7 @@ permissions:
       - "npm run preview"
       - "npm run verify:lite"
       - "npm run smoke"
+      - "npm run validate"
       - "npm run install:export"   # only when user asks for MP4/PDF/PPTX export
       - "ffmpeg"                   # only when user asks for MP4/GIF export
   network:
@@ -58,7 +59,7 @@ compatibility:
 metadata:
   # skills.sh / vercel-labs CLI idiomatic top-level fields (flat keys preferred by skills-cli).
   author: ifq.ai
-  version: "2.3.6"
+  version: "2.3.7"
   homepage: "https://github.com/peixl/ifq-design-skills"
   hermes:
     category: creative
@@ -1021,7 +1022,7 @@ Screen 组件接 callback props（`onEnter`、`onClose`、`onTabChange`、`onOpe
 - **没有内置的 fork-verifier agent**：默认 `scripts/preview.mjs` + `scripts/verify-lite.mjs`（零依赖，系统浏览器 + 静态扫描）；要深一点用 `scripts/verify.py`（Playwright 封装）
 - **没有 asset 注册到 review pane**：直接用 agent 的 Write 能力写文件，用户在自己的浏览器/IDE 里打开
 - **没有 Tweaks host postMessage**：改成**纯前端 localStorage 版**，详见 `references/tweaks-system.md`
-- **没有 `window.claude.complete` 免配置 helper**：若 HTML 里要调 LLM，用一个可复用的 mock 或让用户填自己的 API key，详见 `references/react-setup.md`
+- **没有 `window.claude.complete` 免配置 helper**：若 HTML 里要调 LLM，默认用可复用 mock；真实联网调用交给用户自己的后端或产品环境，详见 `references/react-setup.md`
 - **没有结构化问题 UI**：在对话里用 markdown 清单问问题，参考 `references/workflow.md` 的模板
 
 Skill 路径引用均采用**相对本 skill 根目录**的形式（`references/xxx.md`、`assets/xxx.jsx`、`scripts/xxx.sh`）——agent 或用户按自身安装位置解析，不依赖任何绝对路径。

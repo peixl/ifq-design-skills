@@ -399,10 +399,10 @@ This skill's frontmatter is strictly additive: runtimes that do not understand a
 | `metadata.hermes.tags` | Hermes | recommended |
 | `metadata.clawhub.*` | ClawHub | recommended |
 | `metadata.agentskills.standard` | agentskills.io | informational |
-| `required_environment_variables` | Hermes (secrets) | only if a script needs an API key |
+| `required_environment_variables` | Hermes | only for skills that truly need runtime environment values |
 | `fallback_for_toolsets`, `requires_toolsets` | Hermes | optional |
 
-This skill declares none of the secret/fallback fields because it runs on local files and does not require API keys.
+This skill declares none of those fields because it runs on local files only.
 
 ---
 

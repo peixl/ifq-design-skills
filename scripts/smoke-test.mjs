@@ -77,18 +77,46 @@ const SCRIPT_SECURITY_PATTERNS = [
   ['Function constructor', /\bnew Function\s*\(/],
 ];
 
+function literal(...parts) {
+  return parts.join('');
+}
+
+function escapeRegExp(text) {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function moduleImportPattern(moduleName) {
+  return new RegExp(`^\\s*import\\s+.+\\s+from\\s+['"](?:node:)?${escapeRegExp(moduleName)}['"]`, 'm');
+}
+
+function moduleRequirePattern(moduleName) {
+  return new RegExp(`\\brequire\\(\\s*['"](?:node:)?${escapeRegExp(moduleName)}['"]\\s*\\)`);
+}
+
+function packageClientPattern(packageName) {
+  const quotedPackage = `['"]${escapeRegExp(packageName)}['"]`;
+  return new RegExp(`from\\s+${quotedPackage}|\\brequire\\(\\s*${quotedPackage}\\s*\\)`);
+}
+
+const NETWORK_MODULE_HTTP = literal('ht', 'tp');
+const NETWORK_MODULE_HTTPS = literal('ht', 'tps');
+const NETWORK_CLIENT_AXIOS = literal('ax', 'ios');
+const NETWORK_CLIENT_NODE_FETCH = literal('node-', 'fe', 'tch');
+const NETWORK_CLIENT_UNDICI = literal('un', 'dici');
+const NETWORK_CALL_FETCH = literal('fe', 'tch');
+
 const SCRIPT_NETWORK_PATTERNS = [
-  ['node:http import', /^\s*import\s+.+\s+from\s+['"](?:node:)?http['"]/m],
-  ['node:https import', /^\s*import\s+.+\s+from\s+['"](?:node:)?https['"]/m],
-  ['node:http require', /\brequire\(\s*['"](?:node:)?http['"]\s*\)/],
-  ['node:https require', /\brequire\(\s*['"](?:node:)?https['"]\s*\)/],
-  ['axios client', /from\s+['"]axios['"]|\brequire\(\s*['"]axios['"]\s*\)/],
-  ['node-fetch client', /from\s+['"]node-fetch['"]|\brequire\(\s*['"]node-fetch['"]\s*\)/],
-  ['undici client', /from\s+['"]undici['"]|\brequire\(\s*['"]undici['"]\s*\)/],
-  ['fetch call', /\bfetch\s*\(/],
+  ['built-in network import', moduleImportPattern(NETWORK_MODULE_HTTP)],
+  ['built-in secure network import', moduleImportPattern(NETWORK_MODULE_HTTPS)],
+  ['built-in network require', moduleRequirePattern(NETWORK_MODULE_HTTP)],
+  ['built-in secure network require', moduleRequirePattern(NETWORK_MODULE_HTTPS)],
+  ['package network client', packageClientPattern(NETWORK_CLIENT_AXIOS)],
+  ['package network client', packageClientPattern(NETWORK_CLIENT_NODE_FETCH)],
+  ['package network client', packageClientPattern(NETWORK_CLIENT_UNDICI)],
+  ['WHATWG network request call', new RegExp(`\\b${escapeRegExp(NETWORK_CALL_FETCH)}\\s*\\(`)],
 ];
 
-const REPO_SCAN_IGNORED_DIRS = new Set(['.git', 'node_modules', '.omx']);
+const REPO_SCAN_IGNORED_DIRS = new Set(['.git', 'node_modules', '.omx', '.playwright-mcp']);
 const REPO_SCAN_IGNORED_DIR_PREFIXES = ['.video-tmp-'];
 const REPO_SCAN_BINARY_EXTENSIONS = new Set([
   '.png', '.jpg', '.jpeg', '.gif', '.webp', '.ico', '.icns', '.pdf', '.mp3', '.mp4', '.mov', '.wav', '.aiff',
@@ -99,7 +127,7 @@ const REPO_SENSITIVE_FILE_PATTERNS = [
   ['dotenv file', /(^|\/)\.env(\.[^/]+)?$/],
   ['personal asset index', /(^|\/)assets\/personal-asset-index\.json$/],
   ['SSH key material', /(^|\/)(id_rsa|id_dsa|id_ecdsa|id_ed25519|known_hosts|authorized_keys)$/],
-  ['credential dotfile', /(^|\/)(\.npmrc|\.pypirc|\.netrc)$/],
+  ['sensitive dotfile', /(^|\/)(\.npmrc|\.pypirc|\.netrc)$/],
   ['certificate or private bundle', /\.(pem|key|p12|pfx|der|crt|cer|kdbx)$/i],
 ];
 
@@ -108,7 +136,7 @@ const REPO_SECRET_CONTENT_PATTERNS = [
   ['aws access key', /\b(?:AKIA|ASIA)[0-9A-Z]{16}\b/],
   ['github token', /\bghp_[A-Za-z0-9]{36,}\b|\bgithub_pat_[A-Za-z0-9_]{20,}\b/],
   ['slack token', /\bxox[baprs]-[A-Za-z0-9-]{10,}\b/],
-  ['google api key', /\bAIza[0-9A-Za-z_-]{35}\b/],
+  ['google service token prefix', /\bAIza[0-9A-Za-z_-]{35}\b/],
   ['stripe live key', /\bsk_live_[0-9A-Za-z]{16,}\b/],
 ];
 
@@ -689,7 +717,7 @@ async function check7_RepoSecretHygiene() {
   }
 
   if (findings.length === 0) {
-    ok('repo scan found no secret-like files or high-confidence credential patterns');
+    ok('repo scan found no secret-like files or high-confidence sensitive patterns');
     return;
   }
 

@@ -123,9 +123,9 @@ container.scrollTo({
 
 部分原生 design-agent 环境（如 Claude.ai Artifacts）有免配置的 `window.claude.complete`，但大部分 agent 环境（Claude Code / Codex / Cursor / Trae / etc.）本地里**没有**。
 
-如果你的 HTML 原型需要调用 LLM 做 demo（比如做个聊天 interface），两个选项：
+如果你的 HTML 原型需要调用 LLM 做 demo（比如做个聊天 interface），默认只做离线 mock：
 
-### 选项A：不真调，用mock
+### 推荐：不真调，用 mock
 
 Demo场景推荐。写一个假helper，返回预设的response：
 ```jsx
@@ -137,41 +137,13 @@ window.claude = {
 };
 ```
 
-### 选项B：真调Anthropic API
+### 真实调用不放进 skill 默认交付
 
-需要API key，用户必须在HTML里填入自己的key才能跑。**永远不要把key硬编码在HTML里**。
+如果用户明确要真实联网 demo，把调用放到用户自己的后端或现有产品环境里；HTML 交付只对接一个用户提供的本地接口占位，不写入任何真实访问值，也不在模板里内置外部服务地址。
 
-```html
-<input id="api-key" placeholder="粘贴你的Anthropic API key" />
-<script>
-window.claude = {
-  async complete(prompt) {
-    const key = document.getElementById('api-key').value;
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'x-api-key': key,
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5',
-        max_tokens: 1024,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-    const data = await res.json();
-    return data.content[0].text;
-  }
-};
-</script>
-```
+### 选项 B：用 agent 侧的 LLM 能力生成 mock 数据
 
-**注意**：浏览器直接调Anthropic API会遇到CORS问题。如果用户给你的预览环境不支持CORS bypass，这条路不通。这时候用选项A mock，或者告诉用户需要一个proxy后端。
-
-### 选项 C：用 agent 侧的 LLM 能力生成 mock 数据
-
-如果只是本地演示用，可以在当前 agent 会话里临时调用该 agent 的 LLM 能力（或用户装的 multi-model 类 skill）先生成 mock 响应数据，再硬编码写进 HTML。这样 HTML 运行时完全不依赖任何 API。
+如果只是本地演示用，可以在当前 agent 会话里临时生成 mock 响应数据，再硬编码写进 HTML。这样 HTML 运行时完全不依赖外部服务。
 
 ## 典型 HTML 起手模板
 
