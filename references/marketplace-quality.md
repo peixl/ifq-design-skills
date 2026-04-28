@@ -56,7 +56,7 @@ skills.sh audits 页对每个 skill 的目标是 “Safe / 0 alerts”。ClawHub
 - 不必要的转码库包装器；视频最终转码交给用户显式运行的 `ffmpeg` 命令
 - marketplace 调研快照、浏览器日志、测试截图目录（例如 `.playwright-mcp/`）
 
-2026-04-27 线上观察：ClawHub v2.3.6 页面显示 `Static analysis: 1 pattern detected`，命中 `scripts/smoke-test.mjs:22`，原因是 “File read combined with network send (possible exfiltration)”。v2.3.9 的修复方向：保留本地扫描能力，移除 smoke 脚本中的高风险 remote-send 字面特征，拦截 Python bytecode / cache 生成物，并把 `.playwright-mcp/` 排除出仓库和 secret scan。
+2026-04-27 线上观察：ClawHub v2.3.6 页面显示 `Static analysis: 1 pattern detected`，命中 `scripts/smoke-test.mjs:22`，原因是 “File read combined with network send (possible exfiltration)”。v2.4.0 的修复方向：保留本地扫描能力，移除 smoke 脚本中的高风险 remote-send 字面特征，拦截 Python bytecode / cache 生成物，并把 `.playwright-mcp/` 排除出仓库和 secret scan。
 
 ## 本地发布闸门
 
