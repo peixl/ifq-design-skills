@@ -5,6 +5,7 @@
   "quality_principles": [
     "Make the user more effective in one prompt, not more responsible for prompt engineering.",
     "Give agents a short route, concrete files to read, a forkable template, and a verification command.",
+    "Let AI do the deterministic work: fact-check, route, fork, clean placeholders, verify, and prepare export only when requested.",
     "Prefer visible craft, factual grounding, and export reliability over ornamental novelty.",
     "Keep Tier 0 zero-install unless the prompt explicitly asks for screenshots or export formats."
   ],

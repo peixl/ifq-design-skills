@@ -19,6 +19,27 @@
 - skills.sh all-time visible 前列：find-skills、vercel-react-best-practices、frontend-design、soultrace、web-design-guidelines、remotion-best-practices、microsoft-foundry；同页继续显示 agent-browser、skill-creator、supabase-postgres-best-practices、pdf、pptx、docx、webapp-testing 等高安装样本。
 - clawskills.sh 当前首页：显示 5,147 curated skills，并公开过滤 7,060 条（spam、duplicate、low-quality、finance/trade、malicious）；当前可见下载样本为 cad-agent、bluente-translate。
 
+## 2026-04-28 live delta
+
+本次升级重新核验了用户点名的渠道。结论要落进代码和 manifest，不只留在调研笔记里：
+
+| 站点 | 当前可见信号 | IFQ 吸收动作 |
+|---|---|---|
+| `https://clawhub.ai/peixl/ifq-design-skills` | 当前公开页显示 `v2.4.0`、226 downloads、VirusTotal benign、OpenClaw benign、runtime 只要求 `node` | 保持 `metadata.openclaw.requires.env=[]`、single-line metadata、zero-install bundle；发布后必须复查详情页是否仍无 suspicious banner |
+| `https://skills.sh/` | all-time 列表显示 91,018 skills；Top10 大约进入 260K+ installs 区间；设计相邻标杆包括 `frontend-design`、`web-design-guidelines`、`ui-ux-pro-max`、`extract-design-system`、`canvas-design`、`theme-factory` | README 首屏必须保留 `npx skills add peixl/ifq-design-skills`；description 要主动触发设计、deck、motion、dashboard、export 等关键词 |
+| `https://www.agentskills.to/` | 首页宣称 24K+ skills、4 platforms，显式支持 Claude Code / Codex CLI / Cursor / Gemini CLI；trending 卡片把“使用场景 + installs + install”放在同一张卡里 | `.well-known` metadata 增加 `human_value`、`agent_value`、`quality_signals`，让目录卡片能读出人类价值和 agent contract |
+| `https://agentskill.sh/` | 目录强调 107,000+ skills、20+ AI tools，并把 quality score 拆成 Discovery / Implementation / Structure / Expertise，同时显示 security score | 新增 `references/killer-skill-playbook.md` 的四张 scorecard，并让 `verify:publish` 检查 discovery/quality metadata |
+| `https://clawskills.sh/` | 独立索引当前文本抓取只显示 2 indexed，但公开过滤 7,060 条（spam、duplicate、low-quality、finance/trade、malicious） | 不追求堆关键词和重复入口；默认避开高风险金融/交易语义，发布面强调设计与本地 artifact |
+| `https://skillhub.cn/` | 直接文本抓取为空；公开二级资料描述其面向中文用户、中文搜索、镜像下载、精选榜单 | 不从不可读页面编造排名；中文 README 和安装说明保持一等公民，后续人工打开页面后再记录截图/排名 |
+
+从这些渠道抽象出的硬目标：
+
+1. **Discovery**：30 秒读懂用途、安装命令、输出范围、验证方式。
+2. **Implementation**：有模板、有 routes、有 evals，agent 不从白纸开始。
+3. **Structure**：根入口短，reference 分层，heavy export opt-in。
+4. **Expertise**：设计判断不只靠形容词，必须落到版式、节奏、输出格式和可验证文件。
+5. **Security**：不要求 secrets，不隐藏安装，不默认远程 runtime，不把扫描器敏感模式带进脚本。
+
 ## 顶级 skill 的共同特征
 
 这些是面向 skill marketplace 的硬指标，IFQ 默认遵守：

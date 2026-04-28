@@ -9,8 +9,18 @@ function parseFrontmatter(raw) {
 
 const nameRegex = /^[a-z0-9]([a-z0-9-]{0,62}[a-z0-9])?$/;
 let failed = 0;
+const requiredMarketplaceTargets = ['skills.sh', 'agentskill.sh', 'agentskills.to', 'clawhub.ai', 'clawskills.sh', 'skillhub.cn'];
+const requiredQualitySignals = {
+  zero_install_core: true,
+  eval_coverage_modes: 12,
+  root_skill_router: true,
+  no_required_env: true,
+  scanner_clean_scripts: true,
+  default_remote_runtime: false,
+};
 
 const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+const npmIgnore = fs.existsSync('.npmignore') ? fs.readFileSync('.npmignore', 'utf8') : '';
 const content = fs.readFileSync('SKILL.md', 'utf8');
 const { frontmatter } = parseFrontmatter(content);
 if (!frontmatter) {
@@ -66,6 +76,12 @@ if (!frontmatter) {
   }
 }
 
+for (const localDir of ['.claude/', '.codex/', '.cursor/', '.gemini/', '.hermes/', '.openclaw/', '.roo/', '.windsurf/']) {
+  const ok = npmIgnore.includes(localDir);
+  console.log(`.npmignore excludes ${localDir}:`, ok ? 'OK' : 'FAIL');
+  if (!ok) failed++;
+}
+
 for (const p of ['.well-known/agent-skills/index.json', '.well-known/skills/index.json']) {
   console.log('--- ' + p + ' ---');
   let idx;
@@ -97,6 +113,17 @@ for (const p of ['.well-known/agent-skills/index.json', '.well-known/skills/inde
     const install = e.metadata && e.metadata.install;
     for (const key of ['skills-cli', 'openclaw', 'hermes']) {
       if (!install || typeof install[key] !== 'string' || !install[key]) errs.push('install.' + key);
+    }
+    const quality = e.metadata && e.metadata.quality_signals;
+    for (const [key, expected] of Object.entries(requiredQualitySignals)) {
+      if (!quality || quality[key] !== expected) errs.push('quality_signals.' + key);
+    }
+    const targets = e.metadata && e.metadata.marketplace_targets;
+    for (const target of requiredMarketplaceTargets) {
+      if (!Array.isArray(targets) || !targets.includes(target)) errs.push('marketplace_targets.' + target);
+    }
+    for (const key of ['human_value', 'agent_value', 'entrypoints']) {
+      if (!Array.isArray(e.metadata && e.metadata[key]) || e.metadata[key].length < 3) errs.push(key);
     }
     if (errs.length) { console.log('FAIL ' + e.name + ': ' + errs.join(', ')); failed++; }
     else console.log('OK ' + e.name + ' files=' + JSON.stringify(e.files));

@@ -2,7 +2,7 @@
   "name": "ifq-design-skills",
   "version": "2.4.0",
   "private": true,
-  "description": "IFQ Design Skills — skill package for AI coding agents (Anthropic/OpenAI SKILL.md format). The core design loop is ZERO-install: write HTML → print a file:// preview URL → iterate. Heavy dependencies (playwright/pdf-lib/pptxgenjs/sharp) are only required when you actually export to MP4/GIF/PDF/PPTX, and are therefore listed under optionalDependencies. `npm install --omit=optional` works and keeps the skill lightweight. Install the optional deps on-demand only when an export pipeline asks for them.",
+  "description": "IFQ Design Skills — agent-native design skill that turns ordinary human intent into verified HTML-first artifacts. The core design loop is ZERO-install: route mode → fork template → write HTML → verify placeholders → print a file:// preview URL. Heavy dependencies (playwright/pdf-lib/pptxgenjs/sharp) are only required when MP4/GIF/PDF/PPTX export is explicitly requested, and remain optional.",
   "author": "ifq.ai",
   "license": "SEE LICENSE IN LICENSE",
   "homepage": "https://github.com/peixl/ifq-design-skills",

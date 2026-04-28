@@ -49,3 +49,11 @@ demos/_verify.js
 demos/_verify.mjs
 .omx/
 .playwright-mcp/
+.claude/
+.codex/
+.cursor/
+.gemini/
+.hermes/
+.openclaw/
+.roo/
+.windsurf/

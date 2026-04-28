@@ -27,7 +27,7 @@
 
 <br>
 
-<sub>Thesis &nbsp;·&nbsp; Install &nbsp;·&nbsp; What it hears &nbsp;·&nbsp; Anatomy &nbsp;·&nbsp; Five marks &nbsp;·&nbsp; 12 modes &nbsp;·&nbsp; Six layers &nbsp;·&nbsp; Verification &nbsp;·&nbsp; License</sub>
+<sub>Thesis &nbsp;·&nbsp; Install &nbsp;·&nbsp; Human + Agent contract &nbsp;·&nbsp; What it hears &nbsp;·&nbsp; Anatomy &nbsp;·&nbsp; Five marks &nbsp;·&nbsp; 12 modes &nbsp;·&nbsp; Six layers &nbsp;·&nbsp; Verification &nbsp;·&nbsp; License</sub>
 
 </div>
 
@@ -35,7 +35,7 @@
 
 ## Thesis
 
-Ask most agents to design something, and they will hand you one of two things: a **Figma Community template trying too hard**, or a **Notion page reformatted by an AI**. Neither ships.
+Ask many agents to design something, and they will hand you one of two things: a **template-flavored page trying too hard**, or a **formatted explainer that never becomes a deliverable**. Neither ships.
 
 This skill is what gets in the way of that. It is not a palette file. It is not a logo sticker.
 
@@ -79,6 +79,21 @@ git clone https://github.com/peixl/ifq-design-skills
 # Share across every agent (recommended)
 git clone https://github.com/peixl/ifq-design-skills ~/.agents/skills/ifq-design-skills
 ```
+
+---
+
+## Human + Agent contract
+
+This skill is built around a simple growth principle: make the AI agent do more deterministic work, instead of making the human write better prompts.
+
+| Audience | Promise | Proof |
+|---|---|---|
+| Human users | One sentence can become a previewable, iterable, export-ready visual artifact | `verify:lite` + `preview`, with export gates only when export is requested |
+| AI agents | No guessing: classify the mode, fork a template, read the needed reference, then deliver | short `SKILL.md` router + `assets/templates/INDEX.json` + 12-mode eval suite |
+| Marketplaces | Clear install surface, restrained dependency surface, machine-readable safety signals | `.well-known/**`, `metadata.openclaw.requires`, `npm run verify:publish` |
+| Maintainers | Every upgrade must prove the skill still ships artifacts, not just prose | `npm run validate` runs smoke plus eval contracts |
+
+The principle is: **let AI deliver more leverage**. Humans express intent, constraints, and taste; the agent owns fact checks, routing, template choice, layout production, placeholder cleanup, preview, and export prep.
 
 ---
 

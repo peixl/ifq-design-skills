@@ -161,6 +161,16 @@ const TEMPLATE_REMOTE_RUNTIME_PATTERNS = [
   ['Google Fonts runtime URL', /https:\/\/fonts\.(?:googleapis|gstatic)\.com/i],
 ];
 
+const REQUIRED_MARKETPLACE_TARGETS = ['skills.sh', 'agentskill.sh', 'agentskills.to', 'clawhub.ai', 'clawskills.sh', 'skillhub.cn'];
+const REQUIRED_QUALITY_SIGNALS = {
+  zero_install_core: true,
+  eval_coverage_modes: 12,
+  root_skill_router: true,
+  no_required_env: true,
+  scanner_clean_scripts: true,
+  default_remote_runtime: false,
+};
+
 function findPlaceholderLeaks(text) {
   const findings = [];
   for (const [name, pattern] of SHIPPED_PLACEHOLDER_PATTERNS) {
@@ -835,6 +845,9 @@ async function check9_PackageInstallPosture() {
   const pkg = await readJson(path.join(ROOT, 'package.json'));
   const scripts = pkg.scripts || {};
   const findings = [];
+  const npmIgnore = existsSync(path.join(ROOT, '.npmignore'))
+    ? await readText(path.join(ROOT, '.npmignore'))
+    : '';
 
   for (const lifecycle of ['preinstall', 'install', 'postinstall']) {
     if (Object.prototype.hasOwnProperty.call(scripts, lifecycle)) {
@@ -852,8 +865,14 @@ async function check9_PackageInstallPosture() {
     }
   }
 
+  for (const localDir of ['.claude/', '.codex/', '.cursor/', '.gemini/', '.hermes/', '.openclaw/', '.roo/', '.windsurf/']) {
+    if (!npmIgnore.includes(localDir)) {
+      findings.push(`.npmignore must exclude local agent config dir ${localDir}`);
+    }
+  }
+
   if (findings.length === 0) {
-    ok('no automatic install hooks; export dependencies remain optional');
+    ok('no automatic install hooks; export dependencies remain optional; local agent config dirs excluded from npm pack');
     return;
   }
 
@@ -1070,6 +1089,17 @@ async function check14_PublishSpec() {
       const signals = e.metadata && e.metadata.capability_signals;
       for (const key of ['crypto', 'can_make_purchases', 'requires_sensitive_credentials']) {
         if (!signals || signals[key] !== false) errs.push(`capability_signals.${key}`);
+      }
+      const quality = e.metadata && e.metadata.quality_signals;
+      for (const [key, expected] of Object.entries(REQUIRED_QUALITY_SIGNALS)) {
+        if (!quality || quality[key] !== expected) errs.push(`quality_signals.${key}`);
+      }
+      const targets = e.metadata && e.metadata.marketplace_targets;
+      for (const target of REQUIRED_MARKETPLACE_TARGETS) {
+        if (!Array.isArray(targets) || !targets.includes(target)) errs.push(`marketplace_targets.${target}`);
+      }
+      for (const key of ['human_value', 'agent_value', 'entrypoints']) {
+        if (!Array.isArray(e.metadata && e.metadata[key]) || e.metadata[key].length < 3) errs.push(key);
       }
       if (!Array.isArray(e.files) || e.files.length === 0) errs.push('files[]');
       else {

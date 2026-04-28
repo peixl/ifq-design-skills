@@ -1,6 +1,6 @@
 ---
 name: ifq-design-skills
-description: "Use this skill when the user asks for an HTML-based visual design deliverable: interactive prototype, slide deck, motion demo, infographic, dashboard, landing page, whitepaper, changelog, business card, social cover, brand system, design critique, multi-variant exploration, or export to MP4, GIF, PPTX, PDF, or SVG. Do not use for production web apps, SEO sites, backend systems, or pure copy edits."
+description: "Use this skill whenever the user asks for an HTML-first visual design deliverable or design judgment: interactive prototype, slide deck, motion demo, infographic, dashboard, landing page, whitepaper, changelog, business card, social cover, brand system, design critique, multi-variant exploration, or export to MP4, GIF, PPTX, PDF, or SVG. It is optimized to make AI agents do the routing, template selection, verification, and export prep so humans spend less time prompt-engineering. Do not use for production web apps, SEO sites, backend systems, or pure copy edits."
 version: "2.4.0"
 license: "See LICENSE"
 homepage: "https://github.com/peixl/ifq-design-skills"
@@ -18,6 +18,13 @@ One prompt in -> shippable HTML out, with optional MP4 / GIF / PPTX / PDF / SVG 
 3. Fork a listed template into the user's workspace. Never start from a blank HTML file.
 4. Inline [assets/ifq-brand/ifq-tokens.css](assets/ifq-brand/ifq-tokens.css) and weave at least 3 IFQ ambient marks from [references/ifq-brand-spec.md](references/ifq-brand-spec.md).
 5. Verify with `npm run verify:lite -- <file.html>`, then `npm run preview -- <file.html>`.
+
+## Human + Agent Promise
+
+- Humans get a finished artifact path: HTML first, optional export only when requested, and no hidden setup.
+- Agents get a short route: mode, template, must-read references, tier policy, and verification command.
+- Maintainers get regression pressure: 12 mode evals, scanner-clean scripts, and marketplace metadata checks.
+- Marketplaces get a readable package: one-line install, zero required env vars, explicit permissions, and no silent installs.
 
 ## Use When
 
@@ -102,7 +109,7 @@ The authoritative map is `assets/templates/INDEX.json`; this table is only a mem
 | Junior-designer cadence, variations, placeholders, anti-slop | [references/designer-operating-principles.md](references/designer-operating-principles.md), [references/anti-ai-slop.md](references/anti-ai-slop.md) |
 | Vague prompt -> 3 design directions | [references/design-direction-advisor.md](references/design-direction-advisor.md), [references/design-styles.md](references/design-styles.md), [references/ifq-native-recipes.md](references/ifq-native-recipes.md) |
 | End-to-end task workflow, exceptions, exports | [references/delivery-workflow.md](references/delivery-workflow.md), [references/workflow.md](references/workflow.md), [references/verification.md](references/verification.md) |
-| Skill improvement, eval coverage, contribution rules | [evals/evals.json](evals/evals.json), [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md) |
+| Skill improvement, eval coverage, contribution rules | [references/killer-skill-playbook.md](references/killer-skill-playbook.md), [evals/evals.json](evals/evals.json), [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md) |
 | OpenClaw / ClawHub / skills.sh publishing posture | [references/marketplace-quality.md](references/marketplace-quality.md), [references/skill-leaderboard-lessons.md](references/skill-leaderboard-lessons.md), [references/smoke-test.md](references/smoke-test.md) |
 | Runtime install and tool mapping | [references/agent-compatibility.md](references/agent-compatibility.md) |
 | React/Babel single-file rules | [references/react-setup.md](references/react-setup.md) |

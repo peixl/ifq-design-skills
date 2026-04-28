@@ -1,6 +1,14 @@
 .git/
 .github/
 .omx/
+.claude/
+.codex/
+.cursor/
+.gemini/
+.hermes/
+.openclaw/
+.roo/
+.windsurf/
 node_modules/
 
 .DS_Store

@@ -11,6 +11,7 @@ name: Skills Publish Check
       - README.en.md
       - CONTRIBUTING.md
       - SECURITY.md
+      - LICENSE
       - package.json
       - .well-known/**
       - evals/**
@@ -25,6 +26,7 @@ name: Skills Publish Check
       - README.en.md
       - CONTRIBUTING.md
       - SECURITY.md
+      - LICENSE
       - package.json
       - .well-known/**
       - evals/**
@@ -47,3 +49,6 @@ jobs:
 
       - name: Run unified publish gate
         run: npm run verify:ci
+
+      - name: Validate marketplace metadata
+        run: npm run verify:publish

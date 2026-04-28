@@ -4,7 +4,7 @@
   "skills": [
     {
       "name": "ifq-design-skills",
-      "description": "Agent-native design engine. One prompt -> shippable HTML / MP4 / GIF / PPTX / PDF / SVG with the IFQ ambient brand layer. 12 professional modes, 20 master style advisors plus IFQ Native recipe, Playwright verification, works across Claude Code / Codex / Cursor / Hermes / OpenClaw / OpenCode / CodeBuddy.",
+      "description": "Agent-native design engine that makes AI do more useful work: route the prompt, fork a template, weave IFQ ambient craft, verify the artifact, and only install export tooling when requested. One prompt -> shippable HTML, with optional MP4 / GIF / PPTX / PDF / SVG.",
       "files": [
         "SKILL.md"
       ],
@@ -25,7 +25,10 @@
           "svg",
           "mp4",
           "gif",
-          "ifq"
+          "ifq",
+          "agent-skills",
+          "zero-install",
+          "marketplace-ready"
         ],
         "platforms": [
           "macos",
@@ -40,6 +43,38 @@
           "repo": "peixl/ifq-design-skills",
           "branch": "main"
         },
+        "entrypoints": [
+          "SKILL.md",
+          "references/modes.md",
+          "assets/templates/INDEX.json",
+          "evals/evals.json"
+        ],
+        "human_value": [
+          "turns vague design requests into finished HTML-first artifacts",
+          "keeps export dependencies optional instead of making users set up heavy tooling",
+          "documents verification so non-expert users can trust the result"
+        ],
+        "agent_value": [
+          "short router plus 12 mode routes",
+          "forkable templates instead of blank-canvas generation",
+          "must-read references and deterministic validation commands"
+        ],
+        "quality_signals": {
+          "zero_install_core": true,
+          "eval_coverage_modes": 12,
+          "root_skill_router": true,
+          "no_required_env": true,
+          "scanner_clean_scripts": true,
+          "default_remote_runtime": false
+        },
+        "marketplace_targets": [
+          "skills.sh",
+          "agentskill.sh",
+          "agentskills.to",
+          "clawhub.ai",
+          "clawskills.sh",
+          "skillhub.cn"
+        ],
         "requires": {
           "bins": [
             "node"

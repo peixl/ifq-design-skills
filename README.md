@@ -27,7 +27,7 @@
 
 <br>
 
-<sub>立场 &nbsp;·&nbsp; 安装 &nbsp;·&nbsp; 说给它听 &nbsp;·&nbsp; 一页的解剖 &nbsp;·&nbsp; 五个标记 &nbsp;·&nbsp; 12 种模式 &nbsp;·&nbsp; 六层骨架 &nbsp;·&nbsp; 验证 &nbsp;·&nbsp; 许可</sub>
+<sub>立场 &nbsp;·&nbsp; 安装 &nbsp;·&nbsp; 双对象契约 &nbsp;·&nbsp; 说给它听 &nbsp;·&nbsp; 一页的解剖 &nbsp;·&nbsp; 五个标记 &nbsp;·&nbsp; 12 种模式 &nbsp;·&nbsp; 六层骨架 &nbsp;·&nbsp; 验证 &nbsp;·&nbsp; 许可</sub>
 
 </div>
 
@@ -35,7 +35,7 @@
 
 ## 立场
 
-大多数 agent 被要求"做设计"时，会交出两样东西：**一张过度装饰的 Figma Community 模板**，或者 **一份被 AI 格式化过的 Notion 页面**。都不能发出去。
+很多 agent 被要求"做设计"时，会交出两类东西：**过度装饰的模板感页面**，或者 **只是被排版过的说明文档**。都不能发出去。
 
 这个 skill 解决的就是这一件事。它不是配色文件，也不是一张 logo 贴纸。
 
@@ -82,6 +82,21 @@ git clone https://github.com/peixl/ifq-design-skills ~/.agents/skills/ifq-design
 ```
 
 完整矩阵与工具映射：[references/agent-compatibility.md](references/agent-compatibility.md)。
+
+---
+
+## 双对象契约
+
+这个 skill 的增长目标不是让用户学会更复杂的提示词，而是让 AI agent 承担更多确定性工作。
+
+| 对象 | 这里承诺什么 | 如何验证 |
+|---|---|---|
+| 人类用户 | 一句话能拿到可预览、可迭代、可导出的视觉产物 | `verify:lite` + `preview`，导出时再跑对应 export gate |
+| AI Agent | 不猜路径：先判定模式，再 fork 模板，再读必要 reference，再交付 | `SKILL.md` 短路由 + `assets/templates/INDEX.json` + 12 模式 eval |
+| Marketplace | 安装面清楚、依赖面克制、安全信号可机读 | `.well-known/**`、`metadata.openclaw.requires`、`npm run verify:publish` |
+| 维护者 | 每次升级都能证明没有把 skill 改成只会写文案 | `npm run validate` 同时跑 smoke 与 eval 契约 |
+
+核心理念是：**让 AI 发挥更大效能**。人只表达目标、约束和审美偏好；agent 负责事实核验、路由、模板选择、版面生产、占位符清理、预览和导出准备。
 
 ---
 
