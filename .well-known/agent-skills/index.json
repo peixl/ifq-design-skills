@@ -9,7 +9,7 @@
         "SKILL.md"
       ],
       "metadata": {
-        "version": "2.4.1",
+        "version": "3.0.0",
         "category": "creative",
         "tags": [
           "design",
@@ -97,6 +97,34 @@
           "Structure",
           "Expertise",
           "Security"
+        ],
+        "examples": [
+          {
+            "prompt": "个人站一页，但不要像找工作。",
+            "prompt_en": "One-page personal site, but not like job-hunting.",
+            "mode": "M-02",
+            "output": "hero-landing.html",
+            "output_type": "verified_html"
+          },
+          {
+            "prompt": "明天沙龙讲 AI agent 20 分钟，给我一份 deck。",
+            "prompt_en": "A 20-minute salon deck on AI agents.",
+            "mode": "M-08",
+            "output": "ai-agent-deck.html",
+            "output_type": "verified_html"
+          },
+          {
+            "prompt": "做一个 A vs B 对比评测，我们对 Stripe。",
+            "prompt_en": "A vs B comparison against Stripe.",
+            "mode": "M-05",
+            "output": "compare-vs.html",
+            "output_type": "verified_html"
+          }
+        ],
+        "screenshots": [
+          "demos/hero-landing-showcase.html",
+          "demos/dashboard-showcase.html",
+          "demos/deck-showcase.html"
         ],
         "benchmark_targets": {
           "observed_on": "2026-04-29",

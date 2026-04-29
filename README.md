@@ -27,7 +27,7 @@
 
 <br>
 
-<sub>立场 &nbsp;·&nbsp; 安装 &nbsp;·&nbsp; 双对象契约 &nbsp;·&nbsp; 说给它听 &nbsp;·&nbsp; 一页的解剖 &nbsp;·&nbsp; 五个标记 &nbsp;·&nbsp; 12 种模式 &nbsp;·&nbsp; 六层骨架 &nbsp;·&nbsp; 验证 &nbsp;·&nbsp; 许可</sub>
+<sub>立场 &nbsp;·&nbsp; 安装 &nbsp;·&nbsp; 快速上手 &nbsp;·&nbsp; 对比 &nbsp;·&nbsp; 双对象契约 &nbsp;·&nbsp; 说给它听 &nbsp;·&nbsp; 一页的解剖 &nbsp;·&nbsp; 五个标记 &nbsp;·&nbsp; 12 种模式 &nbsp;·&nbsp; 六层骨架 &nbsp;·&nbsp; 验证 &nbsp;·&nbsp; 社区 &nbsp;·&nbsp; 许可</sub>
 
 </div>
 
@@ -82,6 +82,27 @@ git clone https://github.com/peixl/ifq-design-skills ~/.agents/skills/ifq-design
 ```
 
 完整矩阵与工具映射：[references/agent-compatibility.md](references/agent-compatibility.md)。
+
+**60 秒快速上手**：装完直接对 Agent 说话。3 个 one-liner 示例 → [references/quickstart.md](references/quickstart.md)。
+
+---
+
+## 对比
+
+| 能力 | IFQ Design Skills | frontend-design | web-design-guidelines | pptx/pdf | impeccable |
+|------|:---:|:---:|:---:|:---:|:---:|
+| 12 种设计模式路由 | ✓ | — | — | — | — |
+| 可 fork 模板（非白纸生成） | ✓ 12 个 | 部分 | — | — | — |
+| 多格式导出 (MP4/GIF/PPTX/PDF/SVG) | ✓ | — | — | 单格式 | — |
+| 品牌融入层 (ambient marks) | ✓ 5 个标记 | — | — | — | — |
+| 零安装核心链路 | ✓ | ✓ | ✓ | — | ✓ |
+| 事实核验协议 | ✓ | — | — | — | — |
+| 20 场景 eval 回归 | ✓ | — | — | — | — |
+| 反 AI slop 清单 | ✓ | — | 部分 | — | ✓ |
+| 多 Agent 兼容 (8+ 运行时) | ✓ | ✓ | ✓ | ✓ | ✓ |
+| 安全审计 (零 spawn/eval/网络) | ✓ | ✓ | ✓ | ✓ | ✓ |
+
+> IFQ 是唯一同时做 **设计 + 多格式导出 + 品牌融入** 的 Skill。
 
 ---
 
@@ -415,7 +436,25 @@ python scripts/verify.py path/to/design.html   # headless 多 viewport 截图 + 
 
 单件作品在需要自动截图/可点击测试/导出 MP4 PDF PPTX 时才走 Deep 档。详见 [references/verification.md](references/verification.md)。
 
-**贡献入口**：改 skill 协议、模板、脚本或文档前先看 [CONTRIBUTING.md](CONTRIBUTING.md)。安全边界与上报流程见 [SECURITY.md](SECURITY.md)。
+---
+
+## Showcase
+
+直接在浏览器打开 `demos/` 目录下的 HTML 文件，查看 Skill 的真实产出质量：
+
+| Demo | 文件 | 展示内容 |
+|------|------|---------|
+| Landing Page | `demos/hero-landing-showcase.html` | Editorial hero + rust ledger + spark animation |
+| Dashboard | `demos/dashboard-showcase.html` | Command center + KPI strip + sparkline grid |
+| Slide Deck | `demos/deck-showcase.html` | 5-slide keynote + field-note colophon |
+
+---
+
+## 社区
+
+- **Issues**: [GitHub Issues](https://github.com/peixl/ifq-design-skills/issues) — bug 报告和功能请求
+- **Discussions**: [GitHub Discussions](https://github.com/peixl/ifq-design-skills/discussions) — 设计分享和使用交流
+- **贡献入口**：改 skill 协议、模板、脚本或文档前先看 [CONTRIBUTING.md](CONTRIBUTING.md)。安全边界与上报流程见 [SECURITY.md](SECURITY.md)。
 
 ---
 

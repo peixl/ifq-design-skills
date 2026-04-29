@@ -1,10 +1,25 @@
 interface:
   display_name: "IFQ Design Skills"
-  short_description: "Verified HTML-first design artifacts"
+  short_description: "Agent-native design engine: one prompt in, shippable HTML out"
   icon_small: "./assets/ifq-brand/mark.svg"
   icon_large: "./assets/ifq-brand/logo.svg"
   brand_color: "#D4532B"
   default_prompt: "Use $ifq-design-skills to turn this visual-design request into a verified HTML artifact."
+  examples:
+    - "做一个个人站一页，不要像找工作"
+    - "明天沙龙讲 AI agent 20 分钟，给我一份 deck"
+    - "把这条产品更新做成 X/Twitter 分享卡"
+    - "内部 AI 做一个 command center，像 Bloomberg 终端"
+    - "帮这个品牌做一次体检，给 3 个升级方向"
 
 policy:
   allow_implicit_invocation: true
+  category_tags:
+    - design
+    - creative
+    - html
+    - prototype
+    - slides
+    - motion
+    - brand
+    - export

@@ -7,7 +7,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=1440"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <meta name="ifq:created-at" content="{ CREATED_AT · optional ISO-8601, defaults to now }"/>
 <title>{ A_NAME } vs { B_NAME } · ifq.ai</title>
 <!-- China-safe default: no remote font request. See references/font-loading.md to opt into Google Fonts. -->
@@ -44,6 +44,63 @@
   footer{margin-top:48px;display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
   .sig{display:flex;align-items:center;gap:10px}
   .sig svg{width:16px;height:16px}
+
+  /* ---- Responsive: tablet ---- */
+  @media (max-width: 1024px) {
+    .page{width:100%;padding:32px 40px 56px}
+    h1{font-size:42px}
+    .grid{grid-template-columns:1fr;gap:20px}
+    .col h2{font-size:28px}
+    .verdict{font-size:19px}
+    .radar{position:static;width:200px;height:200px;margin:24px auto 0;opacity:.88}
+  }
+
+  /* ---- Responsive: mobile ---- */
+  @media (max-width: 640px) {
+    .page{width:100%;padding:20px 20px 40px;min-height:auto}
+    header{flex-direction:column;align-items:flex-start;gap:16px}
+    h1{font-size:32px}
+    .meta{text-align:left;font-size:11px}
+    .grid{grid-template-columns:1fr;gap:16px}
+    .col{padding:20px}
+    .col h2{font-size:24px}
+    .col li{font-size:14px}
+    .verdict{font-size:17px;padding:18px 20px}
+    .radar{display:none}
+    footer{flex-direction:column;gap:12px;align-items:flex-start}
+  }
+
+  /* ---- Print ---- */
+  @media print {
+    .page{width:auto;padding:15mm}
+    .radar{display:none}
+    .grid{break-inside:avoid}
+    .col{break-inside:avoid}
+    footer{margin-top:24px}
+  }
+
+  /* ---- Dark mode ---- */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ink: #F5EFE3;
+      --ink-soft: #C8BFB0;
+      --paper: #141212;
+      --cream: #1C1916;
+      --hairline: #2A2520;
+    }
+    .col{background:#1C1916;border-color:rgba(245,239,227,.14)}
+    .col li{border-bottom-color:rgba(245,239,227,.12)}
+    header{border-bottom-color:rgba(245,239,227,.2)}
+    .radar circle{stroke:rgba(245,239,227,.12)}
+    .radar g{stroke:rgba(245,239,227,.12)}
+    .radar polygon:first-of-type{fill:rgba(245,239,227,.18);stroke:#F5EFE3}
+    footer{color:#C8BFB0}
+  }
+
+  /* ---- Reduced motion ---- */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
 </style>
 </head>
 <body>

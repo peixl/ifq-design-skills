@@ -1,6 +1,6 @@
 {
   "name": "ifq-design-skills",
-  "version": "2.4.1",
+  "version": "3.0.0",
   "private": true,
   "description": "IFQ Design Skills — agent-native design skill that turns ordinary human intent into verified HTML-first artifacts. The core design loop is ZERO-install: route mode → fork template → write HTML → verify placeholders → print a file:// preview URL. Heavy dependencies (playwright/pdf-lib/pptxgenjs/sharp) are only required when MP4/GIF/PDF/PPTX export is explicitly requested, and remain optional.",
   "author": "ifq.ai",
@@ -24,6 +24,8 @@
     "verify:lite": "node scripts/verify-lite.mjs",
     "verify": "python3 scripts/verify.py",
     "verify:publish": "node scripts/validate_publish.cjs",
+    "quality:score": "node scripts/quality-score.mjs",
+    "quality:score:json": "node scripts/quality-score.mjs --json",
     "render:video": "node scripts/render-video.js",
     "export:pdf": "node scripts/export_deck_pdf.mjs",
     "export:pptx": "node scripts/export_deck_pptx.mjs",

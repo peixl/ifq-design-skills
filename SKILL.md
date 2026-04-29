@@ -1,10 +1,10 @@
 ---
 name: ifq-design-skills
 description: "Use this skill whenever the user asks for an HTML-first visual design deliverable or design judgment: interactive prototype, slide deck, motion demo, infographic, dashboard, landing page, whitepaper, changelog, business card, social cover, brand system, design critique, multi-variant exploration, or export to MP4, GIF, PPTX, PDF, or SVG. It is optimized to make AI agents do the routing, template selection, verification, and export prep so humans spend less time prompt-engineering. Do not use for production web apps, SEO sites, backend systems, or pure copy edits."
-version: "2.4.1"
+version: "3.0.0"
 license: "See LICENSE"
 homepage: "https://github.com/peixl/ifq-design-skills"
-metadata: {"author":"ifq.ai","version":"2.4.1","homepage":"https://github.com/peixl/ifq-design-skills","category":"creative","tags":["design","html","prototype","slides","motion","infographic","dashboard","brand","pptx","pdf","svg","mp4","gif","ifq"],"openclaw":{"category":"creative","tags":["design","html","prototype","slides","motion","infographic","dashboard","brand","pptx","pdf","svg","mp4","gif","ifq"],"homepage":"https://github.com/peixl/ifq-design-skills","requires":{"bins":["node"],"env":[]},"primaryEnv":null},"hermes":{"category":"creative","tags":["design","html","prototype","slides","motion","infographic","dashboard","brand","pptx","pdf","svg","mp4","gif","ifq"]},"clawhub":{"category":"creative","tags":["design","html","prototype","brand"],"requires":{"bins":["node"],"env":[]},"capability_signals":{"crypto":false,"can_make_purchases":false,"requires_sensitive_credentials":false},"audit":"passes-static-security-scan"},"agentskills":{"standard":"agentskills.io/v1"},"capabilities":{"read_files":true,"write_files":true,"run_shell":"optional","network":"optional_fact_checks_only","dynamic_eval":false,"silent_install":false,"persistent_background":false},"permissions":{"filesystem":{"read":["{baseDir}/**"],"write":["${workspace}/**"]},"shell_allowlist":["npm run preview","npm run verify:lite","npm run smoke","npm run validate","npm run install:export","ffmpeg"],"network_allowlist":["web_search","https://fonts.googleapis.com","https://fonts.gstatic.com","https://unpkg.com","https://cdn.jsdelivr.net"]},"security":{"audit_clean":true,"node_python_process_control":false,"dynamic_eval":false,"script_network":false,"secrets_in_repo":false,"zero_install_core_loop":true},"entrypoints":["SKILL.md","references/modes.md","assets/templates/INDEX.json"],"compatibility":["claude_code","codex_cli","opencode","openclaw","hermes","cursor","codebuddy","generic"]}
+metadata: {"author":"ifq.ai","version":"3.0.0","homepage":"https://github.com/peixl/ifq-design-skills","category":"creative","tags":["design","html","prototype","slides","motion","infographic","dashboard","brand","pptx","pdf","svg","mp4","gif","ifq"],"openclaw":{"category":"creative","tags":["design","html","prototype","slides","motion","infographic","dashboard","brand","pptx","pdf","svg","mp4","gif","ifq"],"homepage":"https://github.com/peixl/ifq-design-skills","requires":{"bins":["node"],"env":[]},"primaryEnv":null},"hermes":{"category":"creative","tags":["design","html","prototype","slides","motion","infographic","dashboard","brand","pptx","pdf","svg","mp4","gif","ifq"]},"clawhub":{"category":"creative","tags":["design","html","prototype","brand"],"requires":{"bins":["node"],"env":[]},"capability_signals":{"crypto":false,"can_make_purchases":false,"requires_sensitive_credentials":false},"audit":"passes-static-security-scan"},"agentskills":{"standard":"agentskills.io/v1"},"capabilities":{"read_files":true,"write_files":true,"run_shell":"optional","network":"optional_fact_checks_only","dynamic_eval":false,"silent_install":false,"persistent_background":false},"permissions":{"filesystem":{"read":["{baseDir}/**"],"write":["${workspace}/**"]},"shell_allowlist":["npm run preview","npm run verify:lite","npm run smoke","npm run validate","npm run install:export","ffmpeg"],"network_allowlist":["web_search","https://fonts.googleapis.com","https://fonts.gstatic.com","https://unpkg.com","https://cdn.jsdelivr.net"]},"security":{"audit_clean":true,"node_python_process_control":false,"dynamic_eval":false,"script_network":false,"secrets_in_repo":false,"zero_install_core_loop":true},"entrypoints":["SKILL.md","references/modes.md","assets/templates/INDEX.json"],"compatibility":["claude_code","codex_cli","opencode","openclaw","hermes","cursor","codebuddy","generic"]}
 ---
 
 # IFQ Design Skills
@@ -67,14 +67,27 @@ Do not ask for account login, global install, export dependencies, or broad envi
 
 Do not install optional dependencies unless the user explicitly needs screenshots or export formats.
 
-## Routing Contract
+## Routing Decision Tree
 
-- Concrete product, technology, company, release date, version, or spec: first load [references/fact-and-asset-protocol.md](references/fact-and-asset-protocol.md) and do web fact-checking before design claims.
-- Clear visual request: route through [references/modes.md](references/modes.md) and `modeRoutes` in [assets/templates/INDEX.json](assets/templates/INDEX.json).
-- Vague request or no style/context: use [references/design-direction-advisor.md](references/design-direction-advisor.md) to propose 3 differentiated directions.
-- Mobile app prototype: load [references/app-prototype-rules.md](references/app-prototype-rules.md) and reuse `assets/ios_frame.jsx` or `assets/android_frame.jsx`.
-- Slides/decks: start from HTML; load [references/slide-decks.md](references/slide-decks.md) before writing.
-- Motion/video: read [references/animation-pitfalls.md](references/animation-pitfalls.md), [references/animations.md](references/animations.md), and [references/video-export.md](references/video-export.md).
+```
+User request arrives
+  │
+  ├─ Is it a visual design deliverable? ─── No → Exit skill, hand back to default agent
+  │
+  ├─ Does it mention a concrete product/tech/event? ─── Yes → fact-and-asset-protocol.md first, then web fact-check
+  │
+  ├─ Can you match a mode trigger? ─── Yes → Read Quick Reference table → fork template → read must-read refs
+  │
+  ├─ Is it vague / no style / no context? ─── Yes → design-direction-advisor.md → propose 3 directions → user picks → route
+  │
+  ├─ Is it a mobile app prototype? ─── Yes → app-prototype-rules.md + ios_frame.jsx / android_frame.jsx
+  │
+  ├─ Is it slides/decks? ─── Yes → slide-decks.md → T-slide-title template
+  │
+  └─ Is it motion/video? ─── Yes → animation-pitfalls.md + animations.md + video-export.md
+```
+
+Read [references/modes.md](references/modes.md) for full mode protocol. The Quick Reference table above is the speed layer.
 
 ## Mode Map
 
@@ -95,12 +108,55 @@ Do not install optional dependencies unless the user explicitly needs screenshot
 
 The authoritative map is `assets/templates/INDEX.json`; this table is only a memory aid.
 
+## Quick Reference (Agent Speed Table)
+
+| Mode | Trigger keywords | Template | Key references |
+|---|---|---|---|
+| M-01 | launch film, 发布会, product video | `T-launch-film` | animations.md, video-export.md |
+| M-02 | portfolio, 个人站, about me | `T-hero-landing` | design-direction-advisor.md |
+| M-03 | whitepaper, 白皮书, annual report | `T-infographic-vertical` | fact-and-asset-protocol.md |
+| M-04 | dashboard, 看板, KPI, command center | `T-dashboard` | app-prototype-rules.md |
+| M-05 | A vs B, 横评, benchmark | `T-compare-vs` | fact-and-asset-protocol.md |
+| M-06 | onboarding, 新手引导, flow demo | `T-onboarding-flow` | app-prototype-rules.md |
+| M-07 | changelog, release notes, 发布日记 | `T-changelog` | content-guidelines.md |
+| M-08 | keynote, PPT, 演讲, slide deck | `T-slide-title` | slide-decks.md, editable-pptx.md |
+| M-09 | 社媒物料, social cover, 小红书 | `T-social-x` | content-guidelines.md |
+| M-10 | 名片, business card, 邀请函 | `T-business-card` | ifq-brand-spec.md |
+| M-11 | 品牌诊断, brand audit, 品牌体检 | `T-brand-diagnosis` | critique-guide.md |
+| M-12 | brand from scratch, 从零建立品牌 | `T-brand-system` | design-direction-advisor.md |
+
+All templates: `npm run verify:lite -- <file>` + `npm run preview -- <file>` (Tier 0, zero-install).
+
 ## IFQ Ambient Layer
 
 - The user's brand is the subject. IFQ is the authored layer: layout rhythm, warm paper, rust ledger, mono field notes, signal spark, quiet URL, and editorial contrast.
 - Every deliverable uses at least 3 IFQ marks. Never paste a loud generic logo or watermark unless the task is IFQ-owned or an animation export that calls for the promotion stamp.
 - Built-in templates use local-first fonts for China-safe rendering. Google Fonts or CDN runtimes are opt-in only; see [references/font-loading.md](references/font-loading.md).
 - Avoid visible internal taxonomy labels such as `Signal Spark` or `Rust Ledger` in user-facing designs. Write real content instead.
+
+## Conversation Patterns
+
+**Pattern A — Vague request (most common):**
+User: "给我做个 landing page" → Agent: read design-direction-advisor.md → propose 3 directions (A/B/C with moodboard descriptions) → user picks → route to M-02 → fork T-hero-landing → deliver HTML → verify.
+
+**Pattern B — Specific request:**
+User: "做一个 A vs B 对比评测，我们对 Stripe" → Agent: fact-check both products → route M-05 → fork T-compare-vs → fill with verified data → deliver → verify.
+
+**Pattern C — Iterative refinement:**
+User: "把刚才那个 deck 的配色改暖一点" → Agent: locate previous artifact → edit in-place → re-run `verify:lite` → report what changed.
+
+Rule: **never ask more than 2 questions per turn**. Use defaults for everything else. If the user did not specify a style, pick one and name it in the deliverable — they can iterate.
+
+## Error Recovery
+
+| Failure | Recovery |
+|---|---|
+| No template matches the request | Use T-hero-landing as generic scaffold, note the gap in deliverable |
+| `verify:lite` reports placeholders | Fix the placeholders, re-verify, report the fix |
+| `verify:lite` reports IFQ label leaks | Remove internal taxonomy labels (Signal Spark, Rust Ledger etc.) from user-facing text |
+| Export command fails | Report the exact error, suggest `npm run install:export` if deps missing, never claim the export exists |
+| User says "this looks AI-generated" | Read anti-ai-slop.md, apply the 7-point pre-flight checklist, rewrite with more rhythm variation |
+| Agent cannot fact-check (no web access) | Name unverified claims as "unverified" in the deliverable, do not invent specs |
 
 ## Safety Contract
 
@@ -122,12 +178,14 @@ The authoritative map is `assets/templates/INDEX.json`; this table is only a mem
 
 | Need | Load |
 |---|---|
+| First-time quickstart, 3 one-liner examples | [references/quickstart.md](references/quickstart.md) |
 | UI discovery chips and default invocation | [agents/openai.yaml](agents/openai.yaml) |
 | Full role, scope, IFQ runtime posture | [references/ifq-ambient-runtime.md](references/ifq-ambient-runtime.md) |
 | Fact checks, brand assets, product/UI images | [references/fact-and-asset-protocol.md](references/fact-and-asset-protocol.md) |
 | Junior-designer cadence, variations, placeholders, anti-slop | [references/designer-operating-principles.md](references/designer-operating-principles.md), [references/anti-ai-slop.md](references/anti-ai-slop.md) |
 | Vague prompt -> 3 design directions | [references/design-direction-advisor.md](references/design-direction-advisor.md), [references/design-styles.md](references/design-styles.md), [references/ifq-native-recipes.md](references/ifq-native-recipes.md) |
 | End-to-end task workflow, exceptions, exports | [references/delivery-workflow.md](references/delivery-workflow.md), [references/workflow.md](references/workflow.md), [references/verification.md](references/verification.md) |
+| Agent interaction protocol, decision tree, state machine | [references/agent-interaction-protocol.md](references/agent-interaction-protocol.md) |
 | Skill improvement, eval coverage, contribution rules | [references/killer-skill-playbook.md](references/killer-skill-playbook.md), [evals/evals.json](evals/evals.json), [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md) |
 | OpenClaw / ClawHub / skills.sh publishing posture | [references/marketplace-quality.md](references/marketplace-quality.md), [references/skill-leaderboard-lessons.md](references/skill-leaderboard-lessons.md), [references/smoke-test.md](references/smoke-test.md) |
 | Runtime install and tool mapping | [references/agent-compatibility.md](references/agent-compatibility.md) |

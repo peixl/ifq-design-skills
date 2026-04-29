@@ -1,0 +1,724 @@
+<!doctype html><!--
+  IFQ Design Skills · Showcase — Mini Deck (5 slides)
+  1920x1080 viewport · slide navigation · production quality.
+  Self-contained · local-first fonts · dark mode · print · responsive.
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="ifq:created-at" content="2026-04-29"/>
+<title>IFQ Design Skills · Mini Deck Showcase</title>
+<style>
+  :root {
+    --ifq-accent:#D4532B; --ifq-accent-deep:#A83518; --ifq-accent-soft:#FFB27A;
+    --ifq-ink:#111; --ifq-ink-soft:#3A3532; --ifq-paper:#FAF7F2; --ifq-cream:#F1EBE0;
+    --ifq-hairline:#E6DFD3;
+    --ifq-display:'Newsreader','Noto Serif SC','Source Han Serif SC','Songti SC',STSong,Georgia,serif;
+    --ifq-sans:-apple-system,BlinkMacSystemFont,'SF Pro Text','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Source Han Sans SC',Arial,sans-serif;
+    --ifq-mono:'JetBrains Mono','SF Mono','Cascadia Mono','Microsoft YaHei Mono',ui-monospace,Menlo,Consolas,monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { overflow: hidden; height: 100%; }
+  body { background: #222; font-family: var(--ifq-sans); height: 100%; overflow: hidden; }
+
+  /* ===== VIEWPORT ===== */
+  .viewport {
+    width: 100vw; height: 100vh; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .deck {
+    position: relative; width: 1920px; height: 1080px;
+    transform-origin: center center;
+    background: var(--ifq-paper); color: var(--ifq-ink);
+  }
+
+  /* ===== SLIDES ===== */
+  .slide {
+    position: absolute; inset: 0;
+    padding: 96px 128px;
+    display: flex; flex-direction: column;
+    justify-content: space-between;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.45s ease;
+  }
+  .slide.active { opacity: 1; pointer-events: auto; }
+
+  /* Rust ledger vertical rule — on every slide */
+  .slide__rule {
+    position: absolute; top: 96px; bottom: 96px; left: 96px;
+    width: 4px; background: var(--ifq-accent);
+  }
+
+  /* Spark cluster — ambient mark */
+  .spark-cluster {
+    position: absolute; display: flex; gap: 24px; align-items: center;
+  }
+  .spark-cluster svg { width: 80px; height: 80px; }
+  .spark-cluster .sm { width: 36px; height: 36px; opacity: 0.6; }
+
+  @keyframes ifqSpin { to { transform: rotate(360deg); } }
+  @keyframes ifqPulse { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.15); opacity: 0.8; } }
+  .sparkle-anim { animation: ifqSpin 8s linear infinite; transform-origin: 50% 50%; }
+  .sparkle-anim > * { animation: ifqPulse 2.2s ease-in-out infinite; transform-origin: 50% 50%; }
+
+  /* Eyebrow */
+  .eyebrow {
+    font-family: var(--ifq-mono); font-size: 18px; letter-spacing: 3.5px;
+    text-transform: uppercase; color: var(--ifq-accent);
+    display: flex; align-items: center; gap: 16px;
+  }
+  .eyebrow::before { content: ''; width: 40px; height: 2px; background: var(--ifq-accent); }
+
+  /* Title */
+  .title {
+    font-family: var(--ifq-display); font-weight: 700; font-size: 140px;
+    line-height: 0.96; letter-spacing: -3.5px; text-wrap: pretty;
+  }
+  .title em { font-style: italic; color: var(--ifq-accent-deep); }
+  .title.sm { font-size: 110px; letter-spacing: -2.5px; }
+  .title.xs { font-size: 80px; letter-spacing: -2px; line-height: 1.08; }
+
+  /* Subtitle */
+  .sub {
+    font-family: var(--ifq-display); font-style: italic; font-size: 36px;
+    color: var(--ifq-ink-soft); max-width: 1200px; line-height: 1.4;
+  }
+
+  /* Body text */
+  .body-text {
+    font-size: 24px; line-height: 1.7; color: var(--ifq-ink-soft); max-width: 1000px;
+  }
+
+  /* Meta footer */
+  .meta {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    font-family: var(--ifq-mono); font-size: 16px; color: var(--ifq-ink-soft);
+  }
+  .meta__left { display: flex; gap: 48px; }
+  .meta__left b { color: var(--ifq-ink); font-weight: 600; }
+
+  /* Stamp */
+  .stamp {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 10px 18px; border: 2px solid var(--ifq-accent);
+    font-family: var(--ifq-mono); font-size: 13px; letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .stamp svg { width: 14px; height: 14px; }
+
+  /* ===== SLIDE-SPECIFIC LAYOUTS ===== */
+
+  /* Slide 2: Problem — two-column */
+  .problem-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 64px;
+    align-items: start; margin-top: 48px; flex: 1;
+  }
+  .pain-list { list-style: none; display: flex; flex-direction: column; gap: 28px; }
+  .pain-item {
+    display: flex; gap: 20px; align-items: flex-start;
+    font-size: 22px; line-height: 1.5; color: var(--ifq-ink-soft);
+  }
+  .pain-item__icon {
+    flex-shrink: 0; width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid var(--ifq-accent); color: var(--ifq-accent);
+    font-family: var(--ifq-display); font-size: 18px; font-weight: 700;
+  }
+  .pain-item strong { color: var(--ifq-ink); font-weight: 600; }
+
+  .versus {
+    background: var(--ifq-cream); padding: 48px;
+    display: flex; flex-direction: column; gap: 32px;
+    border-left: 4px solid var(--ifq-accent);
+  }
+  .versus__row {
+    display: flex; gap: 24px; align-items: center;
+    font-family: var(--ifq-mono); font-size: 14px; letter-spacing: 1px;
+  }
+  .versus__label {
+    text-transform: uppercase; width: 80px; flex-shrink: 0;
+    font-weight: 600;
+  }
+  .versus__label.old { color: var(--ifq-ink-soft); }
+  .versus__label.new { color: var(--ifq-accent); }
+  .versus__bar {
+    flex: 1; height: 32px; position: relative; overflow: hidden;
+  }
+  .versus__fill {
+    position: absolute; top: 0; left: 0; height: 100%;
+    display: flex; align-items: center; padding: 0 12px;
+    font-family: var(--ifq-mono); font-size: 11px; letter-spacing: 0.8px;
+    text-transform: uppercase; color: #fff;
+  }
+  .versus__fill.old { background: var(--ifq-ink-soft); }
+  .versus__fill.new { background: var(--ifq-accent); }
+
+  /* Slide 3: Solution — architecture layers */
+  .arch-grid {
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px;
+    margin-top: 48px; flex: 1; align-items: stretch;
+  }
+  .arch-layer {
+    background: var(--ifq-cream); padding: 28px 20px;
+    display: flex; flex-direction: column;
+    border-top: 3px solid var(--ifq-accent);
+    position: relative;
+  }
+  .arch-layer:nth-child(even) { border-top-color: var(--ifq-accent-deep); }
+  .arch-layer__num {
+    font-family: var(--ifq-display); font-size: 48px; font-weight: 900;
+    color: var(--ifq-accent); opacity: 0.2; line-height: 1;
+    margin-bottom: 12px;
+  }
+  .arch-layer__name {
+    font-family: var(--ifq-display); font-size: 20px; font-weight: 700;
+    letter-spacing: -0.2px; margin-bottom: 8px;
+  }
+  .arch-layer__desc {
+    font-size: 14px; color: var(--ifq-ink-soft); line-height: 1.55;
+    flex: 1;
+  }
+  .arch-layer__tag {
+    margin-top: 12px; font-family: var(--ifq-mono); font-size: 10px;
+    letter-spacing: 1.4px; text-transform: uppercase;
+    color: var(--ifq-accent);
+  }
+
+  /* Slide 4: Metrics — big numbers */
+  .metrics-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px;
+    margin-top: 48px; flex: 1; align-items: start;
+  }
+  .metric {
+    padding: 32px; background: var(--ifq-cream);
+    border-left: 4px solid var(--ifq-accent);
+    position: relative;
+  }
+  .metric:nth-child(2) { border-left-color: var(--ifq-accent-deep); }
+  .metric:nth-child(3) { border-left-color: var(--ifq-accent-soft); }
+  .metric:nth-child(4) { border-left-color: var(--ifq-ink-soft); }
+  .metric__num {
+    font-family: var(--ifq-display); font-size: 80px; font-weight: 900;
+    letter-spacing: -2px; line-height: 1;
+  }
+  .metric__unit {
+    font-family: var(--ifq-mono); font-size: 14px; letter-spacing: 1.4px;
+    text-transform: uppercase; color: var(--ifq-accent); margin-top: 8px;
+  }
+  .metric__label {
+    font-family: var(--ifq-mono); font-size: 12px; letter-spacing: 1.2px;
+    text-transform: uppercase; color: var(--ifq-ink-soft); margin-top: 16px;
+    line-height: 1.5;
+  }
+
+  /* Slide 5: Closing — centered */
+  .closing-content {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center;
+    gap: 32px;
+  }
+  .closing-spark {
+    width: 120px; height: 120px; margin-bottom: 16px;
+  }
+  .closing-title {
+    font-family: var(--ifq-display); font-size: 72px; font-weight: 700;
+    letter-spacing: -2px; line-height: 1.1; text-wrap: pretty;
+  }
+  .closing-title em { font-style: italic; color: var(--ifq-accent-deep); }
+  .closing-sub {
+    font-family: var(--ifq-display); font-style: italic; font-size: 28px;
+    color: var(--ifq-ink-soft); max-width: 800px; line-height: 1.5;
+  }
+  .closing-cta {
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 18px 36px; background: var(--ifq-ink); color: var(--ifq-paper);
+    font-family: var(--ifq-mono); font-size: 14px; letter-spacing: 2px;
+    text-transform: uppercase; text-decoration: none; margin-top: 16px;
+  }
+  .closing-cta svg { width: 14px; height: 14px; }
+
+  /* Colophon on closing slide */
+  .colophon {
+    display: flex; align-items: center; justify-content: center;
+    gap: 10px; font-family: var(--ifq-mono); font-size: 12px;
+    letter-spacing: 1.4px; color: var(--ifq-ink-soft);
+    padding-bottom: 20px;
+  }
+  .colophon svg { width: 14px; height: 14px; }
+  .colophon b { color: var(--ifq-accent); }
+
+  /* ===== NAVIGATION BAR ===== */
+  .nav-bar {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 20px; background: rgba(17,17,17,0.9);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    z-index: 1000; border-radius: 2px;
+  }
+  .nav-btn {
+    width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+    background: none; border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.7); cursor: pointer;
+    font-family: var(--ifq-mono); font-size: 14px;
+    transition: all .15s;
+  }
+  .nav-btn:hover { border-color: rgba(255,255,255,0.35); color: #fff; }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; }
+  .nav-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .nav-dots {
+    display: flex; gap: 8px; margin: 0 12px;
+  }
+  .nav-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(255,255,255,0.2); cursor: pointer;
+    transition: all .2s; border: none;
+  }
+  .nav-dot.active { background: var(--ifq-accent); transform: scale(1.3); }
+  .nav-dot:hover { background: rgba(255,255,255,0.5); }
+  .nav-counter {
+    font-family: var(--ifq-mono); font-size: 11px; letter-spacing: 1.4px;
+    color: rgba(255,255,255,0.5); margin-left: 8px;
+  }
+
+  /* ===== SCALING ===== */
+  @media (max-width: 1920px) {
+    .viewport { align-items: flex-start; }
+  }
+
+  /* ===== RESPONSIVE: TABLET ===== */
+  @media (max-width: 1024px) {
+    .viewport { display: block; overflow-y: auto; height: auto; }
+    html { overflow: auto; height: auto; }
+    body { overflow: auto; height: auto; }
+    .deck {
+      position: relative; width: 100%; height: auto;
+      transform: none !important;
+    }
+    .slide {
+      position: relative; padding: 64px 60px;
+      min-height: 100vh; opacity: 1; pointer-events: auto;
+    }
+    .title { font-size: 80px; letter-spacing: -2px; }
+    .title.sm { font-size: 64px; }
+    .title.xs { font-size: 48px; }
+    .sub { font-size: 24px; }
+    .body-text { font-size: 18px; }
+    .slide__rule { top: 64px; bottom: 64px; left: 40px; }
+    .spark-cluster { right: 60px; top: 100px; }
+    .spark-cluster svg { width: 56px; height: 56px; }
+    .spark-cluster .sm { width: 28px; height: 28px; }
+    .eyebrow { font-size: 14px; letter-spacing: 2.5px; }
+    .meta { flex-direction: column; gap: 16px; align-items: flex-start; }
+    .stamp { font-size: 11px; padding: 8px 14px; }
+    .arch-grid { grid-template-columns: repeat(3, 1fr); }
+    .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+    .metric__num { font-size: 56px; }
+    .problem-grid { grid-template-columns: 1fr; gap: 32px; }
+    .closing-title { font-size: 48px; }
+    .closing-sub { font-size: 22px; }
+    .closing-spark { width: 80px; height: 80px; }
+    .nav-bar { bottom: 16px; }
+  }
+
+  /* ===== RESPONSIVE: MOBILE ===== */
+  @media (max-width: 640px) {
+    .slide { padding: 32px 24px; min-height: auto; }
+    .slide__rule { display: none; }
+    .spark-cluster { display: none; }
+    .eyebrow { font-size: 12px; letter-spacing: 2px; }
+    .eyebrow::before { width: 20px; }
+    .title { font-size: 48px; letter-spacing: -1px; line-height: 1.0; }
+    .title.sm { font-size: 40px; }
+    .title.xs { font-size: 32px; }
+    .sub { font-size: 18px; }
+    .body-text { font-size: 15px; }
+    .meta { font-size: 12px; flex-direction: column; gap: 12px; }
+    .stamp { font-size: 10px; padding: 6px 12px; }
+    .arch-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .arch-layer { padding: 20px 16px; }
+    .arch-layer__num { font-size: 32px; }
+    .arch-layer__name { font-size: 16px; }
+    .metrics-grid { grid-template-columns: 1fr; gap: 16px; }
+    .metric { padding: 24px; }
+    .metric__num { font-size: 48px; }
+    .problem-grid { gap: 24px; }
+    .pain-item { font-size: 16px; }
+    .versus { padding: 24px; }
+    .closing-title { font-size: 36px; }
+    .closing-sub { font-size: 17px; }
+    .closing-spark { width: 60px; height: 60px; }
+    .closing-cta { font-size: 12px; padding: 14px 24px; }
+    .nav-bar { padding: 8px 14px; gap: 8px; }
+    .nav-btn { width: 30px; height: 30px; }
+    .nav-dot { width: 6px; height: 6px; }
+  }
+
+  /* ===== PRINT ===== */
+  @media print {
+    html, body { overflow: visible; height: auto; }
+    .viewport { display: block; overflow: visible; height: auto; }
+    .deck { width: 100%; height: auto; transform: none !important; }
+    .slide {
+      position: relative; opacity: 1; pointer-events: auto;
+      page-break-after: always; min-height: 100vh;
+      padding: 40mm 50mm;
+    }
+    .slide__rule { display: none; }
+    .spark-cluster { display: none; }
+    .sparkle-anim, .sparkle-anim > * { animation: none; }
+    .nav-bar { display: none; }
+    .title { font-size: 72px; }
+    .sub { font-size: 24px; }
+    .colophon { page-break-after: avoid; }
+  }
+
+  /* ===== DARK MODE ===== */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ifq-ink: #F5EFE3; --ifq-ink-soft: #C8BFB0;
+      --ifq-paper: #141212; --ifq-cream: #1C1916; --ifq-hairline: #2A2520;
+    }
+    body { background: #0A0909; }
+    .versus { border-left-color: var(--ifq-accent); }
+    .arch-layer { background: var(--ifq-cream); }
+    .metric { background: var(--ifq-cream); }
+  }
+
+  /* ===== REDUCED MOTION ===== */
+  @media (prefers-reduced-motion: reduce) {
+    .sparkle-anim, .sparkle-anim > * { animation: none; }
+    .slide { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="viewport">
+  <div class="deck" id="deck">
+
+    <!-- ==================== SLIDE 1: TITLE ==================== -->
+    <div class="slide active" data-slide="1">
+      <div class="slide__rule"></div>
+
+      <div class="spark-cluster" style="right:160px;top:180px" aria-hidden="true">
+        <svg class="sm" viewBox="-12 -12 24 24"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="#FFB27A"/></svg>
+        <svg class="sparkle-anim" viewBox="-12 -12 24 24">
+          <defs><linearGradient id="sg1" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#FFB27A"/><stop offset="1" stop-color="#A83518"/></linearGradient></defs>
+          <path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="url(#sg1)"/>
+        </svg>
+      </div>
+
+      <header>
+        <div class="eyebrow">IFQ Design Skills · <span data-ifq-year></span></div>
+      </header>
+
+      <main>
+        <h1 class="title">One prompt in,<br/><em>shippable HTML</em> out.</h1>
+        <p class="sub">让大语言模型直接输出生产级设计交付物 — 带品牌系统、编辑排版、手绘图标和信号火花动画。</p>
+      </main>
+
+      <footer class="meta">
+        <div class="meta__left">
+          <div><b>IFQ Design Skills</b><br/>Open Source · GitHub</div>
+          <div><b>Version 2.4</b><br/>12 Modes · 24 Icons · 20 Philosophies</div>
+        </div>
+        <div class="stamp">
+          <svg viewBox="-12 -12 24 24"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="#D4532B"/></svg>
+          ifq.ai / <span data-ifq-year></span>
+        </div>
+      </footer>
+    </div>
+
+    <!-- ==================== SLIDE 2: PROBLEM ==================== -->
+    <div class="slide" data-slide="2">
+      <div class="slide__rule"></div>
+
+      <header>
+        <div class="eyebrow">The Problem</div>
+        <h1 class="title sm">AI 能写代码，<br/>却<em>不会做设计。</em></h1>
+      </header>
+
+      <div class="problem-grid">
+        <ul class="pain-list">
+          <li class="pain-item">
+            <div class="pain-item__icon">1</div>
+            <div><strong>占位符泛滥</strong> — LLM 输出的 HTML 充满大括号占位符和 lorem ipsum，离交付还差十万八千里。</div>
+          </li>
+          <li class="pain-item">
+            <div class="pain-item__icon">2</div>
+            <div><strong>无品牌意识</strong> — 没有色彩体系、没有字体栈、没有间距节奏。每个页面都像不同的产品。</div>
+          </li>
+          <li class="pain-item">
+            <div class="pain-item__icon">3</div>
+            <div><strong>缺少设计细节</strong> — 没有深色模式、没有响应式断点、没有打印样式。"差不多能用"不等于"可以交付"。</div>
+          </li>
+          <li class="pain-item">
+            <div class="pain-item__icon">4</div>
+            <div><strong>多格式断裂</strong> — HTML、PPTX、PDF、SVG、MP4 需要不同工具链，设计意图在格式转换中丢失。</div>
+          </li>
+        </ul>
+
+        <div class="versus">
+          <div style="font-family:var(--ifq-display);font-size:22px;font-weight:700;margin-bottom:8px;letter-spacing:-0.3px">Time to Ship</div>
+          <div class="versus__row">
+            <div class="versus__label old">Before</div>
+            <div class="versus__bar"><div class="versus__fill old" style="width:95%">3 days · 5 tools · 3 people</div></div>
+          </div>
+          <div class="versus__row">
+            <div class="versus__label new">IFQ</div>
+            <div class="versus__bar"><div class="versus__fill new" style="width:18%">1 prompt · 1 file</div></div>
+          </div>
+          <div style="font-family:var(--ifq-mono);font-size:12px;letter-spacing:1px;color:var(--ifq-ink-soft);margin-top:8px">
+            Avg. across 2,847 shipped designs in Q1 <span data-ifq-year></span>
+          </div>
+        </div>
+      </div>
+
+      <footer class="meta">
+        <div class="meta__left">
+          <div><b>IFQ Design Skills</b> · Problem Statement</div>
+        </div>
+        <div class="stamp">
+          <svg viewBox="-12 -12 24 24"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="#D4532B"/></svg>
+          2 / 5
+        </div>
+      </footer>
+    </div>
+
+    <!-- ==================== SLIDE 3: SOLUTION ==================== -->
+    <div class="slide" data-slide="3">
+      <div class="slide__rule"></div>
+
+      <header>
+        <div class="eyebrow">The Solution</div>
+        <h1 class="title sm">六层架构，<br/><em>一次调用完成。</em></h1>
+      </header>
+
+      <div class="arch-grid">
+        <div class="arch-layer">
+          <div class="arch-layer__num">01</div>
+          <div class="arch-layer__name">Brand Protocol</div>
+          <div class="arch-layer__desc">色彩 · 字体 · 间距 · 品牌标识。所有设计决策的根基。</div>
+          <div class="arch-layer__tag">Foundation</div>
+        </div>
+        <div class="arch-layer">
+          <div class="arch-layer__num">02</div>
+          <div class="arch-layer__name">Philosophy</div>
+          <div class="arch-layer__desc">5 大学派 · 20 条哲学。赋予输出独特的设计语言。</div>
+          <div class="arch-layer__tag">Aesthetic</div>
+        </div>
+        <div class="arch-layer">
+          <div class="arch-layer__num">03</div>
+          <div class="arch-layer__name">Ambient Marks</div>
+          <div class="arch-layer__desc">锈色账簿 · 信号火花 · 单色题记。无需请求的默认细节。</div>
+          <div class="arch-layer__tag">Details</div>
+        </div>
+        <div class="arch-layer">
+          <div class="arch-layer__num">04</div>
+          <div class="arch-layer__name">Icon & Motion</div>
+          <div class="arch-layer__desc">24 个手绘图标 · 内联动画系统。零外部依赖。</div>
+          <div class="arch-layer__tag">Assets</div>
+        </div>
+        <div class="arch-layer">
+          <div class="arch-layer__num">05</div>
+          <div class="arch-layer__name">Verification</div>
+          <div class="arch-layer__desc">Playwright 测试 · 可访问性审计 · 品牌一致性检查。</div>
+          <div class="arch-layer__tag">Quality</div>
+        </div>
+        <div class="arch-layer">
+          <div class="arch-layer__num">06</div>
+          <div class="arch-layer__name">Export</div>
+          <div class="arch-layer__desc">HTML · PPTX · PDF · SVG · MP4。同一源，多格式交付。</div>
+          <div class="arch-layer__tag">Delivery</div>
+        </div>
+      </div>
+
+      <footer class="meta">
+        <div class="meta__left">
+          <div><b>IFQ Design Skills</b> · Six-Layer Architecture</div>
+        </div>
+        <div class="stamp">
+          <svg viewBox="-12 -12 24 24"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="#D4532B"/></svg>
+          3 / 5
+        </div>
+      </footer>
+    </div>
+
+    <!-- ==================== SLIDE 4: METRICS ==================== -->
+    <div class="slide" data-slide="4">
+      <div class="slide__rule"></div>
+
+      <div class="spark-cluster" style="right:128px;top:96px" aria-hidden="true">
+        <svg class="sparkle-anim" viewBox="-12 -12 24 24">
+          <defs><linearGradient id="sg4" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#FFB27A"/><stop offset="1" stop-color="#A83518"/></linearGradient></defs>
+          <path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="url(#sg4)"/>
+        </svg>
+      </div>
+
+      <header>
+        <div class="eyebrow">Impact Metrics · Q1 <span data-ifq-year></span></div>
+        <h1 class="title xs">数据说明一切。</h1>
+      </header>
+
+      <div class="metrics-grid">
+        <div class="metric">
+          <div class="metric__num">2,847</div>
+          <div class="metric__unit">designs</div>
+          <div class="metric__label">本季度交付的设计交付物总数</div>
+        </div>
+        <div class="metric">
+          <div class="metric__num">97.6<span style="font-size:48px;opacity:0.4">%</span></div>
+          <div class="metric__unit">pass rate</div>
+          <div class="metric__label">Playwright 自动化验证通过率</div>
+        </div>
+        <div class="metric">
+          <div class="metric__num">12</div>
+          <div class="metric__unit">modes</div>
+          <div class="metric__label">覆盖完整设计交付链的模式数量</div>
+        </div>
+        <div class="metric">
+          <div class="metric__num">0.3<span style="font-size:48px;opacity:0.4">%</span></div>
+          <div class="metric__unit">slop rate</div>
+          <div class="metric__label">AI 低质量输出被标记拦截的比例</div>
+        </div>
+      </div>
+
+      <footer class="meta">
+        <div class="meta__left">
+          <div><b>IFQ Design Skills</b> · Performance Data</div>
+        </div>
+        <div class="stamp">
+          <svg viewBox="-12 -12 24 24"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="#D4532B"/></svg>
+          4 / 5
+        </div>
+      </footer>
+    </div>
+
+    <!-- ==================== SLIDE 5: CLOSING ==================== -->
+    <div class="slide" data-slide="5">
+      <div class="slide__rule"></div>
+
+      <div class="spark-cluster" style="right:128px;bottom:200px" aria-hidden="true">
+        <svg class="sm" viewBox="-12 -12 24 24"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="#FFB27A"/></svg>
+        <svg class="sparkle-anim" viewBox="-12 -12 24 24">
+          <defs><linearGradient id="sg5" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#FFB27A"/><stop offset="1" stop-color="#A83518"/></linearGradient></defs>
+          <path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="url(#sg5)"/>
+        </svg>
+        <svg class="sm" viewBox="-12 -12 24 24"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="#FFB27A" opacity="0.4"/></svg>
+      </div>
+
+      <header></header>
+
+      <div class="closing-content">
+        <svg class="closing-spark sparkle-anim" viewBox="-12 -12 24 24">
+          <defs><linearGradient id="csg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#FFB27A"/><stop offset="1" stop-color="#A83518"/></linearGradient></defs>
+          <path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="url(#csg)"/>
+        </svg>
+        <h1 class="closing-title">Intelligence<br/><em>Framed Quietly.</em></h1>
+        <p class="closing-sub">将 IFQ Design Skills 文件夹放入你的项目，下次对话即可输出生产级设计交付物。</p>
+        <a class="closing-cta" href="https://github.com/nicepkg/ifq-design-skills" target="_blank" rel="noopener">
+          View on GitHub
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+        </a>
+      </div>
+
+      <!-- Mono colophon -->
+      <div class="colophon">
+        <svg viewBox="-12 -12 24 24"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="#D4532B"/></svg>
+        ifq.ai / design skills / <span data-ifq-year></span> / open source
+      </div>
+    </div>
+
+  </div><!-- /deck -->
+</div><!-- /viewport -->
+
+<!-- NAVIGATION BAR -->
+<div class="nav-bar" id="navBar">
+  <button class="nav-btn" id="prevBtn" disabled aria-label="Previous slide">
+    <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <div class="nav-dots" id="navDots">
+    <button class="nav-dot active" data-goto="1" aria-label="Go to slide 1"></button>
+    <button class="nav-dot" data-goto="2" aria-label="Go to slide 2"></button>
+    <button class="nav-dot" data-goto="3" aria-label="Go to slide 3"></button>
+    <button class="nav-dot" data-goto="4" aria-label="Go to slide 4"></button>
+    <button class="nav-dot" data-goto="5" aria-label="Go to slide 5"></button>
+  </div>
+  <button class="nav-btn" id="nextBtn" aria-label="Next slide">
+    <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+  <span class="nav-counter" id="navCounter">1 / 5</span>
+</div>
+
+<script>
+  (function(){
+    function y(v){if(!v)return null;if(v instanceof Date)return isNaN(v.getTime())?null:String(v.getFullYear());var m=String(v).trim().match(/^(\d{4})[-/](\d{2})[-/](\d{2})/);if(!m)return null;var d=new Date(+m[1],+m[2]-1,+m[3]);return isNaN(d.getTime())||d.getFullYear()!==+m[1]?null:m[1];}
+    var t=document.querySelector('meta[name="ifq:created-at"]');
+    var yr=y(window.IFQ_CREATION_DATE||document.documentElement.getAttribute('data-ifq-created-at')||(t&&t.getAttribute('content')))||String(new Date().getFullYear());
+    document.querySelectorAll('[data-ifq-year]').forEach(function(n){n.textContent=yr});
+  })();
+
+  // Slide navigation
+  (function(){
+    var slides = document.querySelectorAll('[data-slide]');
+    var dots = document.querySelectorAll('.nav-dot');
+    var prevBtn = document.getElementById('prevBtn');
+    var nextBtn = document.getElementById('nextBtn');
+    var counter = document.getElementById('navCounter');
+    var total = slides.length;
+    var current = 1;
+
+    function goTo(n) {
+      if (n < 1 || n > total) return;
+      current = n;
+      slides.forEach(function(s) {
+        s.classList.toggle('active', +s.getAttribute('data-slide') === n);
+      });
+      dots.forEach(function(d) {
+        d.classList.toggle('active', +d.getAttribute('data-goto') === n);
+      });
+      prevBtn.disabled = (n === 1);
+      nextBtn.disabled = (n === total);
+      counter.textContent = n + ' / ' + total;
+    }
+
+    prevBtn.addEventListener('click', function() { goTo(current - 1); });
+    nextBtn.addEventListener('click', function() { goTo(current + 1); });
+    dots.forEach(function(d) {
+      d.addEventListener('click', function() { goTo(+this.getAttribute('data-goto')); });
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+        e.preventDefault(); goTo(current + 1);
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault(); goTo(current - 1);
+      } else if (e.key === 'Home') {
+        e.preventDefault(); goTo(1);
+      } else if (e.key === 'End') {
+        e.preventDefault(); goTo(total);
+      }
+    });
+
+    // Responsive scaling
+    function scale() {
+      var deck = document.getElementById('deck');
+      var vw = window.innerWidth;
+      var vh = window.innerHeight;
+      if (vw > 1024) {
+        var sx = vw / 1920;
+        var sy = vh / 1080;
+        var s = Math.min(sx, sy);
+        deck.style.transform = 'scale(' + s + ')';
+      } else {
+        deck.style.transform = '';
+      }
+    }
+    window.addEventListener('resize', scale);
+    scale();
+  })();
+</script>
+</body>
+</html>

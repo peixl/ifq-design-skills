@@ -1,0 +1,247 @@
+<!doctype html>
+<!--
+  IFQ Design Skills · Template T-brand-diagnosis
+  M-11 Brand Diagnosis / Audit — six-dimension scoring + 3 upgrade directions.
+  Fork-and-fill: replace { BRAND / SCORE / DIMENSION / DIRECTION } placeholders.
+  Read references/critique-guide.md for scoring methodology.
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="ifq:created-at" content="{ CREATED_AT }"/>
+<title>{ BRAND } Brand Diagnosis · ifq.ai</title>
+<style>
+  :root {
+    --ifq-accent:#D4532B; --ifq-accent-deep:#A83518; --ifq-accent-soft:#FFB27A;
+    --ifq-ink:#111; --ifq-ink-soft:#3A3532; --ifq-paper:#FAF7F2; --ifq-cream:#F1EBE0; --ifq-hairline:#E6DFD3;
+    --ifq-display:'Newsreader','Noto Serif SC','Source Han Serif SC','Songti SC',STSong,Georgia,serif;
+    --ifq-sans:-apple-system,BlinkMacSystemFont,'SF Pro Text','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Source Han Sans SC',Arial,sans-serif;
+    --ifq-mono:'JetBrains Mono','SF Mono','Cascadia Mono','Microsoft YaHei Mono',ui-monospace,Menlo,Consolas,monospace;
+    --ok:#2E7D5B; --warn:#C89B2A; --err:#B1422A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --ifq-ink:#F5EFE3; --ifq-ink-soft:#C8BFB0; --ifq-paper:#141212; --ifq-cream:#1C1916; --ifq-hairline:#2A2520; }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: var(--ifq-paper); color: var(--ifq-ink); font-family: var(--ifq-sans); }
+  body { max-width: 1440px; margin: 0 auto; padding: 40px 80px 80px; position: relative; min-height: 100vh; }
+
+  /* Rust ledger */
+  .ledger { position: absolute; top: 0; bottom: 0; left: 60px; width: 3px; background: var(--ifq-accent); }
+
+  /* Header */
+  .head { display: flex; justify-content: space-between; align-items: center; padding-bottom: 32px; border-bottom: 1px solid var(--ifq-hairline); }
+  .head__brand { display: flex; align-items: center; gap: 10px; font-family: var(--ifq-display); font-weight: 900; font-size: 20px; }
+  .head__brand svg { width: 16px; height: 16px; color: var(--ifq-accent); }
+  .head__brand b { color: var(--ifq-accent); }
+  .head__meta { font-family: var(--ifq-mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ifq-ink-soft); opacity: .7; }
+
+  /* Diagnosis hero */
+  .dx-hero { margin-top: 64px; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+  .dx-hero__eyebrow { font-family: var(--ifq-mono); font-size: 12px; letter-spacing: 2.4px; text-transform: uppercase; color: var(--ifq-accent); margin-bottom: 16px; }
+  .dx-hero__title { font-family: var(--ifq-display); font-size: 56px; font-weight: 700; line-height: 1; letter-spacing: -1.5px; }
+  .dx-hero__title em { font-style: italic; color: var(--ifq-accent-deep); }
+  .dx-hero__score { display: flex; align-items: baseline; gap: 8px; margin-top: 24px; }
+  .dx-hero__score-num { font-family: var(--ifq-display); font-size: 96px; font-weight: 900; letter-spacing: -3px; color: var(--ifq-accent); }
+  .dx-hero__score-max { font-family: var(--ifq-mono); font-size: 24px; color: var(--ifq-ink-soft); }
+
+  /* Radar / six-dimension grid */
+  .dims { margin-top: 80px; }
+  .dims__head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 32px; padding-bottom: 16px; border-bottom: 1px solid var(--ifq-hairline); }
+  .dims__head h2 { font-family: var(--ifq-display); font-size: 28px; letter-spacing: -0.5px; }
+  .dims__head span { font-family: var(--ifq-mono); font-size: 11px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--ifq-ink-soft); }
+  .dims__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; }
+  .dim { padding: 28px 24px; border-right: 1px solid var(--ifq-hairline); border-bottom: 1px solid var(--ifq-hairline); }
+  .dim:nth-child(3n) { border-right: none; }
+  .dim:nth-child(n+4) { border-bottom: none; }
+  .dim__label { font-family: var(--ifq-mono); font-size: 10px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--ifq-ink-soft); }
+  .dim__score { display: flex; align-items: baseline; gap: 6px; margin-top: 10px; }
+  .dim__num { font-family: var(--ifq-display); font-size: 44px; font-weight: 900; letter-spacing: -1px; }
+  .dim__max { font-family: var(--ifq-mono); font-size: 14px; color: var(--ifq-ink-soft); }
+  .dim__bar { margin-top: 12px; height: 4px; background: var(--ifq-hairline); border-radius: 2px; overflow: hidden; }
+  .dim__bar-fill { height: 100%; border-radius: 2px; transition: width .6s ease; }
+  .dim__bar-fill.high { background: var(--ok); }
+  .dim__bar-fill.mid { background: var(--warn); }
+  .dim__bar-fill.low { background: var(--err); }
+  .dim__note { margin-top: 12px; font-size: 13px; line-height: 1.5; color: var(--ifq-ink-soft); }
+
+  /* Keep / Fix / Quick Wins matrix */
+  .matrix { margin-top: 64px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .matrix__col { padding: 28px 24px; background: var(--ifq-cream); border: 1px solid var(--ifq-hairline); }
+  .matrix__col-title { font-family: var(--ifq-mono); font-size: 11px; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 16px; }
+  .matrix__col-title.keep { color: var(--ok); }
+  .matrix__col-title.fix { color: var(--err); }
+  .matrix__col-title.qw { color: var(--warn); }
+  .matrix__item { font-size: 14px; line-height: 1.5; color: var(--ifq-ink-soft); padding: 10px 0; border-bottom: 1px solid var(--ifq-hairline); }
+  .matrix__item:last-child { border-bottom: none; }
+
+  /* Three upgrade directions */
+  .directions { margin-top: 64px; }
+  .directions__head { margin-bottom: 32px; padding-bottom: 16px; border-bottom: 1px solid var(--ifq-hairline); }
+  .directions__head h2 { font-family: var(--ifq-display); font-size: 28px; letter-spacing: -0.5px; }
+  .directions__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .direction { padding: 32px 28px; border: 1px solid var(--ifq-hairline); position: relative; }
+  .direction__num { font-family: var(--ifq-display); font-size: 64px; font-weight: 900; color: var(--ifq-hairline); position: absolute; top: 16px; right: 20px; }
+  .direction__title { font-family: var(--ifq-display); font-size: 22px; font-weight: 700; margin-bottom: 12px; }
+  .direction__desc { font-size: 14px; line-height: 1.6; color: var(--ifq-ink-soft); }
+  .direction__moodboard { margin-top: 16px; aspect-ratio: 16/9; background: var(--ifq-cream); border: 1px solid var(--ifq-hairline); display: flex; align-items: center; justify-content: center; }
+  .direction__moodboard::before { content: "{ moodboard }"; font-family: var(--ifq-mono); font-size: 10px; color: var(--ifq-ink-soft); opacity: .35; }
+
+  /* Colophon */
+  .colophon { margin-top: 64px; display: flex; align-items: center; justify-content: space-between; padding-top: 24px; border-top: 1px solid var(--ifq-hairline); }
+  .colophon__left { display: flex; align-items: center; gap: 8px; font-family: var(--ifq-mono); font-size: 10px; letter-spacing: 1px; color: var(--ifq-ink-soft); opacity: .6; }
+  .colophon__left svg { width: 12px; height: 12px; }
+  .colophon__right { font-family: var(--ifq-mono); font-size: 10px; letter-spacing: 1px; color: var(--ifq-ink-soft); opacity: .5; }
+
+  @media print {
+    body { padding: 20mm; }
+    .ledger { display: none; }
+    .dim, .matrix__col, .direction { break-inside: avoid; }
+  }
+  @media (max-width: 1024px) {
+    body { padding: 32px 40px; }
+    .dx-hero { grid-template-columns: 1fr; gap: 32px; }
+    .dx-hero__title { font-size: 40px; }
+    .dims__grid { grid-template-columns: repeat(2, 1fr); }
+    .matrix, .directions__grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    body { padding: 24px 20px; }
+    .dx-hero__title { font-size: 32px; }
+    .dims__grid { grid-template-columns: 1fr; }
+    .dim { border-right: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="ledger" aria-hidden="true"></div>
+
+  <header class="head">
+    <div class="head__brand">
+      <svg viewBox="-12 -12 24 24"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="currentColor"/></svg>
+      <span>ifq<b>.ai</b></span>
+    </div>
+    <div class="head__meta">brand diagnosis / { BRAND } / <span data-ifq-year></span></div>
+  </header>
+
+  <section class="dx-hero">
+    <div>
+      <div class="dx-hero__eyebrow">{ BRAND } · brand audit</div>
+      <h1 class="dx-hero__title">{ BRAND }<br/><em>Diagnosis</em></h1>
+      <p style="margin-top:16px;font-size:16px;line-height:1.55;color:var(--ifq-ink-soft);max-width:480px">{ 20 words summarizing the brand's current state and the audit purpose. }</p>
+    </div>
+    <div class="dx-hero__score">
+      <div class="dx-hero__score-num">{ TOTAL }</div>
+      <div class="dx-hero__score-max">/ 60</div>
+    </div>
+  </section>
+
+  <section class="dims">
+    <div class="dims__head">
+      <h2>Six Dimensions</h2>
+      <span>0–10 per dimension · 60 total</span>
+    </div>
+    <div class="dims__grid">
+      <div class="dim">
+        <div class="dim__label">Recognition</div>
+        <div class="dim__score"><span class="dim__num">{ S1 }</span><span class="dim__max">/10</span></div>
+        <div class="dim__bar"><div class="dim__bar-fill mid" style="width:{ S1 }0%"></div></div>
+        <div class="dim__note">{ Can the brand be identified without its name? Logo, color, shape language distinctiveness. }</div>
+      </div>
+      <div class="dim">
+        <div class="dim__label">Consistency</div>
+        <div class="dim__score"><span class="dim__num">{ S2 }</span><span class="dim__max">/10</span></div>
+        <div class="dim__bar"><div class="dim__bar-fill mid" style="width:{ S2 }0%"></div></div>
+        <div class="dim__note">{ Same hand across touchpoints? Typography, color usage, spacing rhythm alignment. }</div>
+      </div>
+      <div class="dim">
+        <div class="dim__label">Contemporaneity</div>
+        <div class="dim__score"><span class="dim__num">{ S3 }</span><span class="dim__max">/10</span></div>
+        <div class="dim__bar"><div class="dim__bar-fill mid" style="width:{ S3 }0%"></div></div>
+        <div class="dim__note">{ Does it feel current without being trend-chasing? Timelessness vs. dated signals. }</div>
+      </div>
+      <div class="dim">
+        <div class="dim__label">Emotional Resonance</div>
+        <div class="dim__score"><span class="dim__num">{ S4 }</span><span class="dim__max">/10</span></div>
+        <div class="dim__bar"><div class="dim__bar-fill mid" style="width:{ S4 }0%"></div></div>
+        <div class="dim__note">{ Does the brand evoke the intended feeling? Warmth, trust, innovation, calm. }</div>
+      </div>
+      <div class="dim">
+        <div class="dim__label">Differentiation</div>
+        <div class="dim__score"><span class="dim__num">{ S5 }</span><span class="dim__max">/10</span></div>
+        <div class="dim__bar"><div class="dim__bar-fill mid" style="width:{ S5 }0%"></div></div>
+        <div class="dim__note">{ How far from the category default? Could it be swapped with a competitor? }</div>
+      </div>
+      <div class="dim">
+        <div class="dim__label">Extensibility</div>
+        <div class="dim__score"><span class="dim__num">{ S6 }</span><span class="dim__max">/10</span></div>
+        <div class="dim__bar"><div class="dim__bar-fill mid" style="width:{ S6 }0%"></div></div>
+        <div class="dim__note">{ Can the system scale to new products, platforms, and contexts without breaking? }</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="matrix">
+    <div class="matrix__col">
+      <div class="matrix__col-title keep">Keep (3)</div>
+      <div class="matrix__item">{ What works. Preserve this element in any upgrade. }</div>
+      <div class="matrix__item">{ Strongest brand asset. The thing people remember. }</div>
+      <div class="matrix__item">{ Hidden strength worth amplifying. }</div>
+    </div>
+    <div class="matrix__col">
+      <div class="matrix__col-title fix">Fix (3)</div>
+      <div class="matrix__item">{ What hurts. This inconsistency or weakness actively costs trust. }</div>
+      <div class="matrix__item">{ Category-default element that erodes differentiation. }</div>
+      <div class="matrix__item">{ Technical debt: accessibility, scalability, or rendering issues. }</div>
+    </div>
+    <div class="matrix__col">
+      <div class="matrix__col-title qw">Quick Wins (3)</div>
+      <div class="matrix__item">{ Low-effort, high-impact change. Can be done this week. }</div>
+      <div class="matrix__item">{ Swap or refine one element for immediate improvement. }</div>
+      <div class="matrix__item">{ Remove or deprecate something that no longer serves. }</div>
+    </div>
+  </section>
+
+  <section class="directions">
+    <div class="directions__head"><h2>Three Upgrade Directions</h2></div>
+    <div class="directions__grid">
+      <div class="direction">
+        <div class="direction__num">01</div>
+        <div class="direction__title">{ Direction A Name }</div>
+        <div class="direction__desc">{ Evolve the existing system. Keep 80% of what works, refine the 20% that hurts. Lowest risk. }</div>
+        <div class="direction__moodboard"></div>
+      </div>
+      <div class="direction">
+        <div class="direction__num">02</div>
+        <div class="direction__title">{ Direction B Name }</div>
+        <div class="direction__desc">{ Redefine the visual language. Bigger shift in tone and expression. Medium risk, higher reward. }</div>
+        <div class="direction__moodboard"></div>
+      </div>
+      <div class="direction">
+        <div class="direction__num">03</div>
+        <div class="direction__title">{ Direction C Name }</div>
+        <div class="direction__desc">{ Category-breaking move. Position the brand in a new space. Highest risk, highest differentiation. }</div>
+        <div class="direction__moodboard"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="colophon">
+    <div class="colophon__left">
+      <svg viewBox="-12 -12 24 24"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="#D4532B"/></svg>
+      compiled by ifq.ai
+    </div>
+    <div class="colophon__right">ifq.ai / <span data-ifq-year></span></div>
+  </footer>
+
+<script>
+  (function(){
+    function y(v){if(!v)return null;if(v instanceof Date)return isNaN(v.getTime())?null:String(v.getFullYear());var m=String(v).trim().match(/^(\d{4})[-/](\d{2})[-/](\d{2})/);if(!m)return null;var d=new Date(+m[1],+m[2]-1,+m[3]);return isNaN(d.getTime())||d.getFullYear()!==+m[1]?null:m[1];}
+    var t=document.querySelector('meta[name="ifq:created-at"]');
+    var yr=y(window.IFQ_CREATION_DATE||document.documentElement.getAttribute('data-ifq-created-at')||(t&&t.getAttribute('content')))||String(new Date().getFullYear());
+    document.querySelectorAll('[data-ifq-year]').forEach(function(n){n.textContent=yr});
+  })();
+</script>
+</body>
+</html>

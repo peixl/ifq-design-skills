@@ -6,12 +6,12 @@
   "modeRoutes": [
     {
       "mode": "M-01",
-      "templateId": "T-hero-landing",
-      "triggers": ["launch film", "发布会动画", "产品片头", "motion demo"],
+      "templateId": "T-launch-film",
+      "triggers": ["launch film", "发布会动画", "产品片头", "motion demo", "launch opener", "product video"],
       "required_assets": ["logo", "product_image_or_key_visual", "timeline"],
       "verify_command": "npm run verify:lite -- <file.html>",
       "example_prompt": "24 秒硬件发布片头，冷静，像 Teenage Engineering，不要发布会预热。",
-      "fallback_note": "Use as keyposter/first-frame scaffold, then read references/animations.md and assets/animations.jsx for timeline implementation."
+      "fallback_note": "Use T-hero-landing as keyposter scaffold if T-launch-film is too specific."
     },
     {
       "mode": "M-02",
@@ -47,12 +47,12 @@
     },
     {
       "mode": "M-06",
-      "templateId": "T-hero-landing",
-      "triggers": ["onboarding", "新手引导", "flow demo", "可交互流程"],
+      "templateId": "T-onboarding-flow",
+      "triggers": ["onboarding", "新手引导", "flow demo", "可交互流程", "first run", "guided setup"],
       "required_assets": ["screen_list", "primary_flow", "interaction_points"],
       "verify_command": "npm run verify:lite -- <file.html>",
       "example_prompt": "做一个 5 屏 onboarding flow demo。",
-      "fallback_note": "Use as flow cover/overview scaffold, then read App/iOS rules and inline the appropriate device frame."
+      "fallback_note": "Use T-hero-landing as flow cover scaffold if T-onboarding-flow is too specific."
     },
     {
       "mode": "M-07",
@@ -88,20 +88,21 @@
     },
     {
       "mode": "M-11",
-      "templateId": "T-compare-vs",
-      "triggers": ["品牌诊断", "brand audit", "品牌体检", "upgrade direction"],
+      "templateId": "T-brand-diagnosis",
+      "triggers": ["品牌诊断", "brand audit", "品牌体检", "upgrade direction", "brand critique"],
       "required_assets": ["current_brand", "competitors", "diagnosis_criteria"],
       "verify_command": "npm run verify:lite -- <file.html>",
       "example_prompt": "帮这个品牌做一次体检，给 3 个升级方向。",
-      "fallback_note": "Use comparison matrix as audit board; expand with references/critique-guide.md for scoring."
+      "fallback_note": "Use T-compare-vs as audit board if T-brand-diagnosis is too specific."
     },
     {
       "mode": "M-12",
-      "templateId": "T-hero-landing",
-      "triggers": ["brand from scratch", "从零建立品牌", "brand system", "全栈品牌系统"],
+      "templateId": "T-brand-system",
+      "triggers": ["brand from scratch", "从零建立品牌", "brand system", "全栈品牌系统", "visual identity"],
       "required_assets": ["positioning", "name", "applications"],
       "verify_command": "npm run verify:lite -- <file.html>",
-      "example_prompt": "从零建立一个 AI 工具品牌系统，含落地页和社媒物料。"
+      "example_prompt": "从零建立一个 AI 工具品牌系统，含落地页和社媒物料。",
+      "fallback_note": "Use T-hero-landing as landing page scaffold if T-brand-system is too specific."
     }
   ],
   "templates": [
@@ -168,6 +169,38 @@
       "file": "assets/templates/business-card.html",
       "viewport": "96×60mm",
       "notes": "IFQ business card scaffold with spark cue, quiet URL, and authored back colophon."
+    },
+    {
+      "id": "T-launch-film",
+      "mode": ["M-01"],
+      "name": "Launch Film Timeline",
+      "file": "assets/templates/launch-film.html",
+      "viewport": "1440×900",
+      "notes": "Stage+Sprite launch film scaffold with shot timeline, keyposter slot, spec strip, and export path. Rust ledger spine anchors the timeline."
+    },
+    {
+      "id": "T-onboarding-flow",
+      "mode": ["M-06"],
+      "name": "Onboarding Flow Demo",
+      "file": "assets/templates/onboarding-flow.html",
+      "viewport": "1440×900",
+      "notes": "Multi-screen onboarding flow with progress stepper, screen cards, user-mind annotations, and tracking hooks. Progress bar uses rust ledger as flow spine."
+    },
+    {
+      "id": "T-brand-diagnosis",
+      "mode": ["M-11"],
+      "name": "Brand Diagnosis Report",
+      "file": "assets/templates/brand-diagnosis.html",
+      "viewport": "1440×900",
+      "notes": "Six-dimension scoring matrix, Keep/Fix/Quick Wins triage, and three upgrade directions with moodboard slots. Score bars use brand color semantics."
+    },
+    {
+      "id": "T-brand-system",
+      "mode": ["M-12"],
+      "name": "Brand System Spec",
+      "file": "assets/templates/brand-system.html",
+      "viewport": "1440×900",
+      "notes": "Full brand identity page: logo variants, color palette with WCAG, typography scale, 6 application examples, and spacing system. Rust ledger anchors sections."
     }
   ]
 }

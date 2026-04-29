@@ -27,7 +27,7 @@
 
 <br>
 
-<sub>Thesis &nbsp;·&nbsp; Install &nbsp;·&nbsp; Human + Agent contract &nbsp;·&nbsp; What it hears &nbsp;·&nbsp; Anatomy &nbsp;·&nbsp; Five marks &nbsp;·&nbsp; 12 modes &nbsp;·&nbsp; Six layers &nbsp;·&nbsp; Verification &nbsp;·&nbsp; License</sub>
+<sub>Thesis &nbsp;·&nbsp; Install &nbsp;·&nbsp; Quickstart &nbsp;·&nbsp; Comparison &nbsp;·&nbsp; Human + Agent contract &nbsp;·&nbsp; What it hears &nbsp;·&nbsp; Anatomy &nbsp;·&nbsp; Five marks &nbsp;·&nbsp; 12 modes &nbsp;·&nbsp; Six layers &nbsp;·&nbsp; Verification &nbsp;·&nbsp; Community &nbsp;·&nbsp; License</sub>
 
 </div>
 
@@ -79,6 +79,27 @@ git clone https://github.com/peixl/ifq-design-skills
 # Share across every agent (recommended)
 git clone https://github.com/peixl/ifq-design-skills ~/.agents/skills/ifq-design-skills
 ```
+
+**60-second quickstart:** Just talk to the agent after install. 3 one-liner examples → [references/quickstart.md](references/quickstart.md).
+
+---
+
+## Comparison
+
+| Capability | IFQ Design Skills | frontend-design | web-design-guidelines | pptx/pdf | impeccable |
+|------|:---:|:---:|:---:|:---:|:---:|
+| 12-mode design routing | ✓ | — | — | — | — |
+| Forkable templates (not blank canvas) | ✓ 12 | partial | — | — | — |
+| Multi-format export (MP4/GIF/PPTX/PDF/SVG) | ✓ | — | — | single | — |
+| Brand ambient layer (5 marks) | ✓ | — | — | — | — |
+| Zero-install core loop | ✓ | ✓ | ✓ | — | ✓ |
+| Fact-check protocol | ✓ | — | — | — | — |
+| 20-scenario eval regression | ✓ | — | — | — | — |
+| Anti-AI-slop checklist | ✓ | — | partial | — | ✓ |
+| Multi-agent compat (8+ runtimes) | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Security audit (zero spawn/eval/network) | ✓ | ✓ | ✓ | ✓ | ✓ |
+
+> IFQ is the only skill that does **design + multi-format export + brand integration** in one package.
 
 ---
 
@@ -411,7 +432,25 @@ python scripts/verify.py path/to/design.html       # headless multi-viewport scr
 
 Escalate to the deep tier only when you actually need automated screenshots, click-tests, or MP4 / PDF / PPTX export. See [references/verification.md](references/verification.md).
 
-**Contributing:** read [CONTRIBUTING.md](CONTRIBUTING.md) before changing protocol, templates, scripts, or docs. Security posture and reporting live in [SECURITY.md](SECURITY.md).
+---
+
+## Showcase
+
+Open the HTML files in `demos/` to see real output quality:
+
+| Demo | File | What it shows |
+|------|------|---------------|
+| Landing Page | `demos/hero-landing-showcase.html` | Editorial hero + rust ledger + spark animation |
+| Dashboard | `demos/dashboard-showcase.html` | Command center + KPI strip + sparkline grid |
+| Slide Deck | `demos/deck-showcase.html` | 5-slide keynote + field-note colophon |
+
+---
+
+## Community
+
+- **Issues**: [GitHub Issues](https://github.com/peixl/ifq-design-skills/issues) — bug reports and feature requests
+- **Discussions**: [GitHub Discussions](https://github.com/peixl/ifq-design-skills/discussions) — design sharing and usage
+- **Contributing:** read [CONTRIBUTING.md](CONTRIBUTING.md) before changing protocol, templates, scripts, or docs. Security posture and reporting live in [SECURITY.md](SECURITY.md).
 
 ---
 

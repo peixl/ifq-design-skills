@@ -1,0 +1,536 @@
+<!doctype html><!--
+  IFQ Design Skills · Showcase — Design Operations Command Center
+  Production-quality dashboard with real design ops data.
+  Self-contained · local-first fonts · dark mode · print · responsive.
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="ifq:created-at" content="2026-04-29"/>
+<title>Design Operations Command Center · ifq.ai</title>
+<style>
+  :root {
+    --ifq-accent:#D4532B; --ifq-accent-deep:#A83518; --ifq-accent-soft:#FFB27A;
+    --ifq-ink:#0F0F0F; --ifq-ink-soft:#3A3532; --ifq-paper:#FAF7F2; --ifq-cream:#F1EBE0;
+    --ifq-hairline:#E6DFD3; --ifq-surface:#FFFFFF; --ifq-line:rgba(17,17,17,0.08);
+    --ifq-display:'Newsreader','Noto Serif SC','Source Han Serif SC','Songti SC',STSong,Georgia,serif;
+    --ifq-sans:-apple-system,BlinkMacSystemFont,'SF Pro Text','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Source Han Sans SC',Arial,sans-serif;
+    --ifq-mono:'JetBrains Mono','SF Mono','Cascadia Mono','Microsoft YaHei Mono',ui-monospace,Menlo,Consolas,monospace;
+    --ok:#2E7D5B; --warn:#C89B2A; --err:#B1422A;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--ifq-paper); color: var(--ifq-ink); font-family: var(--ifq-sans); font-feature-settings: 'tnum'; -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--ifq-accent-soft); color: var(--ifq-ink); }
+
+  /* ===== SHELL ===== */
+  .shell { display: grid; grid-template-columns: 240px 1fr; width: 1440px; min-height: 960px; }
+
+  /* ===== SIDEBAR ===== */
+  aside {
+    background: var(--ifq-ink); color: var(--ifq-paper);
+    padding: 28px 20px; display: flex; flex-direction: column; gap: 6px;
+    position: relative;
+  }
+  /* Ambient mark: sidebar rust ledger accent line */
+  aside::after {
+    content: ''; position: absolute; top: 0; bottom: 0; right: 0;
+    width: 3px; background: var(--ifq-accent);
+  }
+  .brand {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--ifq-display); font-weight: 900; font-size: 22px;
+    letter-spacing: -0.5px; margin-bottom: 40px;
+  }
+  .brand svg { width: 18px; height: 18px; color: var(--ifq-accent-soft); }
+  .brand b { color: var(--ifq-accent-soft); }
+  .brand__sub {
+    font-family: var(--ifq-mono); font-size: 9px; letter-spacing: 1.6px;
+    text-transform: uppercase; color: rgba(250,247,242,0.4); margin-top: 4px;
+  }
+  .nav-section {
+    font-family: var(--ifq-mono); font-size: 9px; letter-spacing: 2px;
+    text-transform: uppercase; color: rgba(250,247,242,0.3);
+    padding: 16px 12px 8px; margin-top: 8px;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 14px; font-family: var(--ifq-mono); font-size: 12px;
+    letter-spacing: 0.8px; text-transform: uppercase;
+    color: rgba(250,247,242,0.6); cursor: pointer;
+    border-left: 2px solid transparent; transition: all .15s;
+  }
+  .nav-item:hover { color: rgba(250,247,242,0.85); background: rgba(255,255,255,0.03); }
+  .nav-item.active {
+    color: var(--ifq-paper); border-left-color: var(--ifq-accent-soft);
+    background: rgba(255,255,255,0.05);
+  }
+  .nav-item svg {
+    width: 16px; height: 16px; stroke: currentColor; fill: none;
+    stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0;
+  }
+  .nav-item .badge {
+    margin-left: auto; padding: 2px 7px; font-size: 9px; font-weight: 600;
+    background: var(--ifq-accent); color: #fff; border-radius: 2px;
+    letter-spacing: 0.5px;
+  }
+  .sidebar-footer {
+    margin-top: auto; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex; align-items: center; gap: 8px;
+    font-family: var(--ifq-mono); font-size: 10px; letter-spacing: 0.8px;
+    color: rgba(250,247,242,0.35);
+  }
+  .sidebar-footer svg { width: 12px; height: 12px; color: var(--ifq-accent-soft); }
+
+  /* ===== MAIN CONTENT ===== */
+  main { padding: 32px 40px; overflow: auto; }
+
+  /* Header */
+  .head {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 28px; padding-bottom: 24px;
+    border-bottom: 1px solid var(--ifq-line);
+  }
+  .head h1 {
+    font-family: var(--ifq-display); font-size: 34px; font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+  .head p {
+    font-family: var(--ifq-mono); font-size: 11px; letter-spacing: 1.4px;
+    text-transform: uppercase; color: rgba(17,17,17,0.5); margin-top: 6px;
+  }
+  .head__right { display: flex; gap: 8px; font-family: var(--ifq-mono); font-size: 12px; }
+  .head__right span {
+    padding: 7px 14px; border: 1px solid var(--ifq-line); cursor: pointer;
+    transition: all .15s; letter-spacing: 0.8px;
+  }
+  .head__right span:hover { border-color: rgba(17,17,17,0.2); }
+  .head__right .active { background: var(--ifq-ink); color: var(--ifq-paper); border-color: var(--ifq-ink); }
+
+  /* ===== KPI STRIP ===== */
+  .kpi {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+    border: 1px solid var(--ifq-line); background: var(--ifq-surface);
+    margin-bottom: 28px;
+  }
+  .kpi__cell {
+    padding: 24px 28px; border-right: 1px solid var(--ifq-line);
+    position: relative;
+  }
+  .kpi__cell:last-child { border-right: none; }
+  .kpi__cell::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .kpi__cell:nth-child(1)::before { background: var(--ifq-accent); }
+  .kpi__cell:nth-child(2)::before { background: var(--ok); }
+  .kpi__cell:nth-child(3)::before { background: var(--ifq-accent-soft); }
+  .kpi__cell:nth-child(4)::before { background: var(--warn); }
+  .kpi__label {
+    font-family: var(--ifq-mono); font-size: 10px; letter-spacing: 1.6px;
+    text-transform: uppercase; color: rgba(17,17,17,0.5);
+  }
+  .kpi__num {
+    font-family: var(--ifq-display); font-size: 44px; font-weight: 900;
+    letter-spacing: -1.5px; margin-top: 10px; line-height: 1;
+  }
+  .kpi__delta {
+    font-family: var(--ifq-mono); font-size: 11px; margin-top: 8px;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .kpi__delta.up { color: var(--ok); }
+  .kpi__delta.down { color: var(--err); }
+  .kpi__delta svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; }
+  .kpi__spark { margin-top: 12px; height: 32px; }
+
+  /* ===== 3×3 CARD GRID ===== */
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .card {
+    background: var(--ifq-surface); border: 1px solid var(--ifq-line);
+    padding: 22px 24px; min-height: 180px; position: relative;
+    transition: border-color .2s;
+  }
+  .card:hover { border-color: rgba(17,17,17,0.16); }
+  .card__label {
+    font-family: var(--ifq-mono); font-size: 10px; letter-spacing: 1.6px;
+    text-transform: uppercase; color: rgba(17,17,17,0.5);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card__label svg {
+    width: 14px; height: 14px; stroke: currentColor; fill: none;
+    stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+  }
+  .card__title {
+    font-family: var(--ifq-display); font-size: 26px; font-weight: 700;
+    letter-spacing: -0.3px; margin-top: 10px;
+  }
+  .card__meta {
+    font-family: var(--ifq-mono); font-size: 11px; color: rgba(17,17,17,0.5);
+    margin-top: 6px;
+  }
+  .spark { margin-top: 16px; width: 100%; height: 48px; }
+  .status {
+    position: absolute; top: 20px; right: 20px;
+    width: 8px; height: 8px; border-radius: 50%;
+  }
+  .status.ok { background: var(--ok); }
+  .status.warn { background: var(--warn); }
+  .status.err { background: var(--err); }
+
+  /* ===== MONO COLOPHON (ambient mark) ===== */
+  .wm {
+    position: fixed; bottom: 16px; right: 20px;
+    display: flex; align-items: center; gap: 6px; opacity: 0.4;
+    font-family: var(--ifq-mono); font-size: 10px; letter-spacing: 1px;
+    color: var(--ifq-ink); pointer-events: none;
+  }
+  .wm svg { width: 11px; height: 11px; }
+  .wm b { color: var(--ifq-accent); }
+
+  /* ===== RESPONSIVE: TABLET ===== */
+  @media (max-width: 1024px) {
+    .shell { width: 100%; min-height: 100vh; grid-template-columns: 200px 1fr; }
+    aside { padding: 24px 16px; }
+    aside::after { width: 2px; }
+    .brand { font-size: 20px; margin-bottom: 32px; }
+    .nav-item { font-size: 11px; padding: 9px 12px; }
+    main { padding: 28px 32px; }
+    .head h1 { font-size: 28px; }
+    .kpi { grid-template-columns: repeat(2, 1fr); }
+    .kpi__cell:nth-child(2) { border-right: none; }
+    .kpi__cell:nth-child(1),
+    .kpi__cell:nth-child(2) { border-bottom: 1px solid var(--ifq-line); }
+    .kpi__num { font-size: 36px; }
+    .grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .card__title { font-size: 22px; }
+  }
+
+  /* ===== RESPONSIVE: MOBILE ===== */
+  @media (max-width: 640px) {
+    .shell { display: flex; flex-direction: column; width: 100%; min-height: 100vh; }
+    aside {
+      flex-direction: row; flex-wrap: wrap; padding: 14px 16px;
+      gap: 6px; align-items: center;
+    }
+    aside::after { display: none; }
+    .brand { margin-bottom: 0; font-size: 18px; }
+    .brand__sub { display: none; }
+    .nav-section { display: none; }
+    .nav-item {
+      font-size: 10px; padding: 6px 10px;
+      border-left: none; border-bottom: 2px solid transparent;
+    }
+    .nav-item.active { border-left-color: transparent; border-bottom-color: var(--ifq-accent-soft); }
+    .nav-item .badge { display: none; }
+    .sidebar-footer { display: none; }
+    main { padding: 20px 16px; }
+    .head { flex-direction: column; align-items: flex-start; gap: 14px; }
+    .head h1 { font-size: 24px; }
+    .head__right { font-size: 11px; }
+    .head__right span { padding: 5px 10px; }
+    .kpi { grid-template-columns: 1fr 1fr; }
+    .kpi__cell { padding: 16px 18px; }
+    .kpi__num { font-size: 28px; }
+    .kpi__label { font-size: 9px; }
+    .grid { grid-template-columns: 1fr; }
+    .card { min-height: auto; padding: 18px 18px; }
+    .card__title { font-size: 20px; }
+    .wm { position: static; margin-top: 16px; justify-content: center; opacity: 0.5; }
+  }
+
+  /* ===== PRINT ===== */
+  @media print {
+    .wm { display: none; }
+    aside { display: none; }
+    aside::after { display: none; }
+    .shell { display: block; width: auto; min-height: auto; }
+    main { padding: 10mm; }
+    .head__right { display: none; }
+    .grid { break-inside: avoid; }
+    .card { break-inside: avoid; }
+    .kpi { break-inside: avoid; }
+  }
+
+  /* ===== DARK MODE ===== */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ifq-ink: #F5EFE3; --ifq-ink-soft: #C8BFB0;
+      --ifq-paper: #141212; --ifq-cream: #1C1916; --ifq-hairline: #2A2520;
+      --ifq-surface: #1C1916; --ifq-line: rgba(245,239,227,0.1);
+    }
+    aside { background: #0A0909; }
+    .head__right span { border-color: rgba(245,239,227,0.12); }
+    .head__right span:hover { border-color: rgba(245,239,227,0.2); }
+    .head__right .active { background: var(--ifq-ink); color: var(--ifq-paper); border-color: var(--ifq-ink); }
+    .kpi__label, .card__label, .card__meta, .head p { color: rgba(245,239,227,0.5); }
+    .card:hover { border-color: rgba(245,239,227,0.18); }
+    .kpi__cell:nth-child(1),
+    .kpi__cell:nth-child(2) { border-bottom-color: rgba(245,239,227,0.1); }
+  }
+
+  /* ===== REDUCED MOTION ===== */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <aside>
+    <div>
+      <div class="brand">
+        <svg viewBox="-12 -12 24 24"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="currentColor"/></svg>
+        <div>
+          <span>ifq<b>.ai</b></span>
+          <div class="brand__sub">Design Ops Center</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-section">Overview</div>
+    <div class="nav-item active">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Command Center
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+      Metrics
+      <span class="badge">Live</span>
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+      Insights
+    </div>
+
+    <div class="nav-section">Production</div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+      Projects
+      <span class="badge">8</span>
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M3 12h18"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+      Design System
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16"/></svg>
+      Motion Lab
+    </div>
+
+    <div class="nav-section">Quality</div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      Verification
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Exports
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Settings
+    </div>
+
+    <div class="sidebar-footer">
+      <svg viewBox="-12 -12 24 24"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="currentColor"/></svg>
+      v2.4.0 · <span data-ifq-year></span>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main>
+    <div class="head">
+      <div>
+        <h1>Design Operations Command Center</h1>
+        <p>ifq.ai / live system / last updated · 2 min ago</p>
+      </div>
+      <div class="head__right">
+        <span>1D</span><span>7D</span><span class="active">30D</span><span>90D</span>
+      </div>
+    </div>
+
+    <!-- KPI STRIP -->
+    <div class="kpi">
+      <div class="kpi__cell">
+        <div class="kpi__label">Designs Shipped</div>
+        <div class="kpi__num">2,847</div>
+        <div class="kpi__delta up">
+          <svg viewBox="0 0 24 24"><path d="M5 15 L12 8 L19 15"/></svg> +18.3% vs 30d
+        </div>
+        <svg class="kpi__spark" viewBox="0 0 280 32" preserveAspectRatio="none">
+          <polyline points="0,28 28,24 56,26 84,18 112,20 140,14 168,16 196,8 224,10 252,4 280,6" fill="none" stroke="var(--ifq-accent)" stroke-width="1.8"/>
+          <polyline points="0,28 28,24 56,26 84,18 112,20 140,14 168,16 196,8 224,10 252,4 280,6" fill="url(#kpiGrad1)" stroke="none" opacity="0.12"/>
+        </svg>
+      </div>
+      <div class="kpi__cell">
+        <div class="kpi__label">Verification Pass Rate</div>
+        <div class="kpi__num">97.6<span style="font-size:24px;opacity:0.4">%</span></div>
+        <div class="kpi__delta up">
+          <svg viewBox="0 0 24 24"><path d="M5 15 L12 8 L19 15"/></svg> +1.2pp
+        </div>
+        <svg class="kpi__spark" viewBox="0 0 280 32" preserveAspectRatio="none">
+          <polyline points="0,10 28,12 56,8 84,14 112,10 140,12 168,6 196,10 224,4 252,8 280,2" fill="none" stroke="var(--ok)" stroke-width="1.8"/>
+        </svg>
+      </div>
+      <div class="kpi__cell">
+        <div class="kpi__label">Modes Active</div>
+        <div class="kpi__num">12<span style="font-size:24px;opacity:0.4">/12</span></div>
+        <div class="kpi__delta up">
+          <svg viewBox="0 0 24 24"><path d="M5 15 L12 8 L19 15"/></svg> All operational
+        </div>
+        <svg class="kpi__spark" viewBox="0 0 280 32" preserveAspectRatio="none">
+          <polyline points="0,16 28,16 56,16 84,16 112,16 140,16 168,16 196,16 224,16 252,16 280,16" fill="none" stroke="var(--ifq-accent-soft)" stroke-width="1.8"/>
+        </svg>
+      </div>
+      <div class="kpi__cell">
+        <div class="kpi__label">AI Slop Flagged</div>
+        <div class="kpi__num">0.3<span style="font-size:24px;opacity:0.4">%</span></div>
+        <div class="kpi__delta down">
+          <svg viewBox="0 0 24 24"><path d="M5 9 L12 16 L19 9"/></svg> −0.8pp
+        </div>
+        <svg class="kpi__spark" viewBox="0 0 280 32" preserveAspectRatio="none">
+          <polyline points="0,24 28,20 56,22 84,16 112,18 140,12 168,14 196,8 224,10 252,6 280,4" fill="none" stroke="var(--warn)" stroke-width="1.8"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- SVG defs for gradient fills -->
+    <svg width="0" height="0" style="position:absolute">
+      <defs>
+        <linearGradient id="kpiGrad1" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stop-color="#D4532B"/><stop offset="1" stop-color="#D4532B" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+    </svg>
+
+    <!-- 3×3 CARD GRID -->
+    <div class="grid">
+      <!-- Card 1: Hero Landings -->
+      <div class="card">
+        <span class="status ok"></span>
+        <div class="card__label">
+          <svg viewBox="0 0 24 24"><path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg>
+          Hero Landings
+        </div>
+        <div class="card__title">486 shipped</div>
+        <div class="card__meta">this quarter · avg 2.3s generation</div>
+        <svg class="spark" viewBox="0 0 300 48" preserveAspectRatio="none"><polyline points="0,36 30,30 60,34 90,24 120,28 150,16 180,20 210,10 240,14 270,6 300,8" fill="none" stroke="#D4532B" stroke-width="1.8"/></svg>
+      </div>
+
+      <!-- Card 2: Slide Decks -->
+      <div class="card">
+        <span class="status ok"></span>
+        <div class="card__label">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          Slide Decks
+        </div>
+        <div class="card__title">312 pptx</div>
+        <div class="card__meta">5-slide avg · real text frames</div>
+        <svg class="spark" viewBox="0 0 300 48" preserveAspectRatio="none"><polyline points="0,20 30,16 60,24 90,12 120,18 150,8 180,14 210,6 240,12 270,4 300,8" fill="none" stroke="#111" stroke-width="1.8"/></svg>
+      </div>
+
+      <!-- Card 3: Brand Compliance -->
+      <div class="card">
+        <span class="status ok"></span>
+        <div class="card__label">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Brand Compliance
+        </div>
+        <div class="card__title">94.8%</div>
+        <div class="card__meta">7 assets in review queue</div>
+        <svg class="spark" viewBox="0 0 300 48" preserveAspectRatio="none"><polyline points="0,14 30,18 60,10 90,16 120,8 150,14 180,10 210,12 240,6 270,10 300,4" fill="none" stroke="#2E7D5B" stroke-width="1.8"/></svg>
+      </div>
+
+      <!-- Card 4: Motion Renders -->
+      <div class="card">
+        <span class="status ok"></span>
+        <div class="card__label">
+          <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+          Motion Renders
+        </div>
+        <div class="card__title">1,240 mp4</div>
+        <div class="card__meta">60fps · palette-optimized gif</div>
+        <svg class="spark" viewBox="0 0 300 48" preserveAspectRatio="none"><polyline points="0,36 30,24 60,32 90,18 120,26 150,12 180,20 210,8 240,16 270,6 300,10" fill="none" stroke="#D4532B" stroke-width="1.8"/></svg>
+      </div>
+
+      <!-- Card 5: Playwright Tests -->
+      <div class="card">
+        <span class="status ok"></span>
+        <div class="card__label">
+          <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          Playwright Pass Rate
+        </div>
+        <div class="card__title">98.4%</div>
+        <div class="card__meta">2,847 tests · 452 unique flows</div>
+        <svg class="spark" viewBox="0 0 300 48" preserveAspectRatio="none"><polyline points="0,8 30,10 60,6 90,12 120,8 150,14 180,6 210,12 240,4 270,10 300,4" fill="none" stroke="#2E7D5B" stroke-width="1.8"/></svg>
+      </div>
+
+      <!-- Card 6: Philosophies Used -->
+      <div class="card">
+        <span class="status ok"></span>
+        <div class="card__label">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          Philosophies Active
+        </div>
+        <div class="card__title">20 / 20</div>
+        <div class="card__meta">all 5 schools represented</div>
+        <svg class="spark" viewBox="0 0 300 48" preserveAspectRatio="none"><polyline points="0,24 30,22 60,24 90,20 120,22 150,18 180,20 210,16 240,14 270,12 300,10" fill="none" stroke="#D4532B" stroke-width="1.8"/></svg>
+      </div>
+
+      <!-- Card 7: Advisor Triggers -->
+      <div class="card">
+        <span class="status warn"></span>
+        <div class="card__label">
+          <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Advisor Triggers
+        </div>
+        <div class="card__title">18.4%</div>
+        <div class="card__meta">vague-prompt fallback rate</div>
+        <svg class="spark" viewBox="0 0 300 48" preserveAspectRatio="none"><polyline points="0,28 30,32 60,26 90,34 120,28 150,36 180,30 210,34 240,28 270,32 300,26" fill="none" stroke="#C89B2A" stroke-width="1.8"/></svg>
+      </div>
+
+      <!-- Card 8: Export Formats -->
+      <div class="card">
+        <span class="status ok"></span>
+        <div class="card__label">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Export Formats
+        </div>
+        <div class="card__title">5 formats</div>
+        <div class="card__meta">HTML · PPTX · PDF · SVG · MP4</div>
+        <svg class="spark" viewBox="0 0 300 48" preserveAspectRatio="none"><polyline points="0,16 30,16 60,16 90,16 120,16 150,16 180,16 210,16 240,16 270,16 300,16" fill="none" stroke="#111" stroke-width="1.8"/></svg>
+      </div>
+
+      <!-- Card 9: Next Sprint -->
+      <div class="card">
+        <span class="status ok"></span>
+        <div class="card__label">
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          Next Sprint
+        </div>
+        <div class="card__title">4 modes in beta</div>
+        <div class="card__meta">M-09 iOS · M-11 Onboarding · M-12 Whitepaper · M-06 Review</div>
+        <svg class="spark" viewBox="0 0 300 48" preserveAspectRatio="none"><polyline points="0,30 30,26 60,28 90,20 120,22 150,16 180,18 210,12 240,14 270,8 300,6" fill="none" stroke="#D4532B" stroke-width="1.8"/></svg>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Mono colophon watermark -->
+<div class="wm">
+  <svg viewBox="-12 -12 24 24"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="#D4532B"/></svg>
+  ifq.ai / design ops / <span data-ifq-year></span>
+</div>
+
+<script>
+  (function(){
+    function y(v){if(!v)return null;if(v instanceof Date)return isNaN(v.getTime())?null:String(v.getFullYear());var m=String(v).trim().match(/^(\d{4})[-/](\d{2})[-/](\d{2})/);if(!m)return null;var d=new Date(+m[1],+m[2]-1,+m[3]);return isNaN(d.getTime())||d.getFullYear()!==+m[1]?null:m[1];}
+    var t=document.querySelector('meta[name="ifq:created-at"]');
+    var yr=y(window.IFQ_CREATION_DATE||document.documentElement.getAttribute('data-ifq-created-at')||(t&&t.getAttribute('content')))||String(new Date().getFullYear());
+    document.querySelectorAll('[data-ifq-year]').forEach(function(n){n.textContent=yr});
+  })();
+</script>
+</body>
+</html>

@@ -19,7 +19,7 @@
       "agent_value": "The agent has a fixed motion route, timeline references, and a Tier 0 preview before optional export.",
       "agent_contract": {
         "route": "M-01",
-        "template_ids": ["T-hero-landing"],
+        "template_ids": ["T-launch-film"],
         "must_read": ["references/animation-pitfalls.md", "references/animations.md", "references/video-export.md", "assets/templates/INDEX.json"],
         "tier": "Tier 0 for HTML preview; Tier 2 only when MP4/GIF is requested",
         "verification": ["npm run verify:lite -- <file.html>", "npm run preview -- <file.html>"],
@@ -119,7 +119,7 @@
       "agent_value": "The agent uses the device frame and overview/flow routing instead of hand-rolling a phone shell.",
       "agent_contract": {
         "route": "M-06",
-        "template_ids": ["T-hero-landing"],
+        "template_ids": ["T-onboarding-flow"],
         "must_read": ["references/app-prototype-rules.md", "assets/ios_frame.jsx", "assets/templates/INDEX.json"],
         "tier": "Tier 0",
         "verification": ["npm run verify:lite -- <file.html>", "npm run preview -- <file.html>", "manual click pass for tab/detail flow"],
@@ -219,7 +219,7 @@
       "agent_value": "The agent separates critique from execution and uses scoring criteria.",
       "agent_contract": {
         "route": "M-11",
-        "template_ids": ["T-compare-vs"],
+        "template_ids": ["T-brand-diagnosis"],
         "must_read": ["references/critique-guide.md", "references/design-direction-advisor.md", "assets/templates/INDEX.json"],
         "tier": "Tier 0",
         "verification": ["npm run verify:lite -- <file.html>", "npm run preview -- <file.html>"],
@@ -239,7 +239,7 @@
       "agent_value": "The agent can stage brand foundations, templates, and follow-up exports without losing the source of truth.",
       "agent_contract": {
         "route": "Design Direction Advisor -> M-12",
-        "template_ids": ["T-hero-landing", "T-social-x"],
+        "template_ids": ["T-brand-system", "T-hero-landing", "T-social-x"],
         "must_read": ["references/design-direction-advisor.md", "references/ifq-native-recipes.md", "references/ifq-brand-spec.md", "assets/templates/INDEX.json"],
         "tier": "Tier 0",
         "verification": ["npm run verify:lite -- <file.html>", "npm run preview -- <file.html>"],
@@ -248,6 +248,166 @@
       "quality_bar": {
         "must_include": ["positioning", "type/color/spacing tokens", "landing page", "social application", "usage notes"],
         "must_not": ["single-logo-only delivery", "brand marks without application", "hidden dependency on remote assets"]
+      }
+    },
+    {
+      "id": "m01-launch-with-existing-brand",
+      "mode": "M-01",
+      "prompt_zh": "用我们现有的品牌 assets 做一个 30 秒产品发布视频，品牌色是 #2563EB。",
+      "prompt_en": "Use our existing brand assets to make a 30-second product launch video. Brand color is #2563EB.",
+      "user_value": "The human gets a launch film that uses their actual brand system, not IFQ defaults.",
+      "agent_value": "The agent knows to override IFQ accent with user-supplied brand color and source real assets before animating.",
+      "agent_contract": {
+        "route": "M-01",
+        "template_ids": ["T-launch-film"],
+        "must_read": ["references/fact-and-asset-protocol.md", "references/animations.md", "assets/templates/INDEX.json"],
+        "tier": "Tier 0 for HTML; Tier 2 for MP4",
+        "verification": ["npm run verify:lite -- <file.html>", "npm run preview -- <file.html>"],
+        "fact_check_required": true
+      },
+      "quality_bar": {
+        "must_include": ["user brand color override", "asset sourcing protocol", "timeline with real product references"],
+        "must_not": ["default to IFQ accent color", "invent product specs", "skip asset verification"]
+      }
+    },
+    {
+      "id": "m04-dashboard-real-data",
+      "mode": "M-04",
+      "prompt_zh": "把这份 CSV 数据做成一个运营 dashboard，要能看到趋势和异常。",
+      "prompt_en": "Turn this CSV data into an operations dashboard. I need to see trends and anomalies.",
+      "user_value": "The human gets a data-driven dashboard, not a decorative mockup with fake numbers.",
+      "agent_value": "The agent parses real data, maps fields to chart slots, and highlights anomalies with color semantics.",
+      "agent_contract": {
+        "route": "M-04",
+        "template_ids": ["T-dashboard"],
+        "must_read": ["references/app-prototype-rules.md", "references/design-context.md", "assets/templates/INDEX.json"],
+        "tier": "Tier 0",
+        "verification": ["npm run verify:lite -- <file.html>", "npm run preview -- <file.html>"],
+        "fact_check_required": false
+      },
+      "quality_bar": {
+        "must_include": ["real data values from CSV", "trend visualization", "anomaly highlighting", "tabular-nums alignment"],
+        "must_not": ["fake placeholder numbers", "decorative charts with no data source", "ignore the user's actual data"]
+      }
+    },
+    {
+      "id": "m06-onboarding-multiplatform",
+      "mode": "M-06",
+      "prompt_zh": "做一个跨 iOS、Android 和 Web 的 onboarding 流程原型。",
+      "prompt_en": "Make an onboarding flow prototype that works across iOS, Android, and Web.",
+      "user_value": "The human gets platform-aware screens that respect each platform's conventions.",
+      "agent_value": "The agent uses device frames and platform-specific UI patterns instead of one-size-fits-all.",
+      "agent_contract": {
+        "route": "M-06",
+        "template_ids": ["T-onboarding-flow"],
+        "must_read": ["references/app-prototype-rules.md", "assets/ios_frame.jsx", "assets/android_frame.jsx", "assets/templates/INDEX.json"],
+        "tier": "Tier 0",
+        "verification": ["npm run verify:lite -- <file.html>", "npm run preview -- <file.html>"],
+        "fact_check_required": false
+      },
+      "quality_bar": {
+        "must_include": ["at least 2 platform variants", "platform-specific navigation patterns", "device frame reuse", "shared flow logic"],
+        "must_not": ["identical UI across all platforms", "iOS navigation on Android", "ignore platform conventions"]
+      }
+    },
+    {
+      "id": "m08-deck-with-pptx-export",
+      "mode": "M-08",
+      "prompt_zh": "做一份 15 页的 AI 趋势演讲 deck，要能导出 PPTX 给同事用。",
+      "prompt_en": "Make a 15-slide AI trends keynote deck. I need to export it as PPTX for my colleague.",
+      "user_value": "The human gets both an HTML preview and a verified editable PPTX file.",
+      "agent_value": "The agent builds HTML deck first, verifies it, then runs PPTX export only after HTML is approved.",
+      "agent_contract": {
+        "route": "M-08",
+        "template_ids": ["T-slide-title"],
+        "must_read": ["references/slide-decks.md", "references/editable-pptx.md", "assets/templates/INDEX.json"],
+        "tier": "Tier 0 for HTML; Tier 2 for PPTX",
+        "verification": ["npm run verify:lite -- <file.html>", "npm run preview -- <file.html>"],
+        "fact_check_required": true
+      },
+      "quality_bar": {
+        "must_include": ["15 distinct slides", "HTML verified before export", "PPTX export command documented", "real text frames not images"],
+        "must_not": ["claim PPTX exists without running export", "skip HTML verification", "use image-only slides"]
+      }
+    },
+    {
+      "id": "m09-social-multiplatform",
+      "mode": "M-09",
+      "prompt_zh": "这条产品更新做一套社媒物料：X、小红书、LinkedIn 三个平台。",
+      "prompt_en": "Turn this product update into a social media kit: X, Xiaohongshu, and LinkedIn.",
+      "user_value": "The human gets three platform-optimized cards from one content source.",
+      "agent_value": "The agent generates all three sizes from the same content, respecting each platform's aspect ratio and text density.",
+      "agent_contract": {
+        "route": "M-09",
+        "template_ids": ["T-social-x"],
+        "must_read": ["references/content-guidelines.md", "assets/templates/INDEX.json"],
+        "tier": "Tier 0",
+        "verification": ["npm run verify:lite -- <file.html>", "npm run preview -- <file.html>"],
+        "fact_check_required": false
+      },
+      "quality_bar": {
+        "must_include": ["3 platform-specific sizes (1200x675, 1242x1656, 1200x627)", "consistent brand treatment", "platform-appropriate text density"],
+        "must_not": ["identical layout scaled to different sizes", "ignore platform text limits", "remote font dependency"]
+      }
+    },
+    {
+      "id": "m12-brand-with-existing-guidelines",
+      "mode": "M-12",
+      "prompt_zh": "我们已有品牌指南 PDF，帮我扩展到数字触点：网站、App、社媒。",
+      "prompt_en": "We have a brand guidelines PDF. Help me extend it to digital touchpoints: website, app, social.",
+      "user_value": "The human gets digital applications of their existing brand, not a new brand from scratch.",
+      "agent_value": "The agent extracts tokens from existing guidelines and applies them to digital templates.",
+      "agent_contract": {
+        "route": "M-12",
+        "template_ids": ["T-brand-system", "T-hero-landing"],
+        "must_read": ["references/design-context.md", "references/ifq-brand-spec.md", "assets/templates/INDEX.json"],
+        "tier": "Tier 0",
+        "verification": ["npm run verify:lite -- <file.html>", "npm run preview -- <file.html>"],
+        "fact_check_required": false
+      },
+      "quality_bar": {
+        "must_include": ["extracted brand tokens from existing guidelines", "digital-specific applications", "usage notes for each touchpoint"],
+        "must_not": ["ignore existing brand guidelines", "create a new brand system", "override user's brand with IFQ defaults"]
+      }
+    },
+    {
+      "id": "edge-vague-no-context",
+      "mode": "M-02",
+      "prompt_zh": "帮我做点好看的东西，我也不确定要什么，给我几个方向看看。",
+      "prompt_en": "Make me something that looks good. I am not sure what I want — show me a few directions.",
+      "user_value": "The human gets 3 concrete directions to choose from instead of a generic template.",
+      "agent_value": "The agent uses the Design Direction Advisor to create choice, not guess.",
+      "agent_contract": {
+        "route": "Design Direction Advisor -> propose 3 -> user picks -> M-02",
+        "template_ids": ["T-hero-landing"],
+        "must_read": ["references/design-direction-advisor.md", "references/design-styles.md", "assets/templates/INDEX.json"],
+        "tier": "Tier 0",
+        "verification": ["npm run verify:lite -- <file.html>", "npm run preview -- <file.html>"],
+        "fact_check_required": false
+      },
+      "quality_bar": {
+        "must_include": ["3 differentiated directions", "each direction with a clear name and visual description", "user choice before execution"],
+        "must_not": ["pick a direction without asking", "produce a generic template", "ask more than 2 questions"]
+      }
+    },
+    {
+      "id": "edge-iterative-refinement",
+      "mode": "M-04",
+      "prompt_zh": "刚才那个 dashboard 的数字太小了，把 KPI 区域放大，配色改成深色主题。",
+      "prompt_en": "The numbers on that dashboard are too small. Make the KPI section bigger and switch to a dark theme.",
+      "user_value": "The human gets targeted edits to their existing artifact, not a rebuild from scratch.",
+      "agent_value": "The agent locates the previous file, makes surgical edits, re-verifies, and reports exactly what changed.",
+      "agent_contract": {
+        "route": "M-04 (iterative)",
+        "template_ids": ["T-dashboard"],
+        "must_read": ["references/design-context.md", "assets/templates/INDEX.json"],
+        "tier": "Tier 0",
+        "verification": ["npm run verify:lite -- <file.html>", "npm run preview -- <file.html>"],
+        "fact_check_required": false
+      },
+      "quality_bar": {
+        "must_include": ["locate previous artifact", "surgical edit not full rebuild", "re-verification after edit", "changelog of what changed"],
+        "must_not": ["start from scratch", "lose previous content", "skip re-verification"]
       }
     }
   ]

@@ -7,6 +7,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <meta name="ifq:created-at" content="{ CREATED_AT · optional ISO-8601, defaults to now }"/>
 <title>{ TALK TITLE } · ifq.ai keynote</title>
 <!-- China-safe default: no remote font request. See references/font-loading.md to opt into Google Fonts. -->
@@ -36,6 +37,61 @@
   .spark-cluster { position: absolute; right: 160px; top: 180px; display: flex; gap: 28px; align-items: center; }
   .spark-cluster svg { width: 96px; height: 96px; }
   .spark-cluster .small { width: 42px; height: 42px; opacity: 0.7; }
+
+  /* ---- Responsive: tablet ---- */
+  @media (max-width: 1024px) {
+    .slide { width: 100%; height: auto; min-height: 100vh; padding: 64px 80px; }
+    .rule { top: 64px; bottom: 64px; left: 64px; }
+    .title { font-size: 120px; letter-spacing: -3px; }
+    .sub { font-size: 32px; max-width: 720px; }
+    .spark-cluster { right: 100px; top: 120px; }
+    .spark-cluster svg { width: 72px; height: 72px; }
+    .spark-cluster .small { width: 32px; height: 32px; }
+    .meta { flex-direction: column; gap: 24px; align-items: flex-start; }
+  }
+
+  /* ---- Responsive: mobile ---- */
+  @media (max-width: 640px) {
+    body { background: var(--ifq-paper); }
+    .slide { width: 100%; height: auto; min-height: auto; padding: 32px 24px; }
+    .rule { display: none; }
+    .spark-cluster { position: static; margin-bottom: 24px; gap: 16px; }
+    .spark-cluster svg { width: 56px; height: 56px; }
+    .spark-cluster .small { width: 24px; height: 24px; }
+    .eyebrow { font-size: 14px; letter-spacing: 2px; }
+    .title { font-size: 64px; letter-spacing: -1.5px; line-height: 1.0; }
+    .sub { font-size: 22px; }
+    .meta { flex-direction: column; gap: 16px; font-size: 14px; }
+    .stamp { font-size: 12px; padding: 8px 14px; }
+  }
+
+  /* ---- Print ---- */
+  @media print {
+    body { background: #fff; }
+    .slide { width: 100%; height: auto; padding: 20mm; }
+    .rule { display: none; }
+    .spark-cluster { display: none; }
+    .title { font-size: 72px; }
+    .sub { font-size: 24px; }
+  }
+
+  /* ---- Dark mode ---- */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ifq-ink: #F5EFE3;
+      --ifq-paper: #141212;
+      --ifq-cream: #1C1916;
+      --ifq-hairline: #2A2520;
+    }
+    body { background: #0A0909; }
+    .sub { color: #C8BFB0; }
+    .meta { color: #C8BFB0; }
+  }
+
+  /* ---- Reduced motion ---- */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
 </style>
 </head>
 <body>

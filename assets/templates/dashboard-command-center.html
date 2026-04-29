@@ -7,6 +7,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Command Center · ifq.ai</title>
 <!-- China-safe default: no remote font request. See references/font-loading.md to opt into Google Fonts. -->
 <style>
@@ -66,6 +67,72 @@
   .wm { position: fixed; bottom: 14px; right: 18px; display: flex; align-items: center; gap: 6px; opacity: 0.45; font-family: var(--ifq-mono); font-size: 10px; letter-spacing: 1px; color: var(--ifq-ink); pointer-events: none; }
   .wm svg { width: 11px; height: 11px; }
   .wm b { color: var(--ifq-accent); }
+
+  /* ---- Responsive: tablet ---- */
+  @media (max-width: 1024px) {
+    .shell { width: 100%; height: auto; min-height: 100vh; grid-template-columns: 180px 1fr; }
+    aside { padding: 20px 16px; }
+    aside .brand { font-size: 18px; margin-bottom: 24px; }
+    aside .nav-item { font-size: 11px; padding: 8px 10px; }
+    main { padding: 24px 28px; }
+    .head h1 { font-size: 26px; }
+    .kpi { grid-template-columns: repeat(2, 1fr); }
+    .kpi__num { font-size: 32px; }
+    .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .card__title { font-size: 19px; }
+  }
+
+  /* ---- Responsive: mobile ---- */
+  @media (max-width: 640px) {
+    .shell { display: flex; flex-direction: column; width: 100%; height: auto; min-height: 100vh; }
+    aside { flex-direction: row; flex-wrap: wrap; padding: 12px 16px; gap: 4px; align-items: center; }
+    aside .brand { margin-bottom: 0; font-size: 16px; }
+    aside .nav-item { font-size: 10px; padding: 6px 8px; border-left: none; border-bottom: 2px solid transparent; }
+    aside .nav-item.active { border-left-color: transparent; border-bottom-color: var(--ifq-accent-soft); }
+    main { padding: 16px 16px; }
+    .head { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .head h1 { font-size: 22px; }
+    .head__right { font-size: 11px; }
+    .kpi { grid-template-columns: 1fr 1fr; }
+    .kpi__cell { padding: 14px 16px; }
+    .kpi__num { font-size: 26px; }
+    .kpi__label { font-size: 9px; }
+    .grid { grid-template-columns: 1fr; }
+    .card { min-height: auto; padding: 14px 16px; }
+    .card__title { font-size: 17px; }
+  }
+
+  /* ---- Print ---- */
+  @media print {
+    .wm { display: none; }
+    aside { display: none; }
+    .shell { display: block; width: auto; height: auto; }
+    main { padding: 10mm; }
+    .grid { break-inside: avoid; }
+    .card { break-inside: avoid; }
+  }
+
+  /* ---- Dark mode ---- */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ifq-ink: #F5EFE3;
+      --ifq-paper: #141212;
+      --ifq-cream: #1C1916;
+      --ifq-hairline: #2A2520;
+      --ifq-surface: #1C1916;
+      --ifq-line: rgba(245,239,227,0.1);
+    }
+    aside { background: #0A0909; }
+    .head__right span { border-color: rgba(245,239,227,0.12); }
+    .head__right .active { background: var(--ifq-ink); color: var(--ifq-paper); border-color: var(--ifq-ink); }
+    .kpi__label, .card__label, .card__meta, .head p { color: rgba(245,239,227,0.55); }
+    .col { background: var(--ifq-surface); }
+  }
+
+  /* ---- Reduced motion ---- */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
 </style>
 </head>
 <body>

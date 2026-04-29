@@ -1,0 +1,229 @@
+<!doctype html>
+<!--
+  IFQ Design Skills · Template T-brand-system
+  M-12 Full Brand System — logo + palette + type + 6 applications.
+  Fork-and-fill: replace { BRAND / COLOR / FONT / APP } placeholders.
+  Read references/ifq-brand-spec.md and references/design-direction-advisor.md first.
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="ifq:created-at" content="{ CREATED_AT }"/>
+<title>{ BRAND } Brand System · ifq.ai</title>
+<style>
+  :root {
+    --ifq-accent:#D4532B; --ifq-accent-deep:#A83518; --ifq-accent-soft:#FFB27A;
+    --ifq-ink:#111; --ifq-ink-soft:#3A3532; --ifq-paper:#FAF7F2; --ifq-cream:#F1EBE0; --ifq-hairline:#E6DFD3;
+    --ifq-display:'Newsreader','Noto Serif SC','Source Han Serif SC','Songti SC',STSong,Georgia,serif;
+    --ifq-sans:-apple-system,BlinkMacSystemFont,'SF Pro Text','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Source Han Sans SC',Arial,sans-serif;
+    --ifq-mono:'JetBrains Mono','SF Mono','Cascadia Mono','Microsoft YaHei Mono',ui-monospace,Menlo,Consolas,monospace;
+    /* Brand colors — replace with actual brand palette */
+    --brand-primary:{ PRIMARY_COLOR };
+    --brand-secondary:{ SECONDARY_COLOR };
+    --brand-accent:{ ACCENT_COLOR };
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --ifq-ink:#F5EFE3; --ifq-ink-soft:#C8BFB0; --ifq-paper:#141212; --ifq-cream:#1C1916; --ifq-hairline:#2A2520; }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: var(--ifq-paper); color: var(--ifq-ink); font-family: var(--ifq-sans); }
+  body { max-width: 1440px; margin: 0 auto; padding: 40px 80px 80px; position: relative; min-height: 100vh; }
+
+  /* Rust ledger */
+  .ledger { position: absolute; top: 0; bottom: 0; left: 60px; width: 3px; background: var(--ifq-accent); }
+
+  /* Header */
+  .head { display: flex; justify-content: space-between; align-items: center; padding-bottom: 32px; border-bottom: 1px solid var(--ifq-hairline); }
+  .head__brand { display: flex; align-items: center; gap: 10px; font-family: var(--ifq-display); font-weight: 900; font-size: 20px; }
+  .head__brand svg { width: 16px; height: 16px; color: var(--ifq-accent); }
+  .head__brand b { color: var(--ifq-accent); }
+  .head__meta { font-family: var(--ifq-mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ifq-ink-soft); opacity: .7; }
+
+  /* System hero */
+  .sys-hero { margin-top: 80px; text-align: center; max-width: 800px; margin-left: auto; margin-right: auto; }
+  .sys-hero__eyebrow { font-family: var(--ifq-mono); font-size: 12px; letter-spacing: 2.4px; text-transform: uppercase; color: var(--ifq-accent); margin-bottom: 16px; }
+  .sys-hero__title { font-family: var(--ifq-display); font-size: 64px; font-weight: 700; line-height: 1; letter-spacing: -2px; }
+  .sys-hero__title em { font-style: italic; color: var(--ifq-accent-deep); }
+  .sys-hero__desc { margin-top: 20px; font-size: 17px; line-height: 1.55; color: var(--ifq-ink-soft); max-width: 560px; margin-left: auto; margin-right: auto; }
+
+  /* Section pattern */
+  .section { margin-top: 80px; }
+  .section__head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 32px; padding-bottom: 16px; border-bottom: 1px solid var(--ifq-hairline); }
+  .section__head h2 { font-family: var(--ifq-display); font-size: 28px; letter-spacing: -0.5px; }
+  .section__head span { font-family: var(--ifq-mono); font-size: 11px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--ifq-ink-soft); }
+
+  /* Logo section */
+  .logo-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .logo-card { aspect-ratio: 1; background: var(--ifq-cream); border: 1px solid var(--ifq-hairline); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px; }
+  .logo-card__preview { width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; }
+  .logo-card__preview::before { content: "{ logo }"; font-family: var(--ifq-mono); font-size: 10px; color: var(--ifq-ink-soft); opacity: .4; }
+  .logo-card__label { font-family: var(--ifq-mono); font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--ifq-ink-soft); }
+  .logo-card.dark { background: var(--ifq-ink); }
+  .logo-card.dark .logo-card__label { color: rgba(250,247,242,0.6); }
+
+  /* Color palette */
+  .palette { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0; }
+  .swatch { aspect-ratio: 1; display: flex; flex-direction: column; justify-content: flex-end; padding: 14px; }
+  .swatch__name { font-family: var(--ifq-mono); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; }
+  .swatch__hex { font-family: var(--ifq-mono); font-size: 11px; margin-top: 4px; opacity: .7; }
+  .swatch__wcag { font-family: var(--ifq-mono); font-size: 9px; margin-top: 4px; opacity: .5; }
+
+  /* Typography */
+  .type-stack { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .type-sample { padding: 28px 24px; background: var(--ifq-cream); border: 1px solid var(--ifq-hairline); }
+  .type-sample__label { font-family: var(--ifq-mono); font-size: 10px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--ifq-ink-soft); margin-bottom: 12px; }
+  .type-sample__preview { margin-bottom: 8px; }
+  .type-sample__spec { font-family: var(--ifq-mono); font-size: 11px; color: var(--ifq-ink-soft); }
+
+  /* Applications grid */
+  .apps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .app { aspect-ratio: 4/3; background: var(--ifq-cream); border: 1px solid var(--ifq-hairline); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+  .app::before { content: "{ application }"; font-family: var(--ifq-mono); font-size: 10px; color: var(--ifq-ink-soft); opacity: .35; }
+  .app__label { position: absolute; bottom: 12px; left: 16px; font-family: var(--ifq-mono); font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--ifq-ink-soft); opacity: .6; }
+
+  /* Spacing system */
+  .spacing { display: flex; align-items: flex-end; gap: 12px; padding: 24px; background: var(--ifq-cream); border: 1px solid var(--ifq-hairline); }
+  .spacing__item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .spacing__block { background: var(--ifq-accent); opacity: .2; }
+  .spacing__label { font-family: var(--ifq-mono); font-size: 10px; color: var(--ifq-ink-soft); }
+
+  /* Colophon */
+  .colophon { margin-top: 64px; display: flex; align-items: center; justify-content: space-between; padding-top: 24px; border-top: 1px solid var(--ifq-hairline); }
+  .colophon__left { display: flex; align-items: center; gap: 8px; font-family: var(--ifq-mono); font-size: 10px; letter-spacing: 1px; color: var(--ifq-ink-soft); opacity: .6; }
+  .colophon__left svg { width: 12px; height: 12px; }
+  .colophon__right { font-family: var(--ifq-mono); font-size: 10px; letter-spacing: 1px; color: var(--ifq-ink-soft); opacity: .5; }
+
+  @media print {
+    body { padding: 20mm; }
+    .ledger { display: none; }
+    .logo-card, .type-sample, .app { break-inside: avoid; }
+  }
+  @media (max-width: 1024px) {
+    body { padding: 32px 40px; }
+    .sys-hero__title { font-size: 44px; }
+    .logo-grid { grid-template-columns: repeat(2, 1fr); }
+    .palette { grid-template-columns: repeat(3, 1fr); }
+    .type-stack { grid-template-columns: 1fr; }
+    .apps { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 640px) {
+    body { padding: 24px 20px; }
+    .sys-hero__title { font-size: 32px; }
+    .logo-grid, .apps { grid-template-columns: 1fr; }
+    .palette { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+  <div class="ledger" aria-hidden="true"></div>
+
+  <header class="head">
+    <div class="head__brand">
+      <svg viewBox="-12 -12 24 24"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="currentColor"/></svg>
+      <span>ifq<b>.ai</b></span>
+    </div>
+    <div class="head__meta">brand system / { BRAND } / <span data-ifq-year></span></div>
+  </header>
+
+  <section class="sys-hero">
+    <div class="sys-hero__eyebrow">{ BRAND } · brand system</div>
+    <h1 class="sys-hero__title">{ BRAND }<br/><em>Visual Identity</em></h1>
+    <p class="sys-hero__desc">{ 20 words on the brand's positioning, audience, and visual philosophy. }</p>
+  </section>
+
+  <section class="section">
+    <div class="section__head"><h2>Logo System</h2><span>4 variants</span></div>
+    <div class="logo-grid">
+      <div class="logo-card"><div class="logo-card__preview"></div><div class="logo-card__label">Primary</div></div>
+      <div class="logo-card dark"><div class="logo-card__preview"></div><div class="logo-card__label">Reversed</div></div>
+      <div class="logo-card"><div class="logo-card__preview"></div><div class="logo-card__label">Square</div></div>
+      <div class="logo-card"><div class="logo-card__preview"></div><div class="logo-card__label">Horizontal</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section__head"><h2>Color Palette</h2><span>oklch · WCAG contrast</span></div>
+    <div class="palette">
+      <div class="swatch" style="background:{ PRIMARY_COLOR };color:#fff"><div class="swatch__name">Primary</div><div class="swatch__hex">{ HEX }</div><div class="swatch__wcag">WCAG AA ✓</div></div>
+      <div class="swatch" style="background:{ SECONDARY_COLOR };color:#fff"><div class="swatch__name">Secondary</div><div class="swatch__hex">{ HEX }</div><div class="swatch__wcag">WCAG AA ✓</div></div>
+      <div class="swatch" style="background:{ ACCENT_COLOR };color:#fff"><div class="swatch__name">Accent</div><div class="swatch__hex">{ HEX }</div><div class="swatch__wcag">WCAG AA ✓</div></div>
+      <div class="swatch" style="background:{ DARK_COLOR };color:#fff"><div class="swatch__name">Dark</div><div class="swatch__hex">{ HEX }</div><div class="swatch__wcag">—</div></div>
+      <div class="swatch" style="background:{ LIGHT_COLOR };color:#111"><div class="swatch__name">Light</div><div class="swatch__hex">{ HEX }</div><div class="swatch__wcag">—</div></div>
+      <div class="swatch" style="background:{ NEUTRAL_COLOR };color:#fff"><div class="swatch__name">Neutral</div><div class="swatch__hex">{ HEX }</div><div class="swatch__wcag">—</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section__head"><h2>Typography</h2><span>type scale · local-first</span></div>
+    <div class="type-stack">
+      <div class="type-sample">
+        <div class="type-sample__label">Display</div>
+        <div class="type-sample__preview" style="font-family:var(--ifq-display);font-size:48px;font-weight:700;line-height:1.05;letter-spacing:-1.5px">{ Display heading }</div>
+        <div class="type-sample__spec">{ FONT_NAME } · 48px / 700 / -1.5px tracking</div>
+      </div>
+      <div class="type-sample">
+        <div class="type-sample__label">Body</div>
+        <div class="type-sample__preview" style="font-size:16px;line-height:1.55">{ Body text sample. The quick brown fox jumps over the lazy dog. }</div>
+        <div class="type-sample__spec">{ FONT_NAME } · 16px / 400 / 1.55 leading</div>
+      </div>
+      <div class="type-sample">
+        <div class="type-sample__label">Mono / Data</div>
+        <div class="type-sample__preview" style="font-family:var(--ifq-mono);font-size:14px;letter-spacing:0.5px">ifq.ai / 2026 / v1.0.0</div>
+        <div class="type-sample__spec">{ MONO_FONT } · 14px / 400 / tabular-nums</div>
+      </div>
+      <div class="type-sample">
+        <div class="type-sample__label">Scale</div>
+        <div style="font-family:var(--ifq-display);font-size:32px;font-weight:700">H1 — 32px</div>
+        <div style="font-size:24px;font-weight:600;margin-top:8px">H2 — 24px</div>
+        <div style="font-size:19px;font-weight:600;margin-top:8px">H3 — 19px</div>
+        <div style="font-size:16px;margin-top:8px">Body — 16px</div>
+        <div style="font-family:var(--ifq-mono);font-size:11px;margin-top:8px">Caption — 11px</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section__head"><h2>Applications</h2><span>6 touchpoints</span></div>
+    <div class="apps">
+      <div class="app"><div class="app__label">Business Card</div></div>
+      <div class="app"><div class="app__label">Website Hero</div></div>
+      <div class="app"><div class="app__label">App Icon</div></div>
+      <div class="app"><div class="app__label">Social Header</div></div>
+      <div class="app"><div class="app__label">Invitation</div></div>
+      <div class="app"><div class="app__label">Product Packaging</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section__head"><h2>Spacing System</h2><span>8-point ledger</span></div>
+    <div class="spacing">
+      <div class="spacing__item"><div class="spacing__block" style="width:4px;height:4px"></div><div class="spacing__label">4</div></div>
+      <div class="spacing__item"><div class="spacing__block" style="width:8px;height:8px"></div><div class="spacing__label">8</div></div>
+      <div class="spacing__item"><div class="spacing__block" style="width:12px;height:12px"></div><div class="spacing__label">12</div></div>
+      <div class="spacing__item"><div class="spacing__block" style="width:16px;height:16px"></div><div class="spacing__label">16</div></div>
+      <div class="spacing__item"><div class="spacing__block" style="width:24px;height:24px"></div><div class="spacing__label">24</div></div>
+      <div class="spacing__item"><div class="spacing__block" style="width:32px;height:32px"></div><div class="spacing__label">32</div></div>
+      <div class="spacing__item"><div class="spacing__block" style="width:48px;height:48px"></div><div class="spacing__label">48</div></div>
+      <div class="spacing__item"><div class="spacing__block" style="width:64px;height:64px"></div><div class="spacing__label">64</div></div>
+    </div>
+  </section>
+
+  <footer class="colophon">
+    <div class="colophon__left">
+      <svg viewBox="-12 -12 24 24"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="#D4532B"/></svg>
+      compiled by ifq.ai
+    </div>
+    <div class="colophon__right">ifq.ai / <span data-ifq-year></span></div>
+  </footer>
+
+<script>
+  (function(){
+    function y(v){if(!v)return null;if(v instanceof Date)return isNaN(v.getTime())?null:String(v.getFullYear());var m=String(v).trim().match(/^(\d{4})[-/](\d{2})[-/](\d{2})/);if(!m)return null;var d=new Date(+m[1],+m[2]-1,+m[3]);return isNaN(d.getTime())||d.getFullYear()!==+m[1]?null:m[1];}
+    var t=document.querySelector('meta[name="ifq:created-at"]');
+    var yr=y(window.IFQ_CREATION_DATE||document.documentElement.getAttribute('data-ifq-created-at')||(t&&t.getAttribute('content')))||String(new Date().getFullYear());
+    document.querySelectorAll('[data-ifq-year]').forEach(function(n){n.textContent=yr});
+  })();
+</script>
+</body>
+</html>

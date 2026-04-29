@@ -7,7 +7,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=1200"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <meta name="ifq:created-at" content="{ CREATED_AT · optional ISO-8601, defaults to now }"/>
 <title>{ HEADLINE } · ifq.ai</title>
 <!-- China-safe default: no remote font request. See references/font-loading.md to opt into Google Fonts. -->
@@ -34,6 +34,53 @@
 
   .spark{position:absolute;top:120px;right:120px;width:80px;height:80px;opacity:.92;animation:pulse 3s ease-in-out infinite}
   @keyframes pulse{0%,100%{transform:scale(1);opacity:.92}50%{transform:scale(1.08);opacity:1}}
+
+  /* ---- Responsive: tablet ---- */
+  @media (max-width: 1024px) {
+    .card{width:100%;max-width:1200px;height:auto;aspect-ratio:1200/675}
+    .inner{padding:48px 64px 48px 80px}
+    h1{font-size:64px}
+    .brand{font-size:18px}
+    .tag{font-size:11px}
+  }
+
+  /* ---- Responsive: mobile ---- */
+  @media (max-width: 640px) {
+    .card{width:100%;height:auto;aspect-ratio:auto;min-height:400px}
+    .card .rule{display:none}
+    .inner{padding:28px 24px}
+    .top{flex-direction:column;align-items:flex-start;gap:12px}
+    .brand{font-size:16px}
+    .tag{font-size:10px;letter-spacing:.16em}
+    h1{font-size:40px;line-height:1.06;max-width:100%}
+    .bottom{flex-direction:column;gap:12px;align-items:flex-start;font-size:12px}
+    .spark{width:48px;height:48px;top:24px;right:24px}
+  }
+
+  /* ---- Print ---- */
+  @media print {
+    .card{width:100%;max-width:1200px;height:auto;aspect-ratio:1200/675;box-shadow:none}
+    .card .rule{display:none}
+    .spark{display:none}
+    .card::before{display:none}
+  }
+
+  /* ---- Dark mode ---- */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ink: #F5EFE3;
+      --paper: #141212;
+      --cream: #1C1916;
+      --hairline: #2A2520;
+    }
+    /* Card already uses dark gradient; keep as-is */
+    .bottom{color:rgba(245,239,227,.72)}
+  }
+
+  /* ---- Reduced motion ---- */
+  @media (prefers-reduced-motion: reduce) {
+    .spark{animation:none}
+  }
 </style>
 </head>
 <body>

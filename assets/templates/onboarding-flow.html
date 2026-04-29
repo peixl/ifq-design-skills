@@ -1,0 +1,182 @@
+<!doctype html>
+<!--
+  IFQ Design Skills · Template T-onboarding-flow
+  M-06 Onboarding / Guided Flow — multi-screen interactive scaffold.
+  Fork-and-fill: replace { APP / STEP / SCREEN } placeholders.
+  Read references/app-prototype-rules.md for density and interaction rules.
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="ifq:created-at" content="{ CREATED_AT }"/>
+<title>{ APP } Onboarding · ifq.ai</title>
+<style>
+  :root {
+    --ifq-accent:#D4532B; --ifq-accent-deep:#A83518; --ifq-accent-soft:#FFB27A;
+    --ifq-ink:#111; --ifq-ink-soft:#3A3532; --ifq-paper:#FAF7F2; --ifq-cream:#F1EBE0; --ifq-hairline:#E6DFD3;
+    --ifq-display:'Newsreader','Noto Serif SC','Source Han Serif SC','Songti SC',STSong,Georgia,serif;
+    --ifq-sans:-apple-system,BlinkMacSystemFont,'SF Pro Text','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Source Han Sans SC',Arial,sans-serif;
+    --ifq-mono:'JetBrains Mono','SF Mono','Cascadia Mono','Microsoft YaHei Mono',ui-monospace,Menlo,Consolas,monospace;
+    --ok:#2E7D5B;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --ifq-ink:#F5EFE3; --ifq-ink-soft:#C8BFB0; --ifq-paper:#141212; --ifq-cream:#1C1916; --ifq-hairline:#2A2520; }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: var(--ifq-paper); color: var(--ifq-ink); font-family: var(--ifq-sans); }
+  body { max-width: 1440px; margin: 0 auto; padding: 40px 80px 80px; position: relative; min-height: 100vh; }
+
+  /* Header */
+  .head { display: flex; justify-content: space-between; align-items: center; padding-bottom: 32px; border-bottom: 1px solid var(--ifq-hairline); }
+  .head__brand { display: flex; align-items: center; gap: 10px; font-family: var(--ifq-display); font-weight: 900; font-size: 20px; }
+  .head__brand svg { width: 16px; height: 16px; color: var(--ifq-accent); }
+  .head__brand b { color: var(--ifq-accent); }
+  .head__meta { font-family: var(--ifq-mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ifq-ink-soft); opacity: .7; }
+
+  /* Flow hero */
+  .flow-hero { margin-top: 64px; text-align: center; max-width: 720px; margin-left: auto; margin-right: auto; }
+  .flow-hero__eyebrow { font-family: var(--ifq-mono); font-size: 12px; letter-spacing: 2.4px; text-transform: uppercase; color: var(--ifq-accent); margin-bottom: 16px; }
+  .flow-hero__title { font-family: var(--ifq-display); font-size: 56px; font-weight: 700; line-height: 1; letter-spacing: -1.5px; }
+  .flow-hero__title em { font-style: italic; color: var(--ifq-accent-deep); }
+  .flow-hero__desc { margin-top: 20px; font-size: 17px; line-height: 1.55; color: var(--ifq-ink-soft); }
+
+  /* Progress bar — rust ledger becomes the flow spine */
+  .progress { margin: 48px auto 0; max-width: 640px; display: flex; align-items: center; gap: 0; }
+  .progress__step { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
+  .progress__dot { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--ifq-hairline); background: var(--ifq-paper); display: flex; align-items: center; justify-content: center; font-family: var(--ifq-mono); font-size: 12px; font-weight: 700; color: var(--ifq-ink-soft); transition: all .3s ease; position: relative; z-index: 1; }
+  .progress__step.active .progress__dot { border-color: var(--ifq-accent); color: var(--ifq-accent); background: var(--ifq-paper); }
+  .progress__step.done .progress__dot { border-color: var(--ok); background: var(--ok); color: #fff; }
+  .progress__label { margin-top: 10px; font-family: var(--ifq-mono); font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--ifq-ink-soft); }
+  .progress__step.active .progress__label { color: var(--ifq-accent); }
+  .progress__line { flex: 1; height: 2px; background: var(--ifq-hairline); margin: 0 -4px; position: relative; top: -11px; z-index: 0; }
+  .progress__line.done { background: var(--ok); }
+
+  /* Screen cards — the flow demo */
+  .screens { margin-top: 64px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .screen { background: var(--ifq-cream); border: 1px solid var(--ifq-hairline); padding: 32px 28px; position: relative; min-height: 400px; display: flex; flex-direction: column; }
+  .screen__num { font-family: var(--ifq-mono); font-size: 11px; letter-spacing: 1.4px; color: var(--ifq-accent); margin-bottom: 16px; }
+  .screen__title { font-family: var(--ifq-display); font-size: 24px; font-weight: 700; margin-bottom: 12px; }
+  .screen__body { flex: 1; font-size: 14px; line-height: 1.6; color: var(--ifq-ink-soft); }
+  .screen__body p { margin-bottom: 12px; }
+  .screen__cta { margin-top: auto; padding: 12px 20px; background: var(--ifq-ink); color: var(--ifq-paper); font-family: var(--ifq-mono); font-size: 12px; letter-spacing: 1.2px; text-transform: uppercase; text-align: center; cursor: pointer; border: none; width: 100%; }
+  .screen__mind { margin-top: 16px; padding: 12px 16px; border-top: 1px solid var(--ifq-hairline); font-family: var(--ifq-mono); font-size: 11px; color: var(--ifq-ink-soft); }
+  .screen__mind strong { color: var(--ifq-accent); font-weight: 700; }
+
+  /* Annotation */
+  .annotation { margin-top: 48px; padding: 24px 28px; background: var(--ifq-cream); border: 1px solid var(--ifq-hairline); }
+  .annotation__title { font-family: var(--ifq-mono); font-size: 11px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--ifq-accent); margin-bottom: 12px; }
+  .annotation__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .annotation__item { font-family: var(--ifq-mono); font-size: 12px; color: var(--ifq-ink-soft); line-height: 1.5; }
+  .annotation__item code { color: var(--ifq-accent-deep); font-size: 11px; }
+
+  /* Colophon */
+  .colophon { margin-top: 64px; display: flex; align-items: center; justify-content: space-between; padding-top: 24px; border-top: 1px solid var(--ifq-hairline); }
+  .colophon__left { display: flex; align-items: center; gap: 8px; font-family: var(--ifq-mono); font-size: 10px; letter-spacing: 1px; color: var(--ifq-ink-soft); opacity: .6; }
+  .colophon__left svg { width: 12px; height: 12px; }
+  .colophon__right { font-family: var(--ifq-mono); font-size: 10px; letter-spacing: 1px; color: var(--ifq-ink-soft); opacity: .5; }
+
+  @media print {
+    body { padding: 20mm; }
+    .screen { break-inside: avoid; }
+    .screen__cta { border: 1px solid #111; background: none; color: #111; }
+  }
+  @media (max-width: 1024px) {
+    body { padding: 32px 40px; }
+    .screens { grid-template-columns: 1fr; }
+    .flow-hero__title { font-size: 40px; }
+    .annotation__grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    body { padding: 24px 20px; }
+    .flow-hero__title { font-size: 32px; }
+    .progress { flex-wrap: wrap; gap: 8px; }
+    .progress__line { display: none; }
+  }
+</style>
+</head>
+<body>
+  <header class="head">
+    <div class="head__brand">
+      <svg viewBox="-12 -12 24 24"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="currentColor"/></svg>
+      <span>ifq<b>.ai</b></span>
+    </div>
+    <div class="head__meta">onboarding flow / { APP } / <span data-ifq-year></span></div>
+  </header>
+
+  <section class="flow-hero">
+    <div class="flow-hero__eyebrow">{ APP } · onboarding</div>
+    <h1 class="flow-hero__title">{ HEADLINE — <em>First Run</em> }</h1>
+    <p class="flow-hero__desc">{ 15–20 words describing the onboarding goal. What will the user know after completing this flow? }</p>
+  </section>
+
+  <div class="progress" role="navigation" aria-label="Onboarding progress">
+    <div class="progress__step done"><div class="progress__dot">1</div><div class="progress__label">Welcome</div></div>
+    <div class="progress__line done"></div>
+    <div class="progress__step active"><div class="progress__dot">2</div><div class="progress__label">Setup</div></div>
+    <div class="progress__line"></div>
+    <div class="progress__step"><div class="progress__dot">3</div><div class="progress__label">First Task</div></div>
+    <div class="progress__line"></div>
+    <div class="progress__step"><div class="progress__dot">4</div><div class="progress__label">Complete</div></div>
+  </div>
+
+  <section class="screens">
+    <div class="screen">
+      <div class="screen__num">Screen 01 / 04</div>
+      <div class="screen__title">Welcome</div>
+      <div class="screen__body">
+        <p>{ What the user sees on first open. A warm greeting that sets expectations. }</p>
+        <p>{ Optional: show a 3-point value proposition with hand-drawn icons. }</p>
+      </div>
+      <button class="screen__cta">Get Started →</button>
+      <div class="screen__mind"><strong>User is thinking:</strong> "Is this worth my time?" → Show the outcome, not the features.</div>
+    </div>
+    <div class="screen">
+      <div class="screen__num">Screen 02 / 04</div>
+      <div class="screen__title">Quick Setup</div>
+      <div class="screen__body">
+        <p>{ Minimal configuration. Ask for 1–2 things max. Smart defaults for everything else. }</p>
+        <p>{ Progress indicator visible. User knows how much is left. }</p>
+      </div>
+      <button class="screen__cta">Continue →</button>
+      <div class="screen__mind"><strong>User is thinking:</strong> "How long will this take?" → Show progress. Keep it under 30 seconds.</div>
+    </div>
+    <div class="screen">
+      <div class="screen__num">Screen 03 / 04</div>
+      <div class="screen__title">First Success</div>
+      <div class="screen__body">
+        <p>{ Guide the user to their first win. Pre-fill as much as possible. }</p>
+        <p>{ Celebrate completion with a subtle animation — spark reveal or check mark. }</p>
+      </div>
+      <button class="screen__cta">Explore →</button>
+      <div class="screen__mind"><strong>User is thinking:</strong> "Can I actually do this?" → Make the first task trivially easy. Celebrate it.</div>
+    </div>
+  </section>
+
+  <div class="annotation">
+    <div class="annotation__title">Interaction Annotations</div>
+    <div class="annotation__grid">
+      <div class="annotation__item"><strong>Primary CTA:</strong> Each screen has one clear next action. No ambiguous choices.</div>
+      <div class="annotation__item"><strong>Tracking:</strong> <code>data-track="onboarding_step_N_action"</code> on every primary button.</div>
+      <div class="annotation__item"><strong>Skip option:</strong> "Skip for now" link at bottom-right of each non-final screen.</div>
+    </div>
+  </div>
+
+  <footer class="colophon">
+    <div class="colophon__left">
+      <svg viewBox="-12 -12 24 24"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="#D4532B"/></svg>
+      compiled by ifq.ai
+    </div>
+    <div class="colophon__right">ifq.ai / <span data-ifq-year></span></div>
+  </footer>
+
+<script>
+  (function(){
+    function y(v){if(!v)return null;if(v instanceof Date)return isNaN(v.getTime())?null:String(v.getFullYear());var m=String(v).trim().match(/^(\d{4})[-/](\d{2})[-/](\d{2})/);if(!m)return null;var d=new Date(+m[1],+m[2]-1,+m[3]);return isNaN(d.getTime())||d.getFullYear()!==+m[1]?null:m[1];}
+    var t=document.querySelector('meta[name="ifq:created-at"]');
+    var yr=y(window.IFQ_CREATION_DATE||document.documentElement.getAttribute('data-ifq-created-at')||(t&&t.getAttribute('content')))||String(new Date().getFullYear());
+    document.querySelectorAll('[data-ifq-year]').forEach(function(n){n.textContent=yr});
+  })();
+</script>
+</body>
+</html>
