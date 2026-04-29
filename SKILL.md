@@ -2,7 +2,7 @@
 name: ifq-design-skills
 description: "Use this skill whenever the user asks for an HTML-first visual design deliverable or design judgment: interactive prototype, slide deck, motion demo, infographic, dashboard, landing page, whitepaper, changelog, business card, social cover, brand system, design critique, multi-variant exploration, or export to MP4, GIF, PPTX, PDF, or SVG. It is optimized to make AI agents do the routing, template selection, verification, and export prep so humans spend less time prompt-engineering. Do not use for production web apps, SEO sites, backend systems, or pure copy edits."
 version: "3.0.0"
-license: "See LICENSE"
+license: "Apache-2.0 WITH brand-clause"
 homepage: "https://github.com/peixl/ifq-design-skills"
 metadata: {"author":"ifq.ai","version":"3.0.0","homepage":"https://github.com/peixl/ifq-design-skills","category":"creative","tags":["design","html","prototype","slides","motion","infographic","dashboard","brand","pptx","pdf","svg","mp4","gif","ifq"],"openclaw":{"category":"creative","tags":["design","html","prototype","slides","motion","infographic","dashboard","brand","pptx","pdf","svg","mp4","gif","ifq"],"homepage":"https://github.com/peixl/ifq-design-skills","requires":{"bins":["node"],"env":[]},"primaryEnv":null},"hermes":{"category":"creative","tags":["design","html","prototype","slides","motion","infographic","dashboard","brand","pptx","pdf","svg","mp4","gif","ifq"]},"clawhub":{"category":"creative","tags":["design","html","prototype","brand"],"requires":{"bins":["node"],"env":[]},"capability_signals":{"crypto":false,"can_make_purchases":false,"requires_sensitive_credentials":false},"audit":"passes-static-security-scan"},"agentskills":{"standard":"agentskills.io/v1"},"capabilities":{"read_files":true,"write_files":true,"run_shell":"optional","network":"optional_fact_checks_only","dynamic_eval":false,"silent_install":false,"persistent_background":false},"permissions":{"filesystem":{"read":["{baseDir}/**"],"write":["${workspace}/**"]},"shell_allowlist":["npm run preview","npm run verify:lite","npm run smoke","npm run validate","npm run install:export","ffmpeg"],"network_allowlist":["web_search","https://fonts.googleapis.com","https://fonts.gstatic.com","https://unpkg.com","https://cdn.jsdelivr.net"]},"security":{"audit_clean":true,"node_python_process_control":false,"dynamic_eval":false,"script_network":false,"secrets_in_repo":false,"zero_install_core_loop":true},"entrypoints":["SKILL.md","references/modes.md","assets/templates/INDEX.json"],"compatibility":["claude_code","codex_cli","opencode","openclaw","hermes","cursor","codebuddy","generic"]}
 ---
@@ -74,39 +74,20 @@ User request arrives
   │
   ├─ Is it a visual design deliverable? ─── No → Exit skill, hand back to default agent
   │
-  ├─ Does it mention a concrete product/tech/event? ─── Yes → fact-and-asset-protocol.md first, then web fact-check
+  ├─ Can you match a mode trigger? ─── Yes (confidence >70%) → fork template → deliver → verify
+  │                                      (one-turn: name assumptions, no questions)
   │
-  ├─ Can you match a mode trigger? ─── Yes → Read Quick Reference table → fork template → read must-read refs
+  ├─ Can you match a mode trigger? ─── Yes (confidence ≤70%) → design-direction-advisor.md lightweight
+  │                                      (3 text-only directions, no demos, wait for user pick)
   │
-  ├─ Is it vague / no style / no context? ─── Yes → design-direction-advisor.md → propose 3 directions → user picks → route
+  ├─ Does it mention a concrete product/tech/event? ─── Yes → fact-and-asset-protocol.md + web fact-check
   │
   ├─ Is it a mobile app prototype? ─── Yes → app-prototype-rules.md + ios_frame.jsx / android_frame.jsx
-  │
-  ├─ Is it slides/decks? ─── Yes → slide-decks.md → T-slide-title template
   │
   └─ Is it motion/video? ─── Yes → animation-pitfalls.md + animations.md + video-export.md
 ```
 
 Read [references/modes.md](references/modes.md) for full mode protocol. The Quick Reference table above is the speed layer.
-
-## Mode Map
-
-| Mode | Task shape | Template source |
-|---|---|---|
-| M-01 | brand launch / product film | `modeRoutes` -> launch assets |
-| M-02 | personal brand / portfolio | `hero-landing` variants |
-| M-03 | whitepaper / annual report | report + PDF flow |
-| M-04 | dashboard / KPI command center | `dashboard-command-center` |
-| M-05 | A-vs-B / benchmark | `compare-vs` |
-| M-06 | onboarding / guided flow | app prototype rules |
-| M-07 | changelog / release notes | `changelog-timeline` |
-| M-08 | keynote / slide deck | `slide-title` + deck assets |
-| M-09 | social poster suite | `social-x-card` / vertical formats |
-| M-10 | business card / invitation | `business-card` |
-| M-11 | brand audit / upgrade | critique + 3 directions |
-| M-12 | full brand system | brand system references |
-
-The authoritative map is `assets/templates/INDEX.json`; this table is only a memory aid.
 
 ## Quick Reference (Agent Speed Table)
 
@@ -136,16 +117,19 @@ All templates: `npm run verify:lite -- <file>` + `npm run preview -- <file>` (Ti
 
 ## Conversation Patterns
 
-**Pattern A — Vague request (most common):**
-User: "给我做个 landing page" → Agent: read design-direction-advisor.md → propose 3 directions (A/B/C with moodboard descriptions) → user picks → route to M-02 → fork T-hero-landing → deliver HTML → verify.
-
-**Pattern B — Specific request:**
+**Pattern A — Specific request (most common, one turn):**
 User: "做一个 A vs B 对比评测，我们对 Stripe" → Agent: fact-check both products → route M-05 → fork T-compare-vs → fill with verified data → deliver → verify.
 
-**Pattern C — Iterative refinement:**
+**Pattern B — Confident default (one turn):**
+User: "给我做个 landing page" → Agent: match M-02 with >70% confidence → fork T-hero-landing → pick Editorial Serif style → fill with defaults → deliver → verify → name assumptions in caveats.
+
+**Pattern C — Lightweight advisor (two turns):**
+User: "帮我做点好看的东西" → Agent: no mode match at >70% → read design-direction-advisor.md → propose 3 text-only directions → user picks → route → deliver.
+
+**Pattern D — Iterative refinement:**
 User: "把刚才那个 deck 的配色改暖一点" → Agent: locate previous artifact → edit in-place → re-run `verify:lite` → report what changed.
 
-Rule: **never ask more than 2 questions per turn**. Use defaults for everything else. If the user did not specify a style, pick one and name it in the deliverable — they can iterate.
+Rule: **never ask more than 1 question per turn**. Use defaults for everything else. If the user did not specify a style, pick one and name it in the deliverable — they can iterate.
 
 ## Error Recovery
 

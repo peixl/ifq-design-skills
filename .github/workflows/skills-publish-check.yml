@@ -16,6 +16,7 @@ name: Skills Publish Check
       - .well-known/**
       - evals/**
       - scripts/**
+      - tests/**
       - assets/**
       - references/**
   pull_request:
@@ -31,6 +32,7 @@ name: Skills Publish Check
       - .well-known/**
       - evals/**
       - scripts/**
+      - tests/**
       - assets/**
       - references/**
 
@@ -46,6 +48,9 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
+
+      - name: Run unit tests
+        run: npm test
 
       - name: Run unified publish gate
         run: npm run verify:ci

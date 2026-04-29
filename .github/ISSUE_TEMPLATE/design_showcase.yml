@@ -1,0 +1,60 @@
+name: Design Showcase
+description: Share what you built with IFQ Design Skills
+title: "[Showcase] "
+labels: ["showcase"]
+body:
+  - type: input
+    id: title
+    attributes:
+      label: Title
+      description: Name of your project or deliverable
+      placeholder: "My Portfolio Redesign"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Mode Used
+      options:
+        - M-01 Launch Film
+        - M-02 Personal Brand Page
+        - M-03 Whitepaper / Report
+        - M-04 Dashboard
+        - M-05 Comparison / VS
+        - M-06 Onboarding Flow
+        - M-07 Changelog
+        - M-08 Keynote / Slides
+        - M-09 Social Media Kit
+        - M-10 Business Card / Invite
+        - M-11 Brand Diagnosis
+        - M-12 Brand System
+        - Mixed / Custom
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What did you make? What was the prompt?
+      placeholder: "I asked the agent to ..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots / Links
+      description: Share screenshots or live URLs
+    validations:
+      required: false
+
+  - type: input
+    id: agent
+    attributes:
+      label: Agent Used
+      description: Which agent produced this?
+      placeholder: "Claude Code, Cursor, etc."
+    validations:
+      required: false

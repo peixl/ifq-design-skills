@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Quick Question
+    url: https://github.com/peixl/ifq-design-skills/issues/new
+    about: For general questions, use a blank issue with [Question] prefix
+  - name: Documentation
+    url: https://github.com/peixl/ifq-design-skills/tree/main/references
+    about: Browse the full reference library before opening an issue

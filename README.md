@@ -17,7 +17,7 @@
 
 <br><br>
 
-[![License](https://img.shields.io/badge/license-commercial%20%2B%20personal-D4532B?style=flat-square&labelColor=111111)](LICENSE)
+[![License](https://img.shields.io/badge/license-Apache--2.0%20%2B%20brand%20clause-D4532B?style=flat-square&labelColor=111111)](LICENSE)
 [![ifq.ai native](https://img.shields.io/badge/ifq.ai-native-111111?style=flat-square)](assets/ifq-brand/BRAND-DNA.md)
 [![ambient brand](https://img.shields.io/badge/ambient_brand-embedded-A83518?style=flat-square&labelColor=111111)](references/ifq-brand-spec.md)
 [![proof first](https://img.shields.io/badge/proof--first-on-111111?style=flat-square)](references/verification.md)
@@ -465,7 +465,7 @@ npm run render:video -- path/to/film.html      # 渲染 MP4（需 ffmpeg + insta
 
 ## 许可
 
-个人用免费。商用见 [LICENSE](LICENSE)。
+Apache-2.0 + 品牌归属条款。个人学习和非商业分享完全免费；商业使用保留 IFQ 签名归属即可。详见 [LICENSE](LICENSE)。
 
 ---
 

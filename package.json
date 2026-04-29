@@ -4,7 +4,7 @@
   "private": true,
   "description": "IFQ Design Skills — agent-native design skill that turns ordinary human intent into verified HTML-first artifacts. The core design loop is ZERO-install: route mode → fork template → write HTML → verify placeholders → print a file:// preview URL. Heavy dependencies (playwright/pdf-lib/pptxgenjs/sharp) are only required when MP4/GIF/PDF/PPTX export is explicitly requested, and remain optional.",
   "author": "ifq.ai",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "Apache-2.0",
   "homepage": "https://github.com/peixl/ifq-design-skills",
   "repository": {
     "type": "git",
@@ -15,6 +15,8 @@
   },
   "type": "module",
   "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "test:ci": "npm test && npm run validate",
     "sync:year": "node scripts/sync-authored-year.mjs",
     "smoke": "node scripts/smoke-test.mjs",
     "validate": "npm run verify:ci",

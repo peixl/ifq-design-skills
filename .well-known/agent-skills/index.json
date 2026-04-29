@@ -35,7 +35,7 @@
           "linux",
           "windows"
         ],
-        "license": "See LICENSE",
+        "license": "Apache-2.0",
         "author": "ifq.ai",
         "homepage": "https://github.com/peixl/ifq-design-skills",
         "source": {

@@ -17,7 +17,7 @@
 
 <br><br>
 
-[![License](https://img.shields.io/badge/license-commercial%20%2B%20personal-D4532B?style=flat-square&labelColor=111111)](LICENSE)
+[![License](https://img.shields.io/badge/license-Apache--2.0%20%2B%20brand%20clause-D4532B?style=flat-square&labelColor=111111)](LICENSE)
 [![ifq.ai native](https://img.shields.io/badge/ifq.ai-native-111111?style=flat-square)](assets/ifq-brand/BRAND-DNA.md)
 [![ambient brand](https://img.shields.io/badge/ambient_brand-embedded-A83518?style=flat-square&labelColor=111111)](references/ifq-brand-spec.md)
 [![proof first](https://img.shields.io/badge/proof--first-on-111111?style=flat-square)](references/verification.md)
@@ -461,7 +461,7 @@ Open the HTML files in `demos/` to see real output quality:
 
 ## License
 
-Free for personal use. Commercial use — see [LICENSE](LICENSE).
+Apache-2.0 + brand attribution clause. Personal learning and non-commercial sharing are fully free; commercial use just needs to retain IFQ brand attribution. See [LICENSE](LICENSE).
 
 ---
 

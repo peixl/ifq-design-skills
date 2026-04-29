@@ -63,11 +63,11 @@ Stage 时长：
 
 **触发**：「做我的个人站」「portfolio」「about me」「个人主页」。
 
-**关键问题**（一次问清）：
-- 你的职业标签？1 句话 tagline？
-- 3 个代表作 + 每个一句话？
-- 社交链接？（X / B站 / 小红书 / 公众号 / GitHub / 邮箱）
-- 头像图？没有就留位
+**关键信息**（用默认值填充，最多问 1 个）：
+- 职业标签 + tagline → 没有就用"Designer & Maker"
+- 3 个代表作 → 没有就生成 3 个 placeholder 项目
+- 社交链接 → 没有就省略
+- 头像 → 没有就用 IFQ spark mark 占位
 
 **五种变体**（并排生成让用户选）：
 1. **Editorial Serif** · Kenya Hara 式大量留白 + serif display

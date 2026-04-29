@@ -1,0 +1,88 @@
+name: Bug Report
+description: Report a bug or unexpected behavior in IFQ Design Skills
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Mode
+      description: Which mode were you using?
+      options:
+        - M-01 Launch Film
+        - M-02 Personal Brand Page
+        - M-03 Whitepaper / Report
+        - M-04 Dashboard
+        - M-05 Comparison / VS
+        - M-06 Onboarding Flow
+        - M-07 Changelog
+        - M-08 Keynote / Slides
+        - M-09 Social Media Kit
+        - M-10 Business Card / Invite
+        - M-11 Brand Diagnosis
+        - M-12 Brand System
+        - Design Direction Advisor
+        - Not mode-specific
+    validations:
+      required: true
+
+  - type: dropdown
+    id: agent
+    attributes:
+      label: Agent / Runtime
+      description: Which agent were you using?
+      options:
+        - Claude Code
+        - Cursor
+        - Codex CLI
+        - OpenCode
+        - OpenClaw
+        - Hermes
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction Steps
+      description: What did you ask the agent to do?
+      placeholder: |
+        1. Prompt: "..."
+        2. Agent selected mode: ...
+        3. Template used: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Output
+      description: What should have happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Output
+      description: What actually happened? Include error messages if any.
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: "Check `npm run quality:score` or SKILL.md version field"
+      placeholder: "e.g. 3.0.0"
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Screenshots, HTML snippets, or verification output
+    validations:
+      required: false

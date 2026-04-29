@@ -66,16 +66,24 @@
                               ↓
                         ┌────────────┐
                         │ delivering │ ← report file + route + template + verification
+                        └─────┬──────┘
+                              │
+                        用户说"改暖一点" / "太 AI 了"
+                              │
+                              ↓
+                        ┌────────────┐
+                        │ producing  │ ← edit in-place, re-verify
                         └────────────┘
 ```
 
 **状态规则：**
-- `routing` → 最多 2 秒（对 Agent 而言）。匹配就直接进入 producing，不要犹豫。
-- `asset gathering` → 只在 fact_check_required=true 时触发。最多问用户 1 个问题（"能提供 logo/产品图吗？"），然后用 placeholder 继续。
-- `direction advisor` → 只在请求模糊时触发。提出 3 个方向，每个一行描述 + 风格名。等用户选择。
+- `routing` → 匹配模式触发词。置信度 >70% → `direct route`（一轮交付）。≤70% → `direction advisor`（轻量模式，纯文本方向）。
+- `asset gathering` → 只在 fact_check_required=true 时触发。最多问用户 1 个问题，然后用 placeholder 继续。
+- `direction advisor` → 轻量模式（默认）：3 行方向描述，不生成 HTML。完整模式（用户要求时）：生成 3 个视觉 Demo。
 - `producing` → fork 模板，不从白纸开始。填入内容，融入 3+ IFQ ambient marks。
 - `verifying` → 运行 `verify:lite`，修复所有 placeholder 残留，再运行 `preview`。
 - `delivering` → 报告：文件路径、路由模式、模板 ID、验证结果、caveats。
+- `iterate` → 用户反馈后回到 `producing`，编辑已有产物，重新验证。
 
 ---
 
