@@ -108,6 +108,10 @@ git clone https://github.com/peixl/ifq-design-skills ~/.agents/skills/ifq-design
 2. **路由** [references/modes.md](references/modes.md) → 选 12 模式之一 → 在 [assets/templates/INDEX.json](assets/templates/INDEX.json) 找模板 fork，**不要从白纸开始**。
 3. **验证**（默认 Tier 0 · 零安装）：`npm run verify:lite -- <file>` 扫占位符 → `npm run preview -- <file>` 拿到 `file://` URL 自己用浏览器工具打开。
 
+首次运行不要变成环境搭建。先交付一个可见 HTML artifact，并在结果里写清文件路径、模式、模板、验证结果和影响使用的 caveat。导出类产物只在用户明确要求、对应命令跑通并检查到文件后再声称存在。
+
+`agents/openai.yaml` 提供 UI 展示名、短描述、默认提示词和 IFQ 图标路径，方便支持 skill chips / marketplace cards 的 agent 直接展示这项能力。
+
 **能力与权限**（SKILL.md frontmatter 里有单行 JSON `metadata`，OpenClaw / ClawHub / Hermes 可按 `metadata.openclaw.requires` 与 security signals 授权）：
 
 - 读：skill 根目录下所有文件
@@ -138,7 +142,7 @@ git clone https://github.com/peixl/ifq-design-skills ~/.agents/skills/ifq-design
 </td>
 <td>
 
-<sub>M-08 Keynote · editorial dark · Newsreader 大标题 · rust ledger 竖线分章 · 每页 mono 序号 <code>01 / 20</code> · 结尾 colophon · 同步导出 HTML + PPTX + PDF</sub>
+<sub>M-08 Keynote · editorial dark · Newsreader 大标题 · rust ledger 竖线分章 · 每页 mono 序号 <code>01 / 20</code> · 结尾 colophon · HTML 先预览，PPTX/PDF 仅在用户要求并跑通导出后交付</sub>
 
 </td>
 </tr>
@@ -164,7 +168,7 @@ git clone https://github.com/peixl/ifq-design-skills ~/.agents/skills/ifq-design
 </td>
 <td>
 
-<sub>M-10 名片 · 85×55mm + 3mm 出血 · 正面一行业务陈述 + spark 小点 · 反面 mono 信息条 · 第三方物料 · 显式 wordmark 关闭 · IFQ 只保留版面节奏 · 输出带 crop marks 的 PDF</sub>
+<sub>M-10 名片 · 85×55mm + 3mm 出血 · 正面一行业务陈述 + spark 小点 · 反面 mono 信息条 · 第三方物料 · 显式 wordmark 关闭 · IFQ 只保留版面节奏 · 先给可预览源文件，印刷 PDF 经导出验证后再交付</sub>
 
 </td>
 </tr>
@@ -177,7 +181,7 @@ git clone https://github.com/peixl/ifq-design-skills ~/.agents/skills/ifq-design
 </td>
 <td>
 
-<sub>M-01 Launch Film · 先 3 方向 (matter-of-fact / editorial / kinetic-type) · Stage+Sprite 时间轴 · 60fps · key shot + spec mono 叠印 + 2s quiet URL 定版 · 输出 mp4 + gif + keyposter</sub>
+<sub>M-01 Launch Film · 先 3 方向 (matter-of-fact / editorial / kinetic-type) · Stage+Sprite 时间轴 · 60fps · key shot + spec mono 叠印 + 2s quiet URL 定版 · 先交 HTML/keyposter，MP4/GIF 经显式导出后再交付</sub>
 
 </td>
 </tr>
@@ -229,7 +233,7 @@ git clone https://github.com/peixl/ifq-design-skills ~/.agents/skills/ifq-design
 </td>
 <td>
 
-<sub>M-03 白皮书 · A4 可打印 HTML · 扉页 / 摘要 / 目录 / 章节 / 参考 / colophon 全套 · 每章起首 mono 序号 + 半页留白 · 页脚 <code>ifq.ai / 2026</code> · 导出 print-ready PDF + 书签</sub>
+<sub>M-03 白皮书 · A4 可打印 HTML · 扉页 / 摘要 / 目录 / 章节 / 参考 / colophon 全套 · 每章起首 mono 序号 + 半页留白 · 页脚 <code>ifq.ai / 2026</code> · PDF/书签只在导出命令通过后声明</sub>
 
 </td>
 </tr>
@@ -344,16 +348,16 @@ Ambient Brand 由五个环境级标记组成。每份交付物默认至少融合
 
 | # | 模式 | 典型触发 | 交付 |
 |---|------|----------|------|
-| M-01 | Launch Film | 发布动画 · 产品宣传片 | 25–40s 动画 + keyposter + 社媒套件 |
+| M-01 | Launch Film | 发布动画 · 产品宣传片 | HTML/keyposter 先行；MP4/GIF 显式导出 |
 | M-02 | Portfolio | portfolio · 个人站 · about | 单页站 + 5 方向变体 |
-| M-03 | 白皮书 | 白皮书 · 年报 · 研究 PDF | 可打印 HTML → PDF |
+| M-03 | 白皮书 | 白皮书 · 年报 · 研究 PDF | 可打印 HTML；PDF 经导出验证 |
 | M-04 | Dashboard | 数据看板 · KPI · 监控台 | 高密度 dashboard |
 | M-05 | Compare | A vs B · 横评 · benchmark | 对比矩阵 + 事实来源 |
 | M-06 | Onboarding | 新手引导 · flow demo | 3–5 屏交互流 |
 | M-07 | Changelog | release notes · 发布日记 | 纵向时间线 |
-| M-08 | Keynote | 演讲 PPT · 母版 | HTML deck + PPTX + PDF |
+| M-08 | Keynote | 演讲 PPT · 母版 | HTML deck；PPTX/PDF 经导出验证 |
 | M-09 | Social Kit | 小红书 · 朋友圈 · OG 卡 | 多尺寸静态物料 |
-| M-10 | 名片 / 邀请函 | 名片 · VIP 卡 · 请柬 | SVG + 出血位 PDF |
+| M-10 | 名片 / 邀请函 | 名片 · VIP 卡 · 请柬 | SVG/HTML 源；出血位 PDF 经导出验证 |
 | M-11 | 品牌诊断 | 体检 · 升级建议 | 诊断报告 + 3 方向 |
 | M-12 | 全栈品牌 | brand from scratch | logo + 色板 + 字体 + 6 应用 |
 

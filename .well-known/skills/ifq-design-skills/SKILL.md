@@ -30,3 +30,8 @@ After installing, read the root [SKILL.md](https://github.com/peixl/ifq-design-s
 for routing, then load the task-specific files under `references/`. The core
 loop is zero-install: fork a template, run `npm run verify:lite -- <file.html>`,
 and run `npm run preview -- <file.html>`.
+
+First run should produce a visible HTML artifact, not setup work. Report the
+file path, route, template, verification result, and use-affecting caveats.
+Claim MP4/GIF/PDF/PPTX only after the user asks for export and the matching
+command has passed.

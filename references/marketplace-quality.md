@@ -25,7 +25,7 @@
 
 | 站点 | 当前可见信号 | IFQ 吸收动作 |
 |---|---|---|
-| `https://clawhub.ai/peixl/ifq-design-skills` | 当前公开页显示 `v2.4.0`、226 downloads、VirusTotal benign、OpenClaw benign、runtime 只要求 `node` | 保持 `metadata.openclaw.requires.env=[]`、single-line metadata、zero-install bundle；发布后必须复查详情页是否仍无 suspicious banner |
+| `https://clawhub.ai/peixl/ifq-design-skills` | 当前公开页显示 `v2.4.1`、226 downloads、VirusTotal benign、OpenClaw benign、runtime 只要求 `node` | 保持 `metadata.openclaw.requires.env=[]`、single-line metadata、zero-install bundle；发布后必须复查详情页是否仍无 suspicious banner |
 | `https://skills.sh/` | all-time 列表显示 91,018 skills；Top10 大约进入 260K+ installs 区间；设计相邻标杆包括 `frontend-design`、`web-design-guidelines`、`ui-ux-pro-max`、`extract-design-system`、`canvas-design`、`theme-factory` | README 首屏必须保留 `npx skills add peixl/ifq-design-skills`；description 要主动触发设计、deck、motion、dashboard、export 等关键词 |
 | `https://www.agentskills.to/` | 首页宣称 24K+ skills、4 platforms，显式支持 Claude Code / Codex CLI / Cursor / Gemini CLI；trending 卡片把“使用场景 + installs + install”放在同一张卡里 | `.well-known` metadata 增加 `human_value`、`agent_value`、`quality_signals`，让目录卡片能读出人类价值和 agent contract |
 | `https://agentskill.sh/` | 目录强调 107,000+ skills、20+ AI tools，并把 quality score 拆成 Discovery / Implementation / Structure / Expertise，同时显示 security score | 新增 `references/killer-skill-playbook.md` 的四张 scorecard，并让 `verify:publish` 检查 discovery/quality metadata |
@@ -39,6 +39,25 @@
 3. **Structure**：根入口短，reference 分层，heavy export opt-in。
 4. **Expertise**：设计判断不只靠形容词，必须落到版式、节奏、输出格式和可验证文件。
 5. **Security**：不要求 secrets，不隐藏安装，不默认远程 runtime，不把扫描器敏感模式带进脚本。
+
+## 2026-04-29 live delta
+
+本轮重新打开用户点名平台，更新可验证目标。注意：线上目录数字会漂移，公开页只作为当日门槛，不写死为永久承诺。
+
+| 站点 | 当前可见信号 | IFQ 吸收动作 |
+|---|---|---|
+| `https://skills.sh/` | all-time 列表显示 91,025 skills；Top5 为 `find-skills` 1.2M、`vercel-react-best-practices` 357.1K、`frontend-design` 348.1K、`soultrace` 319.1K、`web-design-guidelines` 284.2K；Top10 可见门槛仍应按 260K+ 级别规划 | `.well-known` 新增 `benchmark_targets`，把 Top10 目标和设计相邻标杆变成可读字段；README 首屏继续保留 `npx skills add peixl/ifq-design-skills` |
+| `https://skills.sh/audits` | 审计页把 Gen / Socket / Snyk 合并为一张安全表；头部标杆普遍是 `Safe / 0 alerts`，但 risk 等级仍分 Low/Med/High/Critical | 本地 `smoke` 与 `verify:publish` 继续约束零 spawn、零 eval、零 runtime network、无 secret；安全结论必须区分“本地等价闸门已过”和“线上审计已过” |
+| `https://clawhub.ai/peixl/ifq-design-skills` | 当前详情页显示 `v2.4.1`、253 downloads、11 versions、MIT-0、VirusTotal/ClawScan/Static analysis 均 Benign，安装命令为 `openclaw skills install ifq-design-skills` | 本地仓库当前仍是 `2.4.1`；发布前必须确认 Git 版本与 ClawHub 展示版本是否来自同一包源。吸收 ClawHub-safe 详情页里的 first-run path 与 output boundary 到本仓库 |
+| `https://agentskill.sh/` | 首页显示 107,000+ skills、20+ AI tools、Design 11,504，并把每个条目的 quality score 拆成 Discovery / Implementation / Structure / Expertise，同时显示 security score | `.well-known` 新增 `quality_score_dimensions`，验证脚本检查这些维度存在，避免目录卡片只能读到泛泛标签 |
+| `https://www.agentskills.to/` | 首页显示 24K+ skills、6 categories、4 platforms；trending 卡片把安装量、简介和 install 行为放在同一张卡里 | 新增 `agents/openai.yaml`，提供 UI 展示名、短描述、默认提示词和 IFQ 图标路径，补足 skill chips / marketplace card 入口 |
+
+本轮硬化项：
+
+1. **First-run artifact**：安装后的第一轮必须能产出可见 HTML 文件，而不是先要求登录、全局安装或导出依赖。
+2. **Output boundary**：HTML 是核心交付；MP4/GIF/PDF/PPTX 只有在用户明确要求且命令跑通后才可声称存在。
+3. **Marketplace card readiness**：`agents/openai.yaml` + `.well-known` 同时服务 UI 列表、人类读者和 agent 路由器。
+4. **Benchmark honesty**：Top10 安装量目标写入 `benchmark_targets` 但保留 `observed_on`，方便后续更新，不把历史数字当实时排名。
 
 ## 顶级 skill 的共同特征
 
@@ -77,7 +96,7 @@ skills.sh audits 页对每个 skill 的目标是 “Safe / 0 alerts”。ClawHub
 - 不必要的转码库包装器；视频最终转码交给用户显式运行的 `ffmpeg` 命令
 - marketplace 调研快照、浏览器日志、测试截图目录（例如 `.playwright-mcp/`）
 
-2026-04-27 线上观察：ClawHub v2.3.6 页面显示 `Static analysis: 1 pattern detected`，命中 `scripts/smoke-test.mjs:22`，原因是 “File read combined with network send (possible exfiltration)”。v2.4.0 的修复方向：保留本地扫描能力，移除 smoke 脚本中的高风险 remote-send 字面特征，拦截 Python bytecode / cache 生成物，并把 `.playwright-mcp/` 排除出仓库和 secret scan。
+2026-04-27 线上观察：ClawHub v2.3.6 页面显示 `Static analysis: 1 pattern detected`，命中 `scripts/smoke-test.mjs:22`，原因是 “File read combined with network send (possible exfiltration)”。v2.4.1 的修复方向：保留本地扫描能力，移除 smoke 脚本中的高风险 remote-send 字面特征，拦截 Python bytecode / cache 生成物，并把 `.playwright-mcp/` 排除出仓库和 secret scan。
 
 ## 本地发布闸门
 

@@ -70,6 +70,16 @@ skills.sh 的标准命令是 `npx skills add <owner/repo>`。IFQ 必须保留这
 - **OpenCode / Codex CLI**：仓库根 `AGENTS.md` 自动被发现
 - **OpenClaw / Hermes**：用 `.well-known/agent-skills/index.json` 暴露 `openclaw` / `hermes` install 命令
 
+## 六点五、UI 卡片入口
+
+榜单不只被 agent 读，也被人在 UI 里扫。`agents/openai.yaml` 是轻量 UI metadata：展示名、25-64 字短描述、默认提示词、品牌色和 IFQ 图标路径。它不替代 `SKILL.md` 或 `.well-known`，只负责让支持 skill chips / marketplace cards 的宿主在 3 秒内说清楚“这个 skill 是干什么的”。
+
+维护要求：
+
+- `default_prompt` 必须显式包含 `$ifq-design-skills`，方便显式调用。
+- 图标路径必须指向仓库内真实资产，不能依赖远程图片。
+- `allow_implicit_invocation: true` 与 `SKILL.md` 的 pushy description 保持一致。
+
 ## 七、2026-04-27 leaderboard 样本
 
 2026-04-27 live 调研三处目录，取页面/API 可见信息，不从记忆推断；ClawHub 主列表为客户端动态加载，排行用可验证 API 样本记录。

@@ -1,5 +1,6 @@
 // Validate SKILL.md and well-known indices against vercel-labs/skills rules
 const fs = require('fs');
+const path = require('path');
 
 function parseFrontmatter(raw) {
   const m = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
@@ -18,11 +19,40 @@ const requiredQualitySignals = {
   scanner_clean_scripts: true,
   default_remote_runtime: false,
 };
+const requiredFirstRunEvidence = ['file_path', 'route', 'template', 'verification_result', 'use_affecting_caveats'];
+const requiredForbiddenSetupWork = ['account_login', 'global_install', 'export_dependency_install', 'broad_environment_change'];
+const requiredCoreOutputs = ['verified_html', 'svg_or_static_companions', 'export_ready_source_structure'];
+const requiredQualityScoreDimensions = ['Discovery', 'Implementation', 'Structure', 'Expertise', 'Security'];
 
 const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 const npmIgnore = fs.existsSync('.npmignore') ? fs.readFileSync('.npmignore', 'utf8') : '';
 const content = fs.readFileSync('SKILL.md', 'utf8');
 const { frontmatter } = parseFrontmatter(content);
+
+const openAiYamlPath = 'agents/openai.yaml';
+if (!fs.existsSync(openAiYamlPath)) {
+  console.log('agents/openai.yaml:', 'FAIL missing UI metadata');
+  failed++;
+} else {
+  const yaml = fs.readFileSync(openAiYamlPath, 'utf8');
+  const checks = [
+    ['interface.display_name', /^\s*display_name:\s*"IFQ Design Skills"\s*$/m.test(yaml)],
+    ['interface.short_description', /^\s*short_description:\s*"[^"]{25,64}"\s*$/m.test(yaml)],
+    ['interface.default_prompt mentions skill', /^\s*default_prompt:\s*"[^"]*\$ifq-design-skills[^"]*"\s*$/m.test(yaml)],
+    ['policy.allow_implicit_invocation', /^\s*allow_implicit_invocation:\s*true\s*$/m.test(yaml)],
+    ['interface.brand_color hex', /^\s*brand_color:\s*"#[0-9A-Fa-f]{6}"\s*$/m.test(yaml)],
+  ];
+  const iconMatches = [...yaml.matchAll(/^\s*icon_(?:small|large):\s*"([^"]+)"\s*$/gm)];
+  checks.push(['interface.icons', iconMatches.length >= 2 && iconMatches.every((match) => {
+    const rel = match[1].replace(/^\.\//, '');
+    return rel && !rel.startsWith('/') && !rel.includes('..') && fs.existsSync(path.join(process.cwd(), rel));
+  })]);
+  for (const [label, ok] of checks) {
+    console.log('agents/openai.yaml ' + label + ':', ok ? 'OK' : 'FAIL');
+    if (!ok) failed++;
+  }
+}
+
 if (!frontmatter) {
   console.log('FAIL: SKILL.md has no frontmatter'); failed++;
 } else {
@@ -117,6 +147,36 @@ for (const p of ['.well-known/agent-skills/index.json', '.well-known/skills/inde
     const quality = e.metadata && e.metadata.quality_signals;
     for (const [key, expected] of Object.entries(requiredQualitySignals)) {
       if (!quality || quality[key] !== expected) errs.push('quality_signals.' + key);
+    }
+    const firstRun = e.metadata && e.metadata.first_run_success;
+    if (!firstRun || typeof firstRun.goal !== 'string' || firstRun.goal.length < 20) errs.push('first_run_success.goal');
+    for (const key of requiredFirstRunEvidence) {
+      if (!firstRun || !Array.isArray(firstRun.required_evidence) || !firstRun.required_evidence.includes(key)) {
+        errs.push('first_run_success.required_evidence.' + key);
+      }
+    }
+    for (const key of requiredForbiddenSetupWork) {
+      if (!firstRun || !Array.isArray(firstRun.forbidden_setup_work) || !firstRun.forbidden_setup_work.includes(key)) {
+        errs.push('first_run_success.forbidden_setup_work.' + key);
+      }
+    }
+    const boundary = e.metadata && e.metadata.output_boundary;
+    for (const key of requiredCoreOutputs) {
+      if (!boundary || !Array.isArray(boundary.core_outputs) || !boundary.core_outputs.includes(key)) {
+        errs.push('output_boundary.core_outputs.' + key);
+      }
+    }
+    if (!boundary || typeof boundary.export_claim_rule !== 'string' || !boundary.export_claim_rule.includes('until')) {
+      errs.push('output_boundary.export_claim_rule');
+    }
+    for (const key of requiredQualityScoreDimensions) {
+      const dims = e.metadata && e.metadata.quality_score_dimensions;
+      if (!Array.isArray(dims) || !dims.includes(key)) errs.push('quality_score_dimensions.' + key);
+    }
+    const benchmarks = e.metadata && e.metadata.benchmark_targets;
+    if (!benchmarks || !/^\d{4}-\d{2}-\d{2}$/.test(benchmarks.observed_on || '')) errs.push('benchmark_targets.observed_on');
+    if (!benchmarks || typeof benchmarks.skills_sh_top10_floor_installs !== 'number' || benchmarks.skills_sh_top10_floor_installs < 260000) {
+      errs.push('benchmark_targets.skills_sh_top10_floor_installs');
     }
     const targets = e.metadata && e.metadata.marketplace_targets;
     for (const target of requiredMarketplaceTargets) {

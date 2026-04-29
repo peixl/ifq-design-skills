@@ -170,6 +170,10 @@ const REQUIRED_QUALITY_SIGNALS = {
   scanner_clean_scripts: true,
   default_remote_runtime: false,
 };
+const REQUIRED_FIRST_RUN_EVIDENCE = ['file_path', 'route', 'template', 'verification_result', 'use_affecting_caveats'];
+const REQUIRED_FORBIDDEN_SETUP_WORK = ['account_login', 'global_install', 'export_dependency_install', 'broad_environment_change'];
+const REQUIRED_CORE_OUTPUTS = ['verified_html', 'svg_or_static_companions', 'export_ready_source_structure'];
+const REQUIRED_QUALITY_SCORE_DIMENSIONS = ['Discovery', 'Implementation', 'Structure', 'Expertise', 'Security'];
 
 function findPlaceholderLeaks(text) {
   const findings = [];
@@ -1024,6 +1028,29 @@ async function check14_PublishSpec() {
   const nameRegex = /^[a-z0-9]([a-z0-9-]{0,62}[a-z0-9])?$/;
   const pkg = await readJson(path.join(ROOT, 'package.json'));
 
+  const openAiYaml = path.join(ROOT, 'agents/openai.yaml');
+  if (!existsSync(openAiYaml)) {
+    fail('  agents/openai.yaml missing UI metadata');
+  } else {
+    const yaml = await readText(openAiYaml);
+    if (!/^\s*display_name:\s*"IFQ Design Skills"\s*$/m.test(yaml)) fail('  agents/openai.yaml display_name missing');
+    if (!/^\s*short_description:\s*"[^"]{25,64}"\s*$/m.test(yaml)) fail('  agents/openai.yaml short_description must be 25-64 chars');
+    if (!/^\s*default_prompt:\s*"[^"]*\$ifq-design-skills[^"]*"\s*$/m.test(yaml)) fail('  agents/openai.yaml default_prompt must mention $ifq-design-skills');
+    if (!/^\s*allow_implicit_invocation:\s*true\s*$/m.test(yaml)) fail('  agents/openai.yaml must allow implicit invocation');
+    if (!/^\s*brand_color:\s*"#[0-9A-Fa-f]{6}"\s*$/m.test(yaml)) fail('  agents/openai.yaml brand_color must be hex');
+    const iconMatches = [...yaml.matchAll(/^\s*icon_(?:small|large):\s*"([^"]+)"\s*$/gm)];
+    if (iconMatches.length < 2) {
+      fail('  agents/openai.yaml must include small and large icons');
+    } else {
+      for (const match of iconMatches) {
+        const rel = match[1].replace(/^\.\//, '');
+        if (!rel || rel.startsWith('/') || rel.includes('..') || !existsSync(path.join(ROOT, rel))) {
+          fail(`  agents/openai.yaml icon path invalid: ${match[1]}`);
+        }
+      }
+    }
+  }
+
   // SKILL.md frontmatter
   const skillMd = path.join(ROOT, 'SKILL.md');
   if (!existsSync(skillMd)) return fail('SKILL.md missing at repo root');
@@ -1093,6 +1120,36 @@ async function check14_PublishSpec() {
       const quality = e.metadata && e.metadata.quality_signals;
       for (const [key, expected] of Object.entries(REQUIRED_QUALITY_SIGNALS)) {
         if (!quality || quality[key] !== expected) errs.push(`quality_signals.${key}`);
+      }
+      const firstRun = e.metadata && e.metadata.first_run_success;
+      if (!firstRun || typeof firstRun.goal !== 'string' || firstRun.goal.length < 20) errs.push('first_run_success.goal');
+      for (const key of REQUIRED_FIRST_RUN_EVIDENCE) {
+        if (!firstRun || !Array.isArray(firstRun.required_evidence) || !firstRun.required_evidence.includes(key)) {
+          errs.push(`first_run_success.required_evidence.${key}`);
+        }
+      }
+      for (const key of REQUIRED_FORBIDDEN_SETUP_WORK) {
+        if (!firstRun || !Array.isArray(firstRun.forbidden_setup_work) || !firstRun.forbidden_setup_work.includes(key)) {
+          errs.push(`first_run_success.forbidden_setup_work.${key}`);
+        }
+      }
+      const boundary = e.metadata && e.metadata.output_boundary;
+      for (const key of REQUIRED_CORE_OUTPUTS) {
+        if (!boundary || !Array.isArray(boundary.core_outputs) || !boundary.core_outputs.includes(key)) {
+          errs.push(`output_boundary.core_outputs.${key}`);
+        }
+      }
+      if (!boundary || typeof boundary.export_claim_rule !== 'string' || !boundary.export_claim_rule.includes('until')) {
+        errs.push('output_boundary.export_claim_rule');
+      }
+      const dims = e.metadata && e.metadata.quality_score_dimensions;
+      for (const key of REQUIRED_QUALITY_SCORE_DIMENSIONS) {
+        if (!Array.isArray(dims) || !dims.includes(key)) errs.push(`quality_score_dimensions.${key}`);
+      }
+      const benchmarks = e.metadata && e.metadata.benchmark_targets;
+      if (!benchmarks || !/^\d{4}-\d{2}-\d{2}$/.test(benchmarks.observed_on || '')) errs.push('benchmark_targets.observed_on');
+      if (!benchmarks || typeof benchmarks.skills_sh_top10_floor_installs !== 'number' || benchmarks.skills_sh_top10_floor_installs < 260000) {
+        errs.push('benchmark_targets.skills_sh_top10_floor_installs');
       }
       const targets = e.metadata && e.metadata.marketplace_targets;
       for (const target of REQUIRED_MARKETPLACE_TARGETS) {

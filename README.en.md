@@ -105,6 +105,10 @@ This repo is shaped for agents. The root [`AGENTS.md`](AGENTS.md) points at [`SK
 2. **Route** via [references/modes.md](references/modes.md) → pick one of 12 modes → fork the template listed in [assets/templates/INDEX.json](assets/templates/INDEX.json). **Never start from blank HTML.**
 3. **Verify** (default Tier 0 · zero install): `npm run verify:lite -- <file>` for the placeholder scan, then `npm run preview -- <file>` for a `file://` URL your browser tool (or the user) can open.
 
+Do not turn first run into setup work. Ship a visible HTML artifact first, then report the file path, mode, template, verification result, and use-affecting caveats. Only claim exported files after the user asks for them, the corresponding command has passed, and the output file has been inspected.
+
+`agents/openai.yaml` supplies the UI display name, short description, default prompt, and IFQ icon paths for agents or marketplaces that render skill chips/cards.
+
 **Declarative capability / permission / security data** lives in `SKILL.md` as single-line JSON `metadata`, so OpenClaw / ClawHub / Hermes can read `metadata.openclaw.requires` and security signals without parsing prose:
 
 - Reads the skill root; writes only under the user's workspace.
@@ -134,7 +138,7 @@ Real prompts. Left: what you say. Right: what the skill actually does.
 </td>
 <td>
 
-<sub>M-08 Keynote · editorial dark · Newsreader display · chapter breaks as rust ledger verticals · mono slide index <code>01 / 20</code> · closing colophon · exports HTML + PPTX + PDF in one pass</sub>
+<sub>M-08 Keynote · editorial dark · Newsreader display · chapter breaks as rust ledger verticals · mono slide index <code>01 / 20</code> · closing colophon · HTML preview first, PPTX/PDF only after the user asks and export verification passes</sub>
 
 </td>
 </tr>
@@ -160,7 +164,7 @@ Real prompts. Left: what you say. Right: what the skill actually does.
 </td>
 <td>
 
-<sub>M-10 Card · 85×55mm + 3mm bleed · front: one-line offer + spark dot · back: mono info bar · third-party piece — explicit wordmark off · IFQ kept only as layout rhythm · print-ready PDF with crop marks</sub>
+<sub>M-10 Card · 85×55mm + 3mm bleed · front: one-line offer + spark dot · back: mono info bar · third-party piece — explicit wordmark off · IFQ kept only as layout rhythm · previewable source first, print PDF only after export verification</sub>
 
 </td>
 </tr>
@@ -173,7 +177,7 @@ Real prompts. Left: what you say. Right: what the skill actually does.
 </td>
 <td>
 
-<sub>M-01 Launch Film · three directions first (matter-of-fact / editorial / kinetic-type) · Stage+Sprite timeline · 60fps · key shot + mono spec overlay + 2s quiet-URL close · mp4 + gif + keyposter</sub>
+<sub>M-01 Launch Film · three directions first (matter-of-fact / editorial / kinetic-type) · Stage+Sprite timeline · 60fps · key shot + mono spec overlay + 2s quiet-URL close · HTML/keyposter first, MP4/GIF only after explicit export</sub>
 
 </td>
 </tr>
@@ -225,7 +229,7 @@ Real prompts. Left: what you say. Right: what the skill actually does.
 </td>
 <td>
 
-<sub>M-03 Whitepaper · A4 print-ready HTML · cover / abstract / TOC / chapters / references / colophon · each chapter opens with a mono number and half a page of air · footer <code>ifq.ai / 2026</code> · print-ready PDF with bookmarks</sub>
+<sub>M-03 Whitepaper · A4 print-ready HTML · cover / abstract / TOC / chapters / references / colophon · each chapter opens with a mono number and half a page of air · footer <code>ifq.ai / 2026</code> · PDF/bookmarks claimed only after export passes</sub>
 
 </td>
 </tr>
@@ -340,16 +344,16 @@ Not decoration. Layout grammar.
 
 | # | Mode | Triggered by | Delivers |
 |---|------|-------------|----------|
-| M-01 | Launch Film | launch video · product film | 25–40s motion + keyposter + social kit |
+| M-01 | Launch Film | launch video · product film | HTML/keyposter first; MP4/GIF after export |
 | M-02 | Portfolio | personal site · about | one-pager + 5 direction variants |
-| M-03 | Whitepaper | whitepaper · annual report · research PDF | print-ready HTML → PDF |
+| M-03 | Whitepaper | whitepaper · annual report · research PDF | printable HTML; PDF after export verification |
 | M-04 | Dashboard | command center · KPI · monitor | dense dashboard |
 | M-05 | Compare | A vs B · benchmark | matrix + cited sources |
 | M-06 | Onboarding | new-user flow · demo | 3–5 interactive screens |
 | M-07 | Changelog | release notes · dev log | vertical timeline |
-| M-08 | Keynote | talk deck · master template | HTML deck + PPTX + PDF |
+| M-08 | Keynote | talk deck · master template | HTML deck; PPTX/PDF after export verification |
 | M-09 | Social Kit | IG / Xiaohongshu / OG card | multi-size statics |
-| M-10 | Card / Invite | business card · invite · VIP | SVG + print-ready PDF |
+| M-10 | Card / Invite | business card · invite · VIP | SVG/HTML source; print PDF after export verification |
 | M-11 | Brand Diagnosis | audit · upgrade | report + three directions |
 | M-12 | Full Brand | brand from scratch | logo + palette + type + six applications |
 

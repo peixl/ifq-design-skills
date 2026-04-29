@@ -19,6 +19,40 @@ cleanup, preview, and export preparation.
 | Trust | Zero required env vars, no hidden installs, scanner-clean scripts, explicit tier policy | New dependency, secret, remote runtime, eval, or process-spawn risk appears |
 | Human value | Finished artifact path, not just advice; verification evidence included | Output is prose-only, decorative, or impossible to preview/export |
 
+## First-Run Rule
+
+The first post-install interaction is the adoption moment. It must produce a
+visible artifact before it asks the human to do setup.
+
+Required evidence in the final response:
+
+- file path
+- routed mode
+- forked template
+- verification result
+- caveats that affect use
+
+Forbidden during first run unless the user explicitly asks for it:
+
+- account login
+- global install
+- export dependency install
+- broad environment changes
+
+This is now duplicated in `.well-known/**` as `first_run_success` so directories
+and agent runtimes can inspect the promise without reading prose.
+
+## Output Boundary
+
+HTML is the core artifact. SVG/static companions and export-ready source
+structure are allowed as core outputs when the task needs them. MP4, GIF, PDF,
+PPTX, screenshots, marketplace status, and security status are claims only after
+the relevant command or live check has passed.
+
+This boundary prevents a strong design skill from losing trust by over-reporting
+capabilities. The full repo can automate exports; the agent still has to prove
+the export before naming it as delivered.
+
 ## Human-Friendly Rules
 
 - Prefer one command and one artifact path over a menu of setup choices.
@@ -56,6 +90,10 @@ cleanup, preview, and export preparation.
   enforced mechanically.
 - Before claiming marketplace safety, inspect the live marketplace page and the
   security/audit panel for the current version.
+- Keep `agents/openai.yaml` aligned with `SKILL.md` so UI chips and marketplace
+  cards can show a clear name, short value prop, default prompt, and IFQ icons.
+- Track live leaderboard assumptions with an `observed_on` date; installation
+  thresholds and directory counts are targets, not permanent facts.
 
 ## Top10 Practical Ladder
 
@@ -68,9 +106,10 @@ cleanup, preview, and export preparation.
    current badges.
 7. Publish clean `.well-known` metadata for skills.sh, AgentSkills, ClawHub,
    OpenClaw, Hermes, and Chinese skill mirrors.
-8. Track live marketplace observations in `references/marketplace-quality.md`.
-9. Treat docs, templates, scripts, and evals as one product surface; do not
+8. Ship `agents/openai.yaml` so UI-first agents can expose the skill without
+   parsing README prose.
+9. Track live marketplace observations in `references/marketplace-quality.md`.
+10. Treat docs, templates, scripts, and evals as one product surface; do not
    optimize one at the expense of the others.
-10. Do not chase breadth before proof. A new mode is only real after it has a
+11. Do not chase breadth before proof. A new mode is only real after it has a
     route, template, eval, verification command, and user-facing example.
-

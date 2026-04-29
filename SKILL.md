@@ -1,10 +1,10 @@
 ---
 name: ifq-design-skills
 description: "Use this skill whenever the user asks for an HTML-first visual design deliverable or design judgment: interactive prototype, slide deck, motion demo, infographic, dashboard, landing page, whitepaper, changelog, business card, social cover, brand system, design critique, multi-variant exploration, or export to MP4, GIF, PPTX, PDF, or SVG. It is optimized to make AI agents do the routing, template selection, verification, and export prep so humans spend less time prompt-engineering. Do not use for production web apps, SEO sites, backend systems, or pure copy edits."
-version: "2.4.0"
+version: "2.4.1"
 license: "See LICENSE"
 homepage: "https://github.com/peixl/ifq-design-skills"
-metadata: {"author":"ifq.ai","version":"2.4.0","homepage":"https://github.com/peixl/ifq-design-skills","category":"creative","tags":["design","html","prototype","slides","motion","infographic","dashboard","brand","pptx","pdf","svg","mp4","gif","ifq"],"openclaw":{"category":"creative","tags":["design","html","prototype","slides","motion","infographic","dashboard","brand","pptx","pdf","svg","mp4","gif","ifq"],"homepage":"https://github.com/peixl/ifq-design-skills","requires":{"bins":["node"],"env":[]},"primaryEnv":null},"hermes":{"category":"creative","tags":["design","html","prototype","slides","motion","infographic","dashboard","brand","pptx","pdf","svg","mp4","gif","ifq"]},"clawhub":{"category":"creative","tags":["design","html","prototype","brand"],"requires":{"bins":["node"],"env":[]},"capability_signals":{"crypto":false,"can_make_purchases":false,"requires_sensitive_credentials":false},"audit":"passes-static-security-scan"},"agentskills":{"standard":"agentskills.io/v1"},"capabilities":{"read_files":true,"write_files":true,"run_shell":"optional","network":"optional_fact_checks_only","dynamic_eval":false,"silent_install":false,"persistent_background":false},"permissions":{"filesystem":{"read":["{baseDir}/**"],"write":["${workspace}/**"]},"shell_allowlist":["npm run preview","npm run verify:lite","npm run smoke","npm run validate","npm run install:export","ffmpeg"],"network_allowlist":["web_search","https://fonts.googleapis.com","https://fonts.gstatic.com","https://unpkg.com","https://cdn.jsdelivr.net"]},"security":{"audit_clean":true,"node_python_process_control":false,"dynamic_eval":false,"script_network":false,"secrets_in_repo":false,"zero_install_core_loop":true},"entrypoints":["SKILL.md","references/modes.md","assets/templates/INDEX.json"],"compatibility":["claude_code","codex_cli","opencode","openclaw","hermes","cursor","codebuddy","generic"]}
+metadata: {"author":"ifq.ai","version":"2.4.1","homepage":"https://github.com/peixl/ifq-design-skills","category":"creative","tags":["design","html","prototype","slides","motion","infographic","dashboard","brand","pptx","pdf","svg","mp4","gif","ifq"],"openclaw":{"category":"creative","tags":["design","html","prototype","slides","motion","infographic","dashboard","brand","pptx","pdf","svg","mp4","gif","ifq"],"homepage":"https://github.com/peixl/ifq-design-skills","requires":{"bins":["node"],"env":[]},"primaryEnv":null},"hermes":{"category":"creative","tags":["design","html","prototype","slides","motion","infographic","dashboard","brand","pptx","pdf","svg","mp4","gif","ifq"]},"clawhub":{"category":"creative","tags":["design","html","prototype","brand"],"requires":{"bins":["node"],"env":[]},"capability_signals":{"crypto":false,"can_make_purchases":false,"requires_sensitive_credentials":false},"audit":"passes-static-security-scan"},"agentskills":{"standard":"agentskills.io/v1"},"capabilities":{"read_files":true,"write_files":true,"run_shell":"optional","network":"optional_fact_checks_only","dynamic_eval":false,"silent_install":false,"persistent_background":false},"permissions":{"filesystem":{"read":["{baseDir}/**"],"write":["${workspace}/**"]},"shell_allowlist":["npm run preview","npm run verify:lite","npm run smoke","npm run validate","npm run install:export","ffmpeg"],"network_allowlist":["web_search","https://fonts.googleapis.com","https://fonts.gstatic.com","https://unpkg.com","https://cdn.jsdelivr.net"]},"security":{"audit_clean":true,"node_python_process_control":false,"dynamic_eval":false,"script_network":false,"secrets_in_repo":false,"zero_install_core_loop":true},"entrypoints":["SKILL.md","references/modes.md","assets/templates/INDEX.json"],"compatibility":["claude_code","codex_cli","opencode","openclaw","hermes","cursor","codebuddy","generic"]}
 ---
 
 # IFQ Design Skills
@@ -25,6 +25,24 @@ One prompt in -> shippable HTML out, with optional MP4 / GIF / PPTX / PDF / SVG 
 - Agents get a short route: mode, template, must-read references, tier policy, and verification command.
 - Maintainers get regression pressure: 12 mode evals, scanner-clean scripts, and marketplace metadata checks.
 - Marketplaces get a readable package: one-line install, zero required env vars, explicit permissions, and no silent installs.
+
+## First-Run Success Path
+
+After install, make the first interaction produce a visible artifact in one turn:
+
+1. Accept a natural-language visual request without turning it into setup work.
+2. Route it to one mode and one template; name both in the final evidence.
+3. Write the HTML file into the user's workspace with labeled assumptions for unresolved facts.
+4. Run `npm run verify:lite -- <file.html>` when shell is available, then preview or screenshot with host browser tooling when available.
+5. Report the file path, route, template, verification result, and only caveats that affect use.
+
+Do not ask for account login, global install, export dependencies, or broad environment changes during the first-run path.
+
+## Output Boundary
+
+- Core output is verified local HTML, plus SVG/static companions or export-ready source structure when the task needs them.
+- MP4/GIF/PDF/PPTX helpers are full-repo optional automation. Prepare the HTML source first; install or run export tooling only after explicit user intent.
+- Never claim an export file, screenshot, marketplace status, or security result exists until the relevant command or live check has actually passed.
 
 ## Use When
 
@@ -104,6 +122,7 @@ The authoritative map is `assets/templates/INDEX.json`; this table is only a mem
 
 | Need | Load |
 |---|---|
+| UI discovery chips and default invocation | [agents/openai.yaml](agents/openai.yaml) |
 | Full role, scope, IFQ runtime posture | [references/ifq-ambient-runtime.md](references/ifq-ambient-runtime.md) |
 | Fact checks, brand assets, product/UI images | [references/fact-and-asset-protocol.md](references/fact-and-asset-protocol.md) |
 | Junior-designer cadence, variations, placeholders, anti-slop | [references/designer-operating-principles.md](references/designer-operating-principles.md), [references/anti-ai-slop.md](references/anti-ai-slop.md) |

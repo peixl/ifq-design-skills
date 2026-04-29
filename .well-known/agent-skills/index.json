@@ -9,7 +9,7 @@
         "SKILL.md"
       ],
       "metadata": {
-        "version": "2.4.0",
+        "version": "2.4.1",
         "category": "creative",
         "tags": [
           "design",
@@ -66,6 +66,47 @@
           "no_required_env": true,
           "scanner_clean_scripts": true,
           "default_remote_runtime": false
+        },
+        "first_run_success": {
+          "goal": "produce a visible HTML artifact in one turn after install",
+          "required_evidence": [
+            "file_path",
+            "route",
+            "template",
+            "verification_result",
+            "use_affecting_caveats"
+          ],
+          "forbidden_setup_work": [
+            "account_login",
+            "global_install",
+            "export_dependency_install",
+            "broad_environment_change"
+          ]
+        },
+        "output_boundary": {
+          "core_outputs": [
+            "verified_html",
+            "svg_or_static_companions",
+            "export_ready_source_structure"
+          ],
+          "export_claim_rule": "Do not claim MP4, GIF, PDF, PPTX, screenshot, marketplace, or security results until the relevant command or live check has passed."
+        },
+        "quality_score_dimensions": [
+          "Discovery",
+          "Implementation",
+          "Structure",
+          "Expertise",
+          "Security"
+        ],
+        "benchmark_targets": {
+          "observed_on": "2026-04-29",
+          "skills_sh_top10_floor_installs": 260000,
+          "skills_sh_design_peer_installs": {
+            "frontend-design": 348100,
+            "web-design-guidelines": 284200,
+            "ui-ux-pro-max": 137300
+          },
+          "clawhub_target": "benign VirusTotal, ClawScan, and static analysis with no suspicious banner"
         },
         "marketplace_targets": [
           "skills.sh",
