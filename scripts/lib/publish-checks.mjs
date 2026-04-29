@@ -149,6 +149,13 @@ export function validateWellKnownEntry(entry, pkgVersion) {
     if (!quality || quality[key] !== expected) errs.push(`quality_signals.${key}`);
   }
 
+  const install = entry.metadata && entry.metadata.install;
+  for (const key of ['skills-cli', 'openclaw', 'hermes']) {
+    if (!install || typeof install[key] !== 'string' || !install[key]) {
+      errs.push(`install.${key}`);
+    }
+  }
+
   const firstRun = entry.metadata && entry.metadata.first_run_success;
   if (!firstRun || typeof firstRun.goal !== 'string' || firstRun.goal.length < 20) errs.push('first_run_success.goal');
   for (const key of REQUIRED_FIRST_RUN_EVIDENCE) {

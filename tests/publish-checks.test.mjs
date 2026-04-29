@@ -54,6 +54,11 @@ describe('validateWellKnownEntry', () => {
         quality_score_dimensions: ['Discovery', 'Implementation', 'Structure', 'Expertise', 'Security'],
         benchmark_targets: { observed_on: '2026-04-01', skills_sh_top10_floor_installs: 260000 },
         marketplace_targets: ['skills.sh', 'agentskill.sh', 'agentskills.to', 'clawhub.ai', 'clawskills.sh', 'skillhub.cn'],
+        install: {
+          'skills-cli': 'npx skills add peixl/ifq-design-skills',
+          openclaw: 'openclaw skills install peixl/ifq-design-skills',
+          hermes: 'hermes skills install github:peixl/ifq-design-skills',
+        },
         human_value: ['one', 'two', 'three'],
         agent_value: ['one', 'two', 'three'],
         entrypoints: ['SKILL.md', 'modes.md', 'INDEX.json'],
@@ -125,6 +130,13 @@ describe('validateWellKnownEntry', () => {
     entry.metadata.marketplace_targets = ['skills.sh'];
     const errs = validateWellKnownEntry(entry, '3.0.0');
     assert.ok(errs.some(e => e.startsWith('marketplace_targets')));
+  });
+
+  it('rejects missing install commands', () => {
+    const entry = makeValidEntry();
+    delete entry.metadata.install.openclaw;
+    const errs = validateWellKnownEntry(entry, '3.0.0');
+    assert.ok(errs.includes('install.openclaw'));
   });
 });
 
