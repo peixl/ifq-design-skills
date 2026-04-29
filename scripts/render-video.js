@@ -51,7 +51,7 @@
 const { chromium } = require('playwright');
 const path = require('path');
 const fs = require('fs');
-const { assertNoPlaceholderLeaksInPage } = require('./placeholder-guard.cjs');
+const { assertNoPlaceholderLeaksInPage } = require('./placeholder-guard.mjs');
 
 function arg(name, def) {
   const p = process.argv.find(a => a.startsWith('--' + name + '='));

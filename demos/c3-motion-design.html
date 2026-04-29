@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-Hans">
+<html lang="zh-CN">
 <head>
 <meta charset="utf-8" />
 <title>ifq-design-skills · c3 motion design（中文版）</title>
@@ -557,6 +557,11 @@ html, body {
 .replay-btn.visible {
   opacity: 1;
   pointer-events: auto;
+}
+
+/* ---- Reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 </style>
 </head>

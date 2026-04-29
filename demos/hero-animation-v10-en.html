@@ -751,6 +751,11 @@
   }
   .pivot-line .accent { color: var(--accent); font-weight: inherit; }
   .pivot-line .faint { color: var(--muted); }
+
+  /* ---- Reduced motion ---- */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
 </style>
 </head>
 <body>

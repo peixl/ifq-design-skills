@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ifq.ai/schemas/templates.schema.json",
+  "title": "IFQ Template Index",
+  "description": "Schema for INDEX.json — maps design modes to forkable HTML templates.",
+  "type": "object",
+  "required": ["version", "author", "description", "modeRoutes", "templates"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+$" },
+    "author": { "type": "string" },
+    "description": { "type": "string" },
+    "modeRoutes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["mode", "templateId", "triggers", "verify_command"],
+        "properties": {
+          "mode": { "type": "string", "pattern": "^M-\\d{2}$" },
+          "templateId": { "type": "string", "pattern": "^T-" },
+          "triggers": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+          "required_assets": { "type": "array", "items": { "type": "string" } },
+          "verify_command": { "type": "string" },
+          "example_prompt": { "type": "string" },
+          "fallback_note": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "templates": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "mode", "name", "file"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^T-" },
+          "mode": { "type": "array", "items": { "type": "string", "pattern": "^M-\\d{2}$" }, "minItems": 1 },
+          "name": { "type": "string" },
+          "file": { "type": "string" },
+          "viewport": { "type": "string" },
+          "notes": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

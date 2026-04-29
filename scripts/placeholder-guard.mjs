@@ -155,7 +155,7 @@ async function assertNoPlaceholderLeaksInPage(page, options = {}) {
   }
 }
 
-module.exports = {
+export {
   assertNoPlaceholderLeaksInPage,
   findPlaceholderFindings,
 };

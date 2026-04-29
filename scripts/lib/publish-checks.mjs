@@ -1,4 +1,4 @@
-// Shared publish-spec validation logic used by both smoke-test.mjs and validate_publish.cjs.
+// Shared publish-spec validation logic used by both smoke-test.mjs and validate_publish.mjs.
 // Single source of truth for marketplace metadata checks.
 
 export const NAME_REGEX = /^[a-z0-9]([a-z0-9-]{0,62}[a-z0-9])?$/;

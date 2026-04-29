@@ -158,7 +158,7 @@ async function run() {
 
   if (JSON_OUT) {
     const report = {
-      version: '3.0.0',
+      version: pkg.version,
       scored_at: new Date().toISOString(),
       total: { score: total, max: maxTotal, percent: pct },
       dimensions: {},

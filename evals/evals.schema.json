@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ifq.ai/schemas/evals.schema.json",
+  "title": "IFQ Design Skills Eval Scenarios",
+  "description": "Schema for evals.json — regression prompts covering all 12 design modes.",
+  "type": "object",
+  "required": ["version", "purpose", "quality_principles", "scenarios"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "type": "string" },
+    "purpose": { "type": "string" },
+    "quality_principles": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "scenarios": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "mode", "prompt_zh", "prompt_en", "user_value", "agent_value", "agent_contract", "quality_bar"],
+        "properties": {
+          "id": { "type": "string" },
+          "mode": { "type": "string", "pattern": "^M-\\d{2}$" },
+          "prompt_zh": { "type": "string" },
+          "prompt_en": { "type": "string" },
+          "user_value": { "type": "string" },
+          "agent_value": { "type": "string" },
+          "agent_contract": {
+            "type": "object",
+            "required": ["route", "template_ids", "tier", "verification"],
+            "properties": {
+              "route": { "type": "string" },
+              "template_ids": { "type": "array", "items": { "type": "string" } },
+              "must_read": { "type": "array", "items": { "type": "string" } },
+              "tier": { "type": "string" },
+              "verification": { "type": "array", "items": { "type": "string" } },
+              "fact_check_required": { "type": "boolean" }
+            },
+            "additionalProperties": false
+          },
+          "quality_bar": {
+            "type": "object",
+            "required": ["must_include", "must_not"],
+            "properties": {
+              "must_include": { "type": "array", "items": { "type": "string" } },
+              "must_not": { "type": "array", "items": { "type": "string" } }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

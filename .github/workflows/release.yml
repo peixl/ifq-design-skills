@@ -6,11 +6,8 @@ on:
       - "v*"
 
 jobs:
-  validate-and-release:
+  validate:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
     steps:
       - name: Check out repository
         uses: actions/checkout@v6
@@ -18,7 +15,8 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 24
+          node-version: 22
+          cache: 'npm'
 
       - name: Run full validation
         run: npm run verify:ci
@@ -28,6 +26,15 @@ jobs:
 
       - name: Validate marketplace metadata
         run: npm run verify:publish
+
+  release:
+    needs: validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2

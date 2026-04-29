@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-Hans">
+<html lang="zh-CN">
 <head>
 <meta charset="utf-8" />
 <title>w2 · 粗糙的第一版，好过完美的大招</title>
@@ -545,6 +545,11 @@
     background: var(--accent);
     margin-top: 36px;
     will-change: width;
+  }
+
+  /* ---- Reduced motion ---- */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
   }
 </style>
 </head>

@@ -1,6 +1,6 @@
 // Validate SKILL.md and well-known indices against marketplace publish rules.
-const fs = require('fs');
-const path = require('path');
+import fs from 'node:fs';
+import path from 'node:path';
 
 let failed = 0;
 

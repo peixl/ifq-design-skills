@@ -15,34 +15,34 @@
 <!-- China-safe default: no remote font request. See references/font-loading.md to opt into Google Fonts. -->
 <style>
   @page{size:96mm 60mm;margin:0}
-  :root{--accent:#D4532B;--accent-deep:#A83518;--ink:#111;--paper:#FAF7F2;--cream:#F1EBE0;--display:'Newsreader','Noto Serif SC','Source Han Serif SC','Songti SC',STSong,Georgia,serif;--sans:-apple-system,BlinkMacSystemFont,'SF Pro Text','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Source Han Sans SC',Arial,sans-serif;--mono:'JetBrains Mono','SF Mono','Cascadia Mono','Microsoft YaHei Mono',ui-monospace,Menlo,Consolas,monospace}
+  :root{--ifq-accent:#D4532B;--ifq-accent-deep:#A83518;--ifq-ink:#111;--ifq-paper:#FAF7F2;--ifq-cream:#F1EBE0;--ifq-display:'Newsreader','Noto Serif SC','Source Han Serif SC','Songti SC',STSong,Georgia,serif;--ifq-sans:-apple-system,BlinkMacSystemFont,'SF Pro Text','PingFang SC','Microsoft YaHei','Noto Sans CJK SC','Source Han Sans SC',Arial,sans-serif;--ifq-mono:'JetBrains Mono','SF Mono','Cascadia Mono','Microsoft YaHei Mono',ui-monospace,Menlo,Consolas,monospace}
   *{box-sizing:border-box;margin:0;padding:0}
-  html,body{background:#E5E0D6;color:var(--ink);font-family:var(--sans);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  html,body{background:#E5E0D6;color:var(--ifq-ink);font-family:var(--ifq-sans);-webkit-print-color-adjust:exact;print-color-adjust:exact}
 
   .sheet{display:flex;gap:16mm;padding:24mm 16mm;justify-content:center;flex-wrap:wrap}
 
-  .card{width:96mm;height:60mm;position:relative;overflow:hidden;box-shadow:0 2mm 6mm rgba(0,0,0,.08);background:var(--paper)}
+  .card{width:96mm;height:60mm;position:relative;overflow:hidden;box-shadow:0 2mm 6mm rgba(0,0,0,.08);background:var(--ifq-paper)}
   /* 3mm bleed safe-zone indicator (hide when printing) */
   .card::after{content:"";position:absolute;inset:3mm;border:0.2mm dashed rgba(17,17,17,.12);pointer-events:none}
   @media print { .card::after{display:none} .sheet{padding:0;gap:0} body{background:#fff} }
 
   /* ---------- Front ---------- */
-  .front{padding:6mm 7mm;display:flex;flex-direction:column;justify-content:space-between;border-top:1.4mm solid var(--accent)}
-  .front .brand{display:flex;align-items:center;gap:2mm;font-family:var(--display);font-size:14pt;font-weight:700;letter-spacing:-.01em}
-  .front .brand .dot{color:var(--accent)}
-  .front .name{font-family:var(--display);font-size:22pt;font-weight:700;letter-spacing:-.015em;line-height:1.05}
-  .front .title{font-family:var(--mono);font-size:7pt;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-deep);margin-top:1.5mm}
+  .front{padding:6mm 7mm;display:flex;flex-direction:column;justify-content:space-between;border-top:1.4mm solid var(--ifq-accent)}
+  .front .brand{display:flex;align-items:center;gap:2mm;font-family:var(--ifq-display);font-size:14pt;font-weight:700;letter-spacing:-.01em}
+  .front .brand .dot{color:var(--ifq-accent)}
+  .front .name{font-family:var(--ifq-display);font-size:22pt;font-weight:700;letter-spacing:-.015em;line-height:1.05}
+  .front .title{font-family:var(--ifq-mono);font-size:7pt;letter-spacing:.2em;text-transform:uppercase;color:var(--ifq-accent-deep);margin-top:1.5mm}
 
   .front .spark{position:absolute;right:7mm;top:6mm;width:9mm;height:9mm}
 
   /* ---------- Back ---------- */
-  .back{background:#1C1A17;color:var(--paper);padding:6mm 7mm;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+  .back{background:#1C1A17;color:var(--ifq-paper);padding:6mm 7mm;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
   .back::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 15%,rgba(212,83,43,.28),transparent 60%)}
-  .back .big{font-family:var(--display);font-style:italic;font-size:18pt;font-weight:400;line-height:1.15;position:relative;max-width:64mm}
-  .back .big em{color:var(--accent-soft,#FFB27A);font-style:italic}
-  .back .contact{position:relative;font-family:var(--mono);font-size:7.5pt;letter-spacing:.08em;line-height:1.7}
+  .back .big{font-family:var(--ifq-display);font-style:italic;font-size:18pt;font-weight:400;line-height:1.15;position:relative;max-width:64mm}
+  .back .big em{color:var(--ifq-accent-soft,#FFB27A);font-style:italic}
+  .back .contact{position:relative;font-family:var(--ifq-mono);font-size:7.5pt;letter-spacing:.08em;line-height:1.7}
   .back .contact .row{display:flex;justify-content:space-between}
-  .back .colophon{position:relative;display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:6pt;letter-spacing:.18em;text-transform:uppercase;opacity:.7;margin-top:1.5mm}
+  .back .colophon{position:relative;display:flex;justify-content:space-between;align-items:center;font-family:var(--ifq-mono);font-size:6pt;letter-spacing:.18em;text-transform:uppercase;opacity:.7;margin-top:1.5mm}
   .back .sig{display:flex;align-items:center;gap:1mm}
   .back .sig svg{width:3mm;height:3mm}
 
@@ -54,7 +54,7 @@
 
   /* ---- Responsive: mobile ---- */
   @media (max-width: 640px) {
-    body{background:var(--paper)}
+    body{background:var(--ifq-paper)}
     .sheet{flex-direction:column;align-items:center;padding:12px;gap:24px}
     .card{width:100%;max-width:340px;height:auto;aspect-ratio:96/60}
     .front{padding:5mm 6mm}
@@ -76,13 +76,13 @@
   /* ---- Dark mode (screen preview) ---- */
   @media (prefers-color-scheme: dark) {
     :root {
-      --ink: #F5EFE3;
-      --paper: #141212;
-      --cream: #1C1916;
-      --hairline: #2A2520;
+      --ifq-ink: #F5EFE3;
+      --ifq-paper: #141212;
+      --ifq-cream: #1C1916;
+      --ifq-hairline: #2A2520;
     }
     body{background:#0A0909}
-    .front{background:var(--paper)}
+    .front{background:var(--ifq-paper)}
     .card::after{border-color:rgba(245,239,227,.12)}
   }
 
@@ -97,7 +97,7 @@
   <!-- FRONT -->
   <article class="card front">
     <div class="brand">ifq<span class="dot">.ai</span></div>
-    <svg class="spark" viewBox="-16 -16 32 32"><path d="M0 -12 L2.6 -2.6 L12 0 L2.6 2.6 L0 12 L-2.6 2.6 L-12 0 L-2.6 -2.6 Z" fill="#D4532B"/></svg>
+    <svg class="spark" aria-hidden="true" viewBox="-16 -16 32 32"><path d="M0 -12 L2.6 -2.6 L12 0 L2.6 2.6 L0 12 L-2.6 2.6 L-12 0 L-2.6 -2.6 Z" fill="#D4532B"/></svg>
     <div>
       <div class="name">{ NAME }</div>
       <div class="title">{ TITLE · e.g. Designer · Founder }</div>
@@ -115,7 +115,7 @@
       <div class="colophon">
         <span>ifq.ai / <span data-ifq-year></span></span>
         <span class="sig">
-          <svg viewBox="-16 -16 32 32"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="#D4532B"/></svg>
+          <svg aria-hidden="true" viewBox="-16 -16 32 32"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="#D4532B"/></svg>
           ifq.ai
         </span>
       </div>
@@ -124,24 +124,13 @@
 </main>
 <script>
   (function () {
-    function buildIfqDateParts(parsedDate, year, month, day) {
-      return {
-        date: parsedDate,
-        year: String(year),
-        month: String(month).padStart(2, '0'),
-        day: String(day).padStart(2, '0'),
-      };
-    }
-
-    function normalizeIfqDate(value) {
+    function resolveIfqYear(value) {
       if (!value) {
         return null;
       }
 
       if (value instanceof Date) {
-        return Number.isNaN(value.getTime())
-          ? null
-          : buildIfqDateParts(value, value.getFullYear(), value.getMonth() + 1, value.getDate());
+        return Number.isNaN(value.getTime()) ? null : String(value.getFullYear());
       }
 
       const rawValue = typeof value === 'string' ? value.trim() : value;
@@ -159,7 +148,7 @@
           return null;
         }
 
-        const [, year, month, day, hour = '00', minute = '00', second = '00', fraction = '', zone] = match;
+        const [, year, month, day] = match;
         const calendarDate = new Date(Number(year), Number(month) - 1, Number(day));
         if (
           Number.isNaN(calendarDate.getTime()) ||
@@ -170,57 +159,22 @@
           return null;
         }
 
-        const millisecond = fraction ? Number(fraction.slice(1).padEnd(3, '0')) : 0;
-        let parsed;
-
-        if (zone) {
-          const normalizedZone = zone === 'Z' || zone.includes(':')
-            ? zone
-            : `${zone.slice(0, 3)}:${zone.slice(3)}`;
-          parsed = new Date(
-            `${year}-${month}-${day}T${hour}:${minute}:${second}.${String(millisecond).padStart(3, '0')}${normalizedZone}`
-          );
-        } else if (match[4] !== undefined) {
-          parsed = new Date(
-            Number(year),
-            Number(month) - 1,
-            Number(day),
-            Number(hour),
-            Number(minute),
-            Number(second),
-            millisecond
-          );
-        } else {
-          parsed = calendarDate;
-        }
-
-        return Number.isNaN(parsed.getTime()) ? null : buildIfqDateParts(parsed, year, month, day);
+        return year;
       }
 
       const parsed = new Date(rawValue);
-      return Number.isNaN(parsed.getTime())
-        ? null
-        : buildIfqDateParts(parsed, parsed.getFullYear(), parsed.getMonth() + 1, parsed.getDate());
+      return Number.isNaN(parsed.getTime()) ? null : String(parsed.getFullYear());
     }
 
     const metaTag = document.querySelector('meta[name="ifq:created-at"]');
-    const now = new Date();
-    const createdAt =
-      normalizeIfqDate(window.IFQ_CREATION_DATE) ||
-      normalizeIfqDate(document.documentElement.getAttribute('data-ifq-created-at')) ||
-      normalizeIfqDate(metaTag && metaTag.getAttribute('content')) ||
-      buildIfqDateParts(now, now.getFullYear(), now.getMonth() + 1, now.getDate());
+    const candidate =
+      window.IFQ_CREATION_DATE ||
+      document.documentElement.getAttribute('data-ifq-created-at') ||
+      (metaTag && metaTag.getAttribute('content'));
+    const year = resolveIfqYear(candidate) || String(new Date().getFullYear());
 
-    const parts = {
-      year: createdAt.year,
-      month: createdAt.month,
-      day: createdAt.day,
-    };
-
-    Object.entries(parts).forEach(function ([token, value]) {
-      document.querySelectorAll('[data-ifq-' + token + ']').forEach(function (node) {
-        node.textContent = value;
-      });
+    document.querySelectorAll('[data-ifq-year]').forEach(function (node) {
+      node.textContent = year;
     });
   })();
 </script>

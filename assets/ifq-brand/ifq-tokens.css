@@ -144,12 +144,6 @@
   border: 0;
 }
 
-.ifq-colophon {
-  font-family: var(--ifq-font-mono);
-  font-size: var(--ifq-text-xs);
-  color: var(--ifq-muted);
-  letter-spacing: 0.06em;
-}
 
 /* Sparkle motif as a pure CSS keyframe (no JS needed) */
 @keyframes ifq-sparkle {

@@ -27,6 +27,7 @@
 import { readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { resolve, basename } from 'node:path';
+import { PATTERNS, EMPTY_DATE_ATTR, stripScriptsAndStyles, stripTags, clip } from './lib/lite-scanner.mjs';
 
 const files = process.argv.slice(2).filter(a => !a.startsWith('--'));
 if (!files.length) {
@@ -35,35 +36,6 @@ if (!files.length) {
 }
 
 const RED = '\x1b[31m', GREEN = '\x1b[32m', DIM = '\x1b[2m', RESET = '\x1b[0m', YELLOW = '\x1b[33m';
-
-const PATTERNS = [
-  ['brace-placeholder', /\{[^{}\n<>]{1,120}\}/g],
-  ['year-token',        /(^|[^A-Za-z0-9_])(YYYY|<year>)(?=$|[^A-Za-z0-9_])/g],
-  ['month-day-token',   /(^|[^A-Za-z0-9_])(MM|DD)(?=$|[^A-Za-z0-9_])/g],
-  ['lorem-ipsum',       /\blorem\s+ipsum\b/gi],
-  ['template-stub',     /\b(your\s+(headline|title|name|cta)\s+here|replace\s+me|TODO:)/gi],
-  // IFQ taxonomy labels must NEVER appear as visible body text — they are
-  // internal mark names, not page copy. See references/ifq-brand-spec.md.
-  ['ifq-taxonomy-leak', /(^|[^A-Za-z0-9_])(FIELD\s+NOTE|SIGNAL\s+SPARK|RUST\s+LEDGER|MONO\s+FIELD\s+NOTE|QUIET\s+URL|EDITORIAL\s+CONTRAST)(?=$|[^A-Za-z0-9_])/g],
-];
-
-const EMPTY_DATE_ATTR = /<[^>]+\sdata-ifq-(year|month|day)[^>]*>\s*<\/[^>]+>/gi;
-
-function stripScriptsAndStyles(html) {
-  return html
-    .replace(/<script\b[\s\S]*?<\/script>/gi, ' ')
-    .replace(/<style\b[\s\S]*?<\/style>/gi, ' ')
-    .replace(/<!--[\s\S]*?-->/g, ' ');
-}
-
-function stripTags(html) {
-  return html.replace(/<[^>]+>/g, ' ');
-}
-
-function clip(text, start, end, radius = 36) {
-  return text.slice(Math.max(0, start - radius), Math.min(text.length, end + radius))
-    .replace(/\s+/g, ' ').trim();
-}
 
 let totalFindings = 0;
 

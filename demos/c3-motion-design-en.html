@@ -558,6 +558,11 @@ html, body {
   opacity: 1;
   pointer-events: auto;
 }
+
+/* ---- Reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
 </style>
 </head>
 <body>

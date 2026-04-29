@@ -62,7 +62,7 @@ Animation, video export, and audio design.
 | [video-export.md](video-export.md) | MP4/GIF export pipeline with ffmpeg |
 | [audio-design-rules.md](audio-design-rules.md) | Audio layer design for motion deliverables |
 | [sfx-library.md](sfx-library.md) | Sound effects library and usage rules |
-| [hero-animation-case-study.md](hero-animation-case-studies.md) | Case study: hero animation from brief to export |
+| [hero-animation-case-study.md](hero-animation-case-study.md) | Case study: hero animation from brief to export |
 
 ## Brand & Identity
 

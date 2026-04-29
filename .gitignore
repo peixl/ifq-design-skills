@@ -34,6 +34,18 @@ authorized_keys
 .netrc
 .aws/
 
+# Logs
+*.log
+npm-debug.log*
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Build caches
+.turbo/
+.cache/
+
 # Node / editor / OS
 node_modules/
 __pycache__/

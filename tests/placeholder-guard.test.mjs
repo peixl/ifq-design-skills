@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { findPlaceholderFindings } from '../scripts/placeholder-guard.cjs';
+import { findPlaceholderFindings } from '../scripts/placeholder-guard.mjs';
 
 describe('findPlaceholderFindings', () => {
   it('returns empty for clean text', () => {

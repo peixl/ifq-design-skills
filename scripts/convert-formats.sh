@@ -27,7 +27,7 @@
 #   pass 2: paletteuse with bayer dither + rectangle diff
 # This keeps 30s/1080p animations GIF under ~4MB with good color fidelity.
 
-set -e
+set -eu
 
 INPUT=""
 GIF_WIDTH="960"

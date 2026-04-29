@@ -8,6 +8,10 @@ name: Sync Authored Year
 permissions:
   contents: write
 
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
 jobs:
   sync:
     runs-on: ubuntu-latest
@@ -19,13 +23,15 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 24
+          node-version: 22
+          cache: 'npm'
 
       - name: Sync authored year
         run: npm run sync:year
 
       - name: Commit changes when needed
         run: |
+          set -e
           if git diff --quiet; then
             echo "No authored year changes needed."
             exit 0

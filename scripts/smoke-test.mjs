@@ -15,12 +15,10 @@ import {
   validateSkillManifest,
   validateWellKnownEntry,
 } from './lib/publish-checks.mjs';
-import { createRequire } from 'node:module';
+import { assertNoPlaceholderLeaksInPage } from './placeholder-guard.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
-const require = createRequire(import.meta.url);
-const { assertNoPlaceholderLeaksInPage } = require('./placeholder-guard.cjs');
 
 const RED = '\x1b[31m', GREEN = '\x1b[32m', DIM = '\x1b[2m', RESET = '\x1b[0m', BOLD = '\x1b[1m';
 const ok = (msg) => console.log(`${GREEN}✓${RESET} ${msg}`);
@@ -625,13 +623,13 @@ async function check12_PlaceholderGuardBehavior() {
 
   try {
     await assertNoPlaceholderLeaksInPage(fakePage, { label: 'smoke-fixture.html' });
-    fail('  placeholder-guard.cjs should fail when data-ifq-year is empty');
+    fail('  placeholder-guard.mjs should fail when data-ifq-year is empty');
   } catch (error) {
     if (!/\[data-ifq-year\]/.test(error.message)) {
-      fail(`  placeholder-guard.cjs returned unexpected error: ${error.message.split('\n')[0]}`);
+      fail(`  placeholder-guard.mjs returned unexpected error: ${error.message.split('\n')[0]}`);
       return;
     }
-    ok('placeholder-guard.cjs rejects empty data-ifq-year tokens');
+    ok('placeholder-guard.mjs rejects empty data-ifq-year tokens');
   }
 }
 

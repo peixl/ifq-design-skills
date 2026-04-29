@@ -25,7 +25,7 @@
     "preview": "node scripts/preview.mjs",
     "verify:lite": "node scripts/verify-lite.mjs",
     "verify": "python3 scripts/verify.py",
-    "verify:publish": "node scripts/validate_publish.cjs",
+    "verify:publish": "node scripts/validate_publish.mjs",
     "quality:score": "node scripts/quality-score.mjs",
     "quality:score:json": "node scripts/quality-score.mjs --json",
     "render:video": "node scripts/render-video.js",
@@ -41,6 +41,9 @@
     "pdf-lib": "^1.17.1",
     "pptxgenjs": "^3.12.0",
     "sharp": "^0.33.4"
+  },
+  "peerDependencies": {
+    "ffmpeg-system": ">=4.4"
   },
   "peerDependenciesMeta": {
     "ffmpeg-system": {

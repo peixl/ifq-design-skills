@@ -9,8 +9,9 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<meta name="ifq:created-at" content="{ CREATED_AT }"/>
+<meta name="ifq:created-at" content="{ CREATED_AT · optional ISO-8601, defaults to now }"/>
 <title>{ APP } Onboarding · ifq.ai</title>
+<!-- China-safe default: no remote font request. See references/font-loading.md to opt into Google Fonts. -->
 <style>
   :root {
     --ifq-accent:#D4532B; --ifq-accent-deep:#A83518; --ifq-accent-soft:#FFB27A;
@@ -101,7 +102,7 @@
 <body>
   <header class="head">
     <div class="head__brand">
-      <svg viewBox="-12 -12 24 24"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="currentColor"/></svg>
+      <svg aria-hidden="true" viewBox="-12 -12 24 24"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="currentColor"/></svg>
       <span>ifq<b>.ai</b></span>
     </div>
     <div class="head__meta">onboarding flow / { APP } / <span data-ifq-year></span></div>
@@ -167,7 +168,7 @@
 
   <footer class="colophon">
     <div class="colophon__left">
-      <svg viewBox="-12 -12 24 24"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="#D4532B"/></svg>
+      <svg aria-hidden="true" viewBox="-12 -12 24 24"><path d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z" fill="#D4532B"/></svg>
       compiled by ifq.ai
     </div>
     <div class="colophon__right">ifq.ai / <span data-ifq-year></span></div>

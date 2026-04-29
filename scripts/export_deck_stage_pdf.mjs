@@ -31,10 +31,7 @@
 import { chromium } from 'playwright';
 import fs from 'fs/promises';
 import path from 'path';
-import { createRequire } from 'module';
-
-const require = createRequire(import.meta.url);
-const { assertNoPlaceholderLeaksInPage } = require('./placeholder-guard.cjs');
+import { assertNoPlaceholderLeaksInPage } from './placeholder-guard.mjs';
 
 function parseArgs() {
   const args = { width: 1920, height: 1080 };

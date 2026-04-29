@@ -36,6 +36,10 @@ name: Skills Publish Check
       - assets/**
       - references/**
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -47,7 +51,8 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 24
+          node-version: 22
+          cache: 'npm'
 
       - name: Run unit tests
         run: npm test

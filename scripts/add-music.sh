@@ -30,7 +30,7 @@
 #   bash add-music.sh my.mp4 --mood=educational --out=final.mp4
 #   bash add-music.sh my.mp4 --music=~/Downloads/song.mp3 # bring your own
 #
-set -e
+set -eu
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ASSETS_DIR="$SCRIPT_DIR/../assets"

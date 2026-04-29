@@ -28,12 +28,10 @@
 import pptxgen from 'pptxgenjs';
 import fs from 'fs/promises';
 import path from 'path';
-import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
+import { assertNoPlaceholderLeaksInPage } from './placeholder-guard.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const require = createRequire(import.meta.url);
-const { assertNoPlaceholderLeaksInPage } = require('./placeholder-guard.cjs');
 
 function parseArgs() {
   const args = {};
