@@ -458,8 +458,7 @@ npm run render:video -- path/to/film.html      # 渲染 MP4（需 ffmpeg + insta
 
 ## 社区
 
-- **Issues**: [GitHub Issues](https://github.com/peixl/ifq-design-skills/issues) — bug 报告和功能请求
-- **Discussions**: [GitHub Discussions](https://github.com/peixl/ifq-design-skills/discussions) — 设计分享和使用交流
+- **Issues**: [GitHub Issues](https://github.com/peixl/ifq-design-skills/issues) — bug 报告、功能请求、设计分享和使用交流
 - **贡献入口**：改 skill 协议、模板、脚本或文档前先看 [CONTRIBUTING.md](CONTRIBUTING.md)。安全边界与上报流程见 [SECURITY.md](SECURITY.md)。
 
 ---

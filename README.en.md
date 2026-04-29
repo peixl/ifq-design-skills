@@ -454,8 +454,7 @@ Open the HTML files in `demos/` to see real output quality:
 
 ## Community
 
-- **Issues**: [GitHub Issues](https://github.com/peixl/ifq-design-skills/issues) — bug reports and feature requests
-- **Discussions**: [GitHub Discussions](https://github.com/peixl/ifq-design-skills/discussions) — design sharing and usage
+- **Issues**: [GitHub Issues](https://github.com/peixl/ifq-design-skills/issues) — bug reports, feature requests, design sharing, and usage questions
 - **Contributing:** read [CONTRIBUTING.md](CONTRIBUTING.md) before changing protocol, templates, scripts, or docs. Security posture and reporting live in [SECURITY.md](SECURITY.md).
 
 ---
