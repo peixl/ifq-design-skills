@@ -422,7 +422,8 @@ ifq-design-skills/
 npm run preview -- path/to/design.html   # 打印 file:// URL，交给浏览器工具或用户打开
 npm run verify:lite -- path/to/design.html   # 纯静态扫占位符残留（YYYY / {…} / lorem / 空 data-ifq-*）
 npm run smoke                              # 一分钟 skill 自检
-npm run evals:validate                     # 12 模式回归契约
+npm run evals:validate                     # 20 场景回归契约（12 模式 + 8 边界）
+npm run quality:score                      # 38 项质量评分（Discovery / Implementation / Structure / Expertise / Security）
 ```
 
 不需要装 Playwright、不需要 Chromium、不需要 Python。跨 macOS / Linux / Windows 即跑。
@@ -431,7 +432,12 @@ npm run evals:validate                     # 12 模式回归契约
 
 ```bash
 npm run install:export   # 一键装齐 playwright + pdf-lib + pptxgenjs + sharp + Chromium
+npm run install:browsers # 仅安装 Chromium（不装其他 export 依赖）
 python scripts/verify.py path/to/design.html   # headless 多 viewport 截图 + 控制台错误
+npm run export:pdf -- path/to/deck.html        # 导出 PDF（需先 install:export）
+npm run export:pptx -- path/to/deck.html       # 导出可编辑 PPTX（需先 install:export）
+npm run export:stage-pdf -- path/to/deck.html  # 导出逐页 PDF（需先 install:export）
+npm run render:video -- path/to/film.html      # 渲染 MP4（需 ffmpeg + install:export）
 ```
 
 单件作品在需要自动截图/可点击测试/导出 MP4 PDF PPTX 时才走 Deep 档。详见 [references/verification.md](references/verification.md)。

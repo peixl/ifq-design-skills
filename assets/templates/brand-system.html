@@ -113,6 +113,9 @@
     .logo-grid, .apps { grid-template-columns: 1fr; }
     .palette { grid-template-columns: repeat(2, 1fr); }
   }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+  }
 </style>
 </head>
 <body>

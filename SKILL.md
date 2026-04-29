@@ -157,6 +157,8 @@ Rule: **never ask more than 2 questions per turn**. Use defaults for everything 
 | Export command fails | Report the exact error, suggest `npm run install:export` if deps missing, never claim the export exists |
 | User says "this looks AI-generated" | Read anti-ai-slop.md, apply the 7-point pre-flight checklist, rewrite with more rhythm variation |
 | Agent cannot fact-check (no web access) | Name unverified claims as "unverified" in the deliverable, do not invent specs |
+| Template rendering fails or looks broken | Fall back to a simpler template (T-hero-landing), report the degradation reason |
+| Request is outside the skill scope | State the boundary honestly, suggest alternatives (e.g. "this is better suited to a React framework") |
 
 ## Safety Contract
 

@@ -112,6 +112,9 @@
     .dims__grid { grid-template-columns: 1fr; }
     .dim { border-right: none; }
   }
+  @media (prefers-reduced-motion: reduce) {
+    .dim__bar-fill { transition: none; }
+  }
 </style>
 </head>
 <body>

@@ -20,7 +20,7 @@ All notable changes to IFQ Design Skills are documented here.
 - **CHANGELOG.md**: this file
 
 ### Changed
-- All 8 existing templates upgraded with: responsive breakpoints (1024px, 640px), print-safe styles, dark mode support (`prefers-color-scheme: dark`), reduced motion support (`prefers-reduced-motion: reduce`), responsive viewport meta
+- 8 existing templates upgraded with: responsive breakpoints (1024px, 640px), print-safe styles, dark mode support (`prefers-color-scheme: dark`), reduced motion support (`prefers-reduced-motion: reduce`), responsive viewport meta
 - M-01/M-06/M-11/M-12 mode routes updated to use new dedicated templates (with fallback notes)
 - SKILL.md Reference Map expanded with quickstart and agent-interaction-protocol entries
 - `.well-known/**` manifests: added `examples` (3 prompt→output mappings) and `screenshots` (demo file paths)

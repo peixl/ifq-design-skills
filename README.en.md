@@ -418,7 +418,8 @@ ifq-design-skills/
 npm run preview -- path/to/design.html       # prints a file:// URL for your browser tool or user
 npm run verify:lite -- path/to/design.html   # pure static placeholder scan (YYYY / {…} / lorem / empty data-ifq-*)
 npm run smoke                                # one-minute skill health check
-npm run evals:validate                       # 12-mode regression contract
+npm run evals:validate                       # 20-scenario regression contract (12 modes + 8 edge cases)
+npm run quality:score                        # 38-check quality score (Discovery / Implementation / Structure / Expertise / Security)
 ```
 
 No Playwright, no Chromium, no Python. Runs on macOS / Linux / Windows out of the box.
@@ -427,7 +428,12 @@ No Playwright, no Chromium, no Python. Runs on macOS / Linux / Windows out of th
 
 ```bash
 npm run install:export                              # pulls playwright + pdf-lib + pptxgenjs + sharp + Chromium in one shot
+npm run install:browsers                            # install Chromium only (no other export deps)
 python scripts/verify.py path/to/design.html       # headless multi-viewport screenshots + console-error capture
+npm run export:pdf -- path/to/deck.html             # export PDF (requires install:export first)
+npm run export:pptx -- path/to/deck.html            # export editable PPTX (requires install:export first)
+npm run export:stage-pdf -- path/to/deck.html       # export per-stage PDF (requires install:export first)
+npm run render:video -- path/to/film.html           # render MP4 (requires ffmpeg + install:export)
 ```
 
 Escalate to the deep tier only when you actually need automated screenshots, click-tests, or MP4 / PDF / PPTX export. See [references/verification.md](references/verification.md).

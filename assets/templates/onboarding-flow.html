@@ -93,6 +93,9 @@
     .progress { flex-wrap: wrap; gap: 8px; }
     .progress__line { display: none; }
   }
+  @media (prefers-reduced-motion: reduce) {
+    .progress__dot { transition: none; }
+  }
 </style>
 </head>
 <body>
