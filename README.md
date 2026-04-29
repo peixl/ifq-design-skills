@@ -446,10 +446,11 @@ npm run render:video -- path/to/film.html      # 渲染 MP4（需 ffmpeg + insta
 
 ## Showcase
 
-直接在浏览器打开 `demos/` 目录下的 HTML 文件，查看 Skill 的真实产出质量：
+直接在浏览器打开 `demos/` 目录下的 HTML 文件，查看 Skill 的真实产出质量。更安静的 live case 是作者 peixl 的个人站：[peixl.ifq.ai](http://peixl.ifq.ai/) —— 由 IFQ Design Skills 完整设计完成，可作为 M-02 Portfolio 的最佳实践样本：不靠简历式堆叠，而靠暖纸、ledger 节奏、mono field note 与 quiet URL，把个人品牌收进一页克制的版面里。
 
-| Demo | 文件 | 展示内容 |
+| Demo | 文件 / URL | 展示内容 |
 |------|------|---------|
+| peixl 个人站 | [peixl.ifq.ai](http://peixl.ifq.ai/) | IFQ Design Skills 设计完成的 live M-02 Portfolio 最佳实践 |
 | Landing Page | `demos/hero-landing-showcase.html` | Editorial hero + rust ledger + spark animation |
 | Dashboard | `demos/dashboard-showcase.html` | Command center + KPI strip + sparkline grid |
 | Slide Deck | `demos/deck-showcase.html` | 5-slide keynote + field-note colophon |

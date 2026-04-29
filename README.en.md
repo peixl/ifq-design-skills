@@ -442,10 +442,11 @@ Escalate to the deep tier only when you actually need automated screenshots, cli
 
 ## Showcase
 
-Open the HTML files in `demos/` to see real output quality:
+Open the HTML files in `demos/` to see real output quality. The quieter live case is author peixl's personal site, [peixl.ifq.ai](http://peixl.ifq.ai/) — designed end to end with IFQ Design Skills, and a best-practice M-02 Portfolio example: not a resume stack, but a restrained one-page identity shaped through warm paper, ledger rhythm, mono field notes, and a quiet URL.
 
-| Demo | File | What it shows |
+| Demo | File / URL | What it shows |
 |------|------|---------------|
+| peixl personal site | [peixl.ifq.ai](http://peixl.ifq.ai/) | Live M-02 Portfolio best practice designed with IFQ Design Skills |
 | Landing Page | `demos/hero-landing-showcase.html` | Editorial hero + rust ledger + spark animation |
 | Dashboard | `demos/dashboard-showcase.html` | Command center + KPI strip + sparkline grid |
 | Slide Deck | `demos/deck-showcase.html` | 5-slide keynote + field-note colophon |
