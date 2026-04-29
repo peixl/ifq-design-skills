@@ -33,6 +33,94 @@ export const REQUIRED_QUALITY_SCORE_DIMENSIONS = [
   'Discovery', 'Implementation', 'Structure', 'Expertise', 'Security',
 ];
 
+const REQUIRED_CLAWHUB_CAPABILITY_SIGNALS = [
+  'crypto', 'can_make_purchases', 'requires_sensitive_credentials',
+];
+
+const REQUIRED_SECURITY_FALSE_FLAGS = [
+  'node_python_process_control', 'dynamic_eval', 'script_network', 'secrets_in_repo',
+];
+
+export function parseFrontmatter(raw) {
+  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
+  if (!match) return { frontmatter: null, content: raw };
+  return { frontmatter: match[1], content: match[2] };
+}
+
+/**
+ * Validate SKILL.md frontmatter and marketplace-facing metadata.
+ * Returns parsed fields plus error strings (empty = valid).
+ */
+export function validateSkillManifest(raw, pkgVersion) {
+  const errors = [];
+  const { frontmatter } = parseFrontmatter(raw);
+  const lineCount = raw.split(/\r?\n/).length;
+  const fields = {
+    name: null,
+    description: null,
+    version: null,
+    metadata: null,
+    lineCount,
+  };
+
+  if (!frontmatter) {
+    errors.push('SKILL.md has no frontmatter');
+    return { errors, fields };
+  }
+
+  const nameMatch = frontmatter.match(/^name:\s*(.+)$/m);
+  const descMatch = frontmatter.match(/^description:\s*(.+)$/m);
+  const versionMatch = frontmatter.match(/^version:\s*["']?([^"'\n]+)["']?$/m);
+  const metadataMatch = frontmatter.match(/^metadata:\s*(\{.*\})$/m);
+  fields.name = nameMatch ? nameMatch[1].trim() : null;
+  fields.description = descMatch ? descMatch[1].trim() : null;
+  fields.version = versionMatch ? versionMatch[1].trim() : null;
+
+  if (!fields.name || !NAME_REGEX.test(fields.name)) errors.push('SKILL.md name');
+  if (!fields.description) errors.push('SKILL.md description');
+  if (fields.version !== pkgVersion) errors.push('SKILL.md version');
+  if (lineCount > 500) errors.push('SKILL.md line count');
+
+  if (!metadataMatch) {
+    errors.push('SKILL.md metadata single-line JSON');
+  } else {
+    try {
+      fields.metadata = JSON.parse(metadataMatch[1]);
+    } catch (error) {
+      errors.push(`SKILL.md metadata JSON: ${error.message}`);
+    }
+  }
+
+  const metadata = fields.metadata;
+  if (!metadata) return { errors, fields };
+
+  if (metadata.version !== pkgVersion) errors.push('metadata.version');
+
+  const openclaw = metadata.openclaw;
+  if (!openclaw || !openclaw.requires || !Array.isArray(openclaw.requires.bins) || !openclaw.requires.bins.includes('node')) {
+    errors.push('metadata.openclaw.requires.bins.node');
+  }
+  if (!openclaw || !openclaw.requires || !Array.isArray(openclaw.requires.env) || openclaw.requires.env.length !== 0) {
+    errors.push('metadata.openclaw.requires.env.empty');
+  }
+
+  const capabilitySignals = metadata.clawhub && metadata.clawhub.capability_signals;
+  for (const key of REQUIRED_CLAWHUB_CAPABILITY_SIGNALS) {
+    if (!capabilitySignals || capabilitySignals[key] !== false) {
+      errors.push(`metadata.clawhub.capability_signals.${key}`);
+    }
+  }
+
+  const security = metadata.security || {};
+  for (const key of REQUIRED_SECURITY_FALSE_FLAGS) {
+    if (security[key] !== false) {
+      errors.push(`metadata.security.${key}`);
+    }
+  }
+
+  return { errors, fields };
+}
+
 /**
  * Validate a single well-known index entry.
  * Returns an array of error strings (empty = valid).

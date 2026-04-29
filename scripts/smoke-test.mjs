@@ -9,7 +9,12 @@ import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { checkJsLexical, checkPythonLexical } from './lib/lexer.mjs';
-import { validateIndexSchema } from './lib/publish-checks.mjs';
+import {
+  validateIndexSchema,
+  validateOpenAiYaml,
+  validateSkillManifest,
+  validateWellKnownEntry,
+} from './lib/publish-checks.mjs';
 import { createRequire } from 'node:module';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -162,20 +167,6 @@ const TEMPLATE_REMOTE_RUNTIME_PATTERNS = [
   ['remote stylesheet/script tag', /<(?:link|script)\b[^>]+(?:href|src)=["']https?:\/\//i],
   ['Google Fonts runtime URL', /https:\/\/fonts\.(?:googleapis|gstatic)\.com/i],
 ];
-
-const REQUIRED_MARKETPLACE_TARGETS = ['skills.sh', 'agentskill.sh', 'agentskills.to', 'clawhub.ai', 'clawskills.sh', 'skillhub.cn'];
-const REQUIRED_QUALITY_SIGNALS = {
-  zero_install_core: true,
-  eval_coverage_modes: 12,
-  root_skill_router: true,
-  no_required_env: true,
-  scanner_clean_scripts: true,
-  default_remote_runtime: false,
-};
-const REQUIRED_FIRST_RUN_EVIDENCE = ['file_path', 'route', 'template', 'verification_result', 'use_affecting_caveats'];
-const REQUIRED_FORBIDDEN_SETUP_WORK = ['account_login', 'global_install', 'export_dependency_install', 'broad_environment_change'];
-const REQUIRED_CORE_OUTPUTS = ['verified_html', 'svg_or_static_companions', 'export_ready_source_structure'];
-const REQUIRED_QUALITY_SCORE_DIMENSIONS = ['Discovery', 'Implementation', 'Structure', 'Expertise', 'Security'];
 
 function findPlaceholderLeaks(text) {
   const findings = [];
@@ -687,7 +678,7 @@ async function check13_TemplateRuntimePolicy() {
 // Keeps the repo publishable to skills.sh on every commit.
 async function check14_PublishSpec() {
   console.log(`\n${BOLD}[14/16] skills.sh publish spec${RESET}`);
-  const nameRegex = /^[a-z0-9]([a-z0-9-]{0,62}[a-z0-9])?$/;
+  const startFailures = failures;
   const pkg = await readJson(path.join(ROOT, 'package.json'));
 
   const openAiYaml = path.join(ROOT, 'agents/openai.yaml');
@@ -695,69 +686,15 @@ async function check14_PublishSpec() {
     fail('  agents/openai.yaml missing UI metadata');
   } else {
     const yaml = await readText(openAiYaml);
-    if (!/^\s*display_name:\s*"IFQ Design Skills"\s*$/m.test(yaml)) fail('  agents/openai.yaml display_name missing');
-    if (!/^\s*short_description:\s*"[^"]{25,64}"\s*$/m.test(yaml)) fail('  agents/openai.yaml short_description must be 25-64 chars');
-    if (!/^\s*default_prompt:\s*"[^"]*\$ifq-design-skills[^"]*"\s*$/m.test(yaml)) fail('  agents/openai.yaml default_prompt must mention $ifq-design-skills');
-    if (!/^\s*allow_implicit_invocation:\s*true\s*$/m.test(yaml)) fail('  agents/openai.yaml must allow implicit invocation');
-    if (!/^\s*brand_color:\s*"#[0-9A-Fa-f]{6}"\s*$/m.test(yaml)) fail('  agents/openai.yaml brand_color must be hex');
-    const iconMatches = [...yaml.matchAll(/^\s*icon_(?:small|large):\s*"([^"]+)"\s*$/gm)];
-    if (iconMatches.length < 2) {
-      fail('  agents/openai.yaml must include small and large icons');
-    } else {
-      for (const match of iconMatches) {
-        const rel = match[1].replace(/^\.\//, '');
-        if (!rel || rel.startsWith('/') || rel.includes('..') || !existsSync(path.join(ROOT, rel))) {
-          fail(`  agents/openai.yaml icon path invalid: ${match[1]}`);
-        }
-      }
-    }
+    const errors = validateOpenAiYaml(yaml, (rel) => existsSync(path.join(ROOT, rel)));
+    for (const error of errors) fail(`  agents/openai.yaml ${error}`);
   }
 
-  // SKILL.md frontmatter
   const skillMd = path.join(ROOT, 'SKILL.md');
   if (!existsSync(skillMd)) return fail('SKILL.md missing at repo root');
   const raw = await readText(skillMd);
-  const m = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
-  if (!m) return fail('SKILL.md has no YAML frontmatter');
-  const fm = m[1];
-  const nameMatch = fm.match(/^name:\s*(.+)$/m);
-  const descMatch = fm.match(/^description:\s*(.+)$/m);
-  const versionMatch = fm.match(/^version:\s*["']?([^"'\n]+)["']?$/m);
-  const metadataMatch = fm.match(/^metadata:\s*(\{.*\})$/m);
-  const name = nameMatch ? nameMatch[1].trim() : '';
-  const desc = descMatch ? descMatch[1].trim() : '';
-  const version = versionMatch ? versionMatch[1].trim() : '';
-  const lineCount = raw.split(/\r?\n/).length;
-  let metadata = null;
-  if (!name || !nameRegex.test(name)) fail(`  SKILL.md name invalid: ${JSON.stringify(name)}`);
-  if (!desc) fail('  SKILL.md description missing');
-  if (version !== pkg.version) fail(`  SKILL.md version ${JSON.stringify(version)} != package.json ${pkg.version}`);
-  if (lineCount > 500) fail(`  SKILL.md is ${lineCount} lines; ClawHub guidance target is <= 500`);
-  if (!metadataMatch) {
-    fail('  SKILL.md metadata must be a single-line JSON object for OpenClaw gating');
-  } else {
-    try { metadata = JSON.parse(metadataMatch[1]); }
-    catch (err) { fail(`  SKILL.md metadata JSON invalid: ${err.message}`); }
-  }
-  if (metadata) {
-    const openclaw = metadata.openclaw;
-    const clawhub = metadata.clawhub;
-    const security = metadata.security || {};
-    if (metadata.version !== pkg.version) fail(`  metadata.version ${JSON.stringify(metadata.version)} != package.json ${pkg.version}`);
-    if (!openclaw || !openclaw.requires || !Array.isArray(openclaw.requires.bins) || !openclaw.requires.bins.includes('node')) {
-      fail('  metadata.openclaw.requires.bins must include node');
-    }
-    if (!openclaw || !openclaw.requires || !Array.isArray(openclaw.requires.env) || openclaw.requires.env.length !== 0) {
-      fail('  metadata.openclaw.requires.env must be an empty array');
-    }
-    const signals = clawhub && clawhub.capability_signals;
-    for (const key of ['crypto', 'can_make_purchases', 'requires_sensitive_credentials']) {
-      if (!signals || signals[key] !== false) fail(`  metadata.clawhub.capability_signals.${key} must be false`);
-    }
-    for (const key of ['node_python_process_control', 'dynamic_eval', 'script_network', 'secrets_in_repo']) {
-      if (security[key] !== false) fail(`  metadata.security.${key} must be false`);
-    }
-  }
+  const manifestResult = validateSkillManifest(raw, pkg.version);
+  for (const error of manifestResult.errors) fail(`  ${error}`);
 
   // Well-known indices
   for (const rel of ['.well-known/agent-skills/index.json', '.well-known/skills/index.json']) {
@@ -768,69 +705,11 @@ async function check14_PublishSpec() {
     catch { fail(`  ${rel}: invalid JSON`); continue; }
     if (!Array.isArray(idx.skills) || idx.skills.length === 0) { fail(`  ${rel}: missing skills[]`); continue; }
     for (const e of idx.skills) {
-      const errs = [];
-      if (typeof e.name !== 'string' || !e.name) errs.push('name');
-      else if (e.name.length > 1 && !nameRegex.test(e.name)) errs.push('name-regex');
-      if (typeof e.description !== 'string' || !e.description) errs.push('description');
-      if (!e.metadata || e.metadata.version !== pkg.version) errs.push('metadata.version');
-      if (!e.metadata || !e.metadata.requires || !Array.isArray(e.metadata.requires.bins) || !e.metadata.requires.bins.includes('node')) errs.push('requires.bins.node');
-      if (!e.metadata || !e.metadata.requires || !Array.isArray(e.metadata.requires.env) || e.metadata.requires.env.length !== 0) errs.push('requires.env-empty');
-      const signals = e.metadata && e.metadata.capability_signals;
-      for (const key of ['crypto', 'can_make_purchases', 'requires_sensitive_credentials']) {
-        if (!signals || signals[key] !== false) errs.push(`capability_signals.${key}`);
-      }
-      const quality = e.metadata && e.metadata.quality_signals;
-      for (const [key, expected] of Object.entries(REQUIRED_QUALITY_SIGNALS)) {
-        if (!quality || quality[key] !== expected) errs.push(`quality_signals.${key}`);
-      }
-      const firstRun = e.metadata && e.metadata.first_run_success;
-      if (!firstRun || typeof firstRun.goal !== 'string' || firstRun.goal.length < 20) errs.push('first_run_success.goal');
-      for (const key of REQUIRED_FIRST_RUN_EVIDENCE) {
-        if (!firstRun || !Array.isArray(firstRun.required_evidence) || !firstRun.required_evidence.includes(key)) {
-          errs.push(`first_run_success.required_evidence.${key}`);
-        }
-      }
-      for (const key of REQUIRED_FORBIDDEN_SETUP_WORK) {
-        if (!firstRun || !Array.isArray(firstRun.forbidden_setup_work) || !firstRun.forbidden_setup_work.includes(key)) {
-          errs.push(`first_run_success.forbidden_setup_work.${key}`);
-        }
-      }
-      const boundary = e.metadata && e.metadata.output_boundary;
-      for (const key of REQUIRED_CORE_OUTPUTS) {
-        if (!boundary || !Array.isArray(boundary.core_outputs) || !boundary.core_outputs.includes(key)) {
-          errs.push(`output_boundary.core_outputs.${key}`);
-        }
-      }
-      if (!boundary || typeof boundary.export_claim_rule !== 'string' || !boundary.export_claim_rule.includes('until')) {
-        errs.push('output_boundary.export_claim_rule');
-      }
-      const dims = e.metadata && e.metadata.quality_score_dimensions;
-      for (const key of REQUIRED_QUALITY_SCORE_DIMENSIONS) {
-        if (!Array.isArray(dims) || !dims.includes(key)) errs.push(`quality_score_dimensions.${key}`);
-      }
-      const benchmarks = e.metadata && e.metadata.benchmark_targets;
-      if (!benchmarks || !/^\d{4}-\d{2}-\d{2}$/.test(benchmarks.observed_on || '')) errs.push('benchmark_targets.observed_on');
-      if (!benchmarks || typeof benchmarks.skills_sh_top10_floor_installs !== 'number' || benchmarks.skills_sh_top10_floor_installs < 260000) {
-        errs.push('benchmark_targets.skills_sh_top10_floor_installs');
-      }
-      const targets = e.metadata && e.metadata.marketplace_targets;
-      for (const target of REQUIRED_MARKETPLACE_TARGETS) {
-        if (!Array.isArray(targets) || !targets.includes(target)) errs.push(`marketplace_targets.${target}`);
-      }
-      for (const key of ['human_value', 'agent_value', 'entrypoints']) {
-        if (!Array.isArray(e.metadata && e.metadata[key]) || e.metadata[key].length < 3) errs.push(key);
-      }
-      if (!Array.isArray(e.files) || e.files.length === 0) errs.push('files[]');
-      else {
-        if (!e.files.some((f) => typeof f === 'string' && f.toLowerCase() === 'skill.md')) errs.push('files-must-include-SKILL.md');
-        for (const f of e.files) {
-          if (typeof f !== 'string' || f.startsWith('/') || f.startsWith('\\') || f.includes('..')) errs.push(`unsafe-path:${f}`);
-        }
-      }
+      const errs = validateWellKnownEntry(e, pkg.version);
       if (errs.length) fail(`  ${rel} entry ${e.name || '(?)'}: ${errs.join(', ')}`);
     }
   }
-  if (failures === 0) ok('SKILL.md + well-known indices conform to skills.sh spec');
+  if (failures === startFailures) ok('SKILL.md + well-known indices conform to skills.sh spec');
 }
 
 const HTML_STRUCTURE_ROOTS = [

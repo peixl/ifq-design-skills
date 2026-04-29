@@ -2,6 +2,7 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   NAME_REGEX,
+  validateSkillManifest,
   validateWellKnownEntry,
   validateOpenAiYaml,
   validateIndexSchema,
@@ -124,6 +125,43 @@ describe('validateWellKnownEntry', () => {
     entry.metadata.marketplace_targets = ['skills.sh'];
     const errs = validateWellKnownEntry(entry, '3.0.0');
     assert.ok(errs.some(e => e.startsWith('marketplace_targets')));
+  });
+});
+
+describe('validateSkillManifest', () => {
+  function makeValidSkillMd() {
+    return `---
+name: ifq-design-skills
+description: "Use this skill whenever the user asks for an HTML-first visual design deliverable."
+version: "3.0.0"
+metadata: {"version":"3.0.0","openclaw":{"requires":{"bins":["node"],"env":[]}},"clawhub":{"capability_signals":{"crypto":false,"can_make_purchases":false,"requires_sensitive_credentials":false}},"security":{"node_python_process_control":false,"dynamic_eval":false,"script_network":false,"secrets_in_repo":false}}
+---
+
+# IFQ Design Skills
+`;
+  }
+
+  it('accepts valid SKILL.md frontmatter and metadata', () => {
+    const result = validateSkillManifest(makeValidSkillMd(), '3.0.0');
+    assert.deepEqual(result.errors, []);
+    assert.equal(result.fields.name, 'ifq-design-skills');
+  });
+
+  it('rejects missing frontmatter', () => {
+    const result = validateSkillManifest('# IFQ Design Skills', '3.0.0');
+    assert.ok(result.errors.includes('SKILL.md has no frontmatter'));
+  });
+
+  it('rejects version drift between SKILL.md and package.json', () => {
+    const result = validateSkillManifest(makeValidSkillMd(), '9.9.9');
+    assert.ok(result.errors.includes('SKILL.md version'));
+    assert.ok(result.errors.includes('metadata.version'));
+  });
+
+  it('rejects unsafe capability signal drift', () => {
+    const skillMd = makeValidSkillMd().replace('"crypto":false', '"crypto":true');
+    const result = validateSkillManifest(skillMd, '3.0.0');
+    assert.ok(result.errors.includes('metadata.clawhub.capability_signals.crypto'));
   });
 });
 

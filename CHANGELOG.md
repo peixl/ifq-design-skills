@@ -32,6 +32,7 @@ All notable changes to IFQ Design Skills are documented here.
 - All 20 eval scenarios validated
 - All templates pass `verify:lite` placeholder scan
 - All templates are local-first (no remote CSS/JS)
+- Marketplace publish rules now share one validator across smoke, publish checks, and tests, reducing drift when platform requirements change
 
 ## [2.4.1] — 2026-04-29
 
