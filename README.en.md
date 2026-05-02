@@ -472,3 +472,7 @@ Apache-2.0 + brand attribution clause. Personal learning and non-commercial shar
 
 
 </div>
+
+## Download History
+
+[![Download History](https://skill-history.com/chart/peixl/ifq-design-skills.svg)](https://skill-history.com/peixl/ifq-design-skills)
