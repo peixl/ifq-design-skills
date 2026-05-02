@@ -15,7 +15,7 @@
   },
   "type": "module",
   "scripts": {
-    "test": "node --test tests",
+    "test": "node --test tests/index.test.mjs",
     "test:ci": "npm test && npm run validate",
     "sync:year": "node scripts/sync-authored-year.mjs",
     "smoke": "node scripts/smoke-test.mjs",
