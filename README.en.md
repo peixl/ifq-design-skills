@@ -460,6 +460,12 @@ Open the HTML files in `demos/` to see real output quality. The quieter live cas
 
 ---
 
+## Download History
+
+[![Download History](https://skill-history.com/chart/peixl/ifq-design-skills.svg)](https://skill-history.com/peixl/ifq-design-skills)
+
+---
+
 ## License
 
 Apache-2.0 + brand attribution clause. Personal learning and non-commercial sharing are fully free; commercial use just needs to retain IFQ brand attribution. See [LICENSE](LICENSE).
@@ -473,6 +479,4 @@ Apache-2.0 + brand attribution clause. Personal learning and non-commercial shar
 
 </div>
 
-## Download History
 
-[![Download History](https://skill-history.com/chart/peixl/ifq-design-skills.svg)](https://skill-history.com/peixl/ifq-design-skills)
